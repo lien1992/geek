@@ -3,13 +3,18 @@ package com.thinksns.jkfs.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class UserInfoBean implements Parcelable{
+/**
+ * 用户基本资料
+ * 
+ */
+public class UserInfoBean implements Parcelable {
 	private String uid;
-	private String uname; //昵称
+	private String uname; // 昵称
 	private String email;
 	private String sex;
-	private String location;
-	private String avatar_url; //头像url
+	private String province;
+	private String city;
+	private String avatar_url; // 头像url
 
 	public String getUid() {
 		return uid;
@@ -43,12 +48,20 @@ public class UserInfoBean implements Parcelable{
 		this.sex = sex;
 	}
 
-	public String getLocation() {
-		return location;
+	public String getProvince() {
+		return province;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	public String getAvatar_url() {
@@ -68,7 +81,33 @@ public class UserInfoBean implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
-		
+		dest.writeString(uid);
+		dest.writeString(uname);
+		dest.writeString(email);
+		dest.writeString(sex);
+		dest.writeString(province);
+		dest.writeString(city);
+		dest.writeString(avatar_url);
+
 	}
+
+	public static final Parcelable.Creator<UserInfoBean> CREATOR = new Parcelable.Creator<UserInfoBean>() {
+		public UserInfoBean createFromParcel(Parcel in) {
+			UserInfoBean ub = new UserInfoBean();
+			ub.uid = in.readString();
+			ub.uname = in.readString();
+			ub.email = in.readString();
+			ub.sex = in.readString();
+			ub.province = in.readString();
+			ub.city = in.readString();
+			ub.avatar_url = in.readString();
+			return ub;
+
+		}
+
+		public UserInfoBean[] newArray(int size) {
+			return new UserInfoBean[size];
+		}
+	};
 
 }

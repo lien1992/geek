@@ -4,6 +4,11 @@ package com.thinksns.jkfs.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * 帐户
+ *
+ */
+
 public class AccountBean implements Parcelable {
 	private String uid;
 	private String oauth_token;
@@ -50,11 +55,11 @@ public class AccountBean implements Parcelable {
 
 	public static final Parcelable.Creator<AccountBean> CREATOR = new Parcelable.Creator<AccountBean>() {
 		public AccountBean createFromParcel(Parcel in) {
-			AccountBean accountBean = new AccountBean();
-			accountBean.uid = in.readString();
-			accountBean.oauth_token = in.readString();
-			accountBean.oauth_token_secret = in.readString();
-			return accountBean;
+			AccountBean ab = new AccountBean();
+			ab.uid = in.readString();
+			ab.oauth_token = in.readString();
+			ab.oauth_token_secret = in.readString();
+			return ab;
 		}
 
 		public AccountBean[] newArray(int size) {
