@@ -21,6 +21,10 @@ public class WeiboListBean implements Parcelable {
 		this.weibos = weibos;
 	}
 
+	public int getSize() {
+		return weibos.size();
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub

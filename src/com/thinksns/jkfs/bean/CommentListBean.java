@@ -21,6 +21,10 @@ public class CommentListBean implements Parcelable {
 		this.comments = comments;
 	}
 
+	public int getSize() {
+		return comments.size();
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub

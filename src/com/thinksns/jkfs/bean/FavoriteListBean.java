@@ -11,7 +11,7 @@ import android.os.Parcelable;
  * 
  */
 
-public class FavoriteListBean implements Parcelable{
+public class FavoriteListBean implements Parcelable {
 	private List<FavoriteListBean> favorites = new ArrayList<FavoriteListBean>();
 
 	public List<FavoriteListBean> getFavorites() {
@@ -20,6 +20,10 @@ public class FavoriteListBean implements Parcelable{
 
 	public void setFavorites(List<FavoriteListBean> favorites) {
 		this.favorites = favorites;
+	}
+
+	public int getSize() {
+		return favorites.size();
 	}
 
 	@Override
@@ -31,6 +35,6 @@ public class FavoriteListBean implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

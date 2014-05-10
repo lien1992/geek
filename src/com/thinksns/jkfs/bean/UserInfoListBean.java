@@ -21,6 +21,10 @@ public class UserInfoListBean implements Parcelable {
 		this.users = users;
 	}
 
+	public int getSize() {
+		return users.size();
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
