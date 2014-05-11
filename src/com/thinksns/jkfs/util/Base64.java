@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.support.util;
+package com.thinksns.jkfs.util;
 
 /*
  * Copyright (C) 2010 The Android Open Source Project

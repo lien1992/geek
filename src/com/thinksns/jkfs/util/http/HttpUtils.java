@@ -1,9 +1,10 @@
-package com.thinksns.jkfs.support.http;
+package com.thinksns.jkfs.util.http;
 
 import android.text.TextUtils;
 
-import com.thinksns.jkfs.support.util.AppLogger;
-import com.thinksns.jkfs.support.util.Utility;
+
+import com.thinksns.jkfs.util.AppLogger;
+import com.thinksns.jkfs.util.Utility;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -30,7 +31,7 @@ public class HttpUtils {
 		}
 	}
 
-	public String executeNormalTask(HttpMethod httpMethod, String url,
+	public static String executeNormalTask(HttpMethod httpMethod, String url,
 			Map<String, String> param) {
 		switch (httpMethod) {
 		case Post:
@@ -58,7 +59,7 @@ public class HttpUtils {
 	 * @param param
 	 * @return
 	 */
-	public String doGet(String urlStr, Map<String, String> param) {
+	public static String doGet(String urlStr, Map<String, String> param) {
 		HttpURLConnection urlConnection = null;
 		try {
 
@@ -95,7 +96,7 @@ public class HttpUtils {
 	 * @param param
 	 * @return
 	 */
-	public String doPost(String urlAddress, Map<String, String> param) {
+	public static String doPost(String urlAddress, Map<String, String> param) {
 		HttpURLConnection uRLConnection = null;
 		try {
 			URL url = new URL(urlAddress);
@@ -129,7 +130,7 @@ public class HttpUtils {
 		return handleResponse(uRLConnection);
 	}
 
-	private String handleResponse(HttpURLConnection httpURLConnection) {
+	private static String handleResponse(HttpURLConnection httpURLConnection) {
 		int status = 0;
 		try {
 			status = httpURLConnection.getResponseCode();
@@ -145,13 +146,13 @@ public class HttpUtils {
 		return readResult(httpURLConnection);
 	}
 
-	private String handleError(HttpURLConnection urlConnection) {
+	private  static String handleError(HttpURLConnection urlConnection) {
 		String result = readError(urlConnection);
 		AppLogger.e("error=" + result);
 		return result;
 	}
 
-	private String readResult(HttpURLConnection urlConnection) {
+	private static String readResult(HttpURLConnection urlConnection) {
 		InputStream is = null;
 		BufferedReader buffer = null;
 		StringBuilder strBuilder = new StringBuilder();
@@ -184,7 +185,7 @@ public class HttpUtils {
 
 	}
 
-	private String readError(HttpURLConnection urlConnection) {
+	private static String readError(HttpURLConnection urlConnection) {
 		InputStream is = null;
 		BufferedReader buffer = null;
 		StringBuilder strBuilder = new StringBuilder();

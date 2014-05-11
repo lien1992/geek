@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.support.http;
+package com.thinksns.jkfs.util.http;
 
 
 public enum HttpMethod {

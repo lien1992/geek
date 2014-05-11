@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.support.util;
+package com.thinksns.jkfs.util;
 
 import com.thinksns.jkfs.BuildConfig;
 

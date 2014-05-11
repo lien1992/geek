@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.support.util;
+package com.thinksns.jkfs.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

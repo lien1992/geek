@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.support.util;
+package com.thinksns.jkfs.base;
 
 import android.app.Activity;
 import android.app.Application;
@@ -13,6 +13,7 @@ public final class ThinkSNSApplication extends Application {
 		super.onCreate();
 		globalContext = this;
 	}
+
 
 	public static ThinkSNSApplication getInstance() {
 		return globalContext;

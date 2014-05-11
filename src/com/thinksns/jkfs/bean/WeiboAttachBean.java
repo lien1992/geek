@@ -8,32 +8,32 @@ import android.os.Parcelable;
  *
  */
 public class WeiboAttachBean implements Parcelable{
-	private String attach_id;
-	private String attach_name;
-	private String attach_url;
+	private String id;
+	private String file_name;
+	private String url;
 
 	public String getId() {
-		return attach_id;
+		return id;
 	}
 
 	public void setId(String id) {
-		this.attach_id = id;
+		this.id = id;
 	}
 
 	public String getFile_name() {
-		return attach_name;
+		return file_name;
 	}
 
 	public void setFile_name(String fileName) {
-		attach_name = fileName;
+		file_name = fileName;
 	}
 
 	public String getUrl() {
-		return attach_url;
+		return url;
 	}
 
 	public void setUrl(String url) {
-		this.attach_url = url;
+		this.url = url;
 	}
 
 	@Override

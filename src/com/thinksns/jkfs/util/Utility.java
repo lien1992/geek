@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.support.util;
+package com.thinksns.jkfs.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.thinksns.jkfs.BuildConfig;
+import com.thinksns.jkfs.base.ThinkSNSApplication;
 
 public class Utility {
 

@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.db;
+package com.thinksns.jkfs.util.db;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +54,7 @@ public class UserInfoOperator {
 		cv.put(SEX, userInfo.getSex());
 		cv.put(PROVINCE, userInfo.getProvince());
 		cv.put(CITY, userInfo.getCity());
+		cv.put(AVATAR_URL, userInfo.getAvatar_url());
 		Cursor c = getWdb().query(TABLE_NAME, null, UID + "=?",
 				new String[] { userInfo.getUid() }, null, null, null);
 		if (c != null && c.getCount() > 0) {
@@ -82,6 +83,7 @@ public class UserInfoOperator {
 			uib.setSex(c.getString(c.getColumnIndex(SEX)));
 			uib.setProvince(c.getString(c.getColumnIndex(PROVINCE)));
 			uib.setCity(c.getString(c.getColumnIndex(CITY)));
+			uib.setAvatar_url(c.getString(c.getColumnIndex(AVATAR_URL)));
 			userInfoList.add(uib);
 		}
 		uilb.setUsers(userInfoList);

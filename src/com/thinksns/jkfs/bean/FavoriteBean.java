@@ -5,46 +5,26 @@ import android.os.Parcelable;
 
 /**
  * 收藏
- * 
+ *
  */
-public class FavoriteBean implements Parcelable {
-	private String feed_id;
-	private String uid;
-	private String type;
+public class FavoriteBean implements Parcelable{
+	private String id;
 	private String content;
 	private String time;
 	private String from;
+	private String uid;
 	private String uname;
-	private String avatar_big;
-	private String avatar_middle;
-	private String avatar_small;
 	private int comment_count;
 	private int repost_count;
-	private String transpond_id;
-	private WeiboBean transpond_data;
+	private String f_uid; // 收藏者
+	private String f_time; // 收藏时间
 
-	public String getFeed_id() {
-		return feed_id;
+	public String getId() {
+		return id;
 	}
 
-	public void setFeed_id(String feedId) {
-		feed_id = feedId;
-	}
-
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getContent() {
@@ -71,36 +51,20 @@ public class FavoriteBean implements Parcelable {
 		this.from = from;
 	}
 
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
 	public String getUname() {
 		return uname;
 	}
 
 	public void setUname(String uname) {
 		this.uname = uname;
-	}
-
-	public String getAvatar_big() {
-		return avatar_big;
-	}
-
-	public void setAvatar_big(String avatarBig) {
-		avatar_big = avatarBig;
-	}
-
-	public String getAvatar_middle() {
-		return avatar_middle;
-	}
-
-	public void setAvatar_middle(String avatarMiddle) {
-		avatar_middle = avatarMiddle;
-	}
-
-	public String getAvatar_small() {
-		return avatar_small;
-	}
-
-	public void setAvatar_small(String avatarSmall) {
-		avatar_small = avatarSmall;
 	}
 
 	public int getComment_count() {
@@ -119,20 +83,20 @@ public class FavoriteBean implements Parcelable {
 		repost_count = repostCount;
 	}
 
-	public String getTranspond_id() {
-		return transpond_id;
+	public String getF_uid() {
+		return f_uid;
 	}
 
-	public void setTranspond_id(String transpondId) {
-		transpond_id = transpondId;
+	public void setF_uid(String fUid) {
+		f_uid = fUid;
 	}
 
-	public WeiboBean getTranspond_data() {
-		return transpond_data;
+	public String getF_time() {
+		return f_time;
 	}
 
-	public void setTranspond_data(WeiboBean transpondData) {
-		transpond_data = transpondData;
+	public void setF_time(String fTime) {
+		f_time = fTime;
 	}
 
 	@Override
@@ -144,7 +108,7 @@ public class FavoriteBean implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }

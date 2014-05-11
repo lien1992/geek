@@ -22,10 +22,9 @@ import com.thinksns.jkfs.sina.PreferenceUtil;
 import com.thinksns.jkfs.sina.SinaWeiboUtil;
 import com.thinksns.jkfs.sina.Sinas;
 import com.thinksns.jkfs.sina.WeiboListener;
-import com.thinksns.jkfs.support.http.HttpMethod;
-import com.thinksns.jkfs.support.http.HttpUtility;
-import com.thinksns.jkfs.support.util.DES;
-import com.thinksns.jkfs.support.util.MD5;
+import com.thinksns.jkfs.util.*;
+import com.thinksns.jkfs.util.http.HttpMethod;
+import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

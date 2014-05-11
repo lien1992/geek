@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.db;
+package com.thinksns.jkfs.util.db;
 
 import android.database.sqlite.SQLiteDatabase;
 
