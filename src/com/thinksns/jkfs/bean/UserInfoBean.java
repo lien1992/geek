@@ -9,12 +9,17 @@ import android.os.Parcelable;
  */
 public class UserInfoBean implements Parcelable {
 	private String uid;
-	private String uname; // 昵称
+	private String uname;
 	private String email;
 	private String sex;
 	private String province;
 	private String city;
-	private String avatar_url; // 头像url
+	private String avatar_big;
+	private String avatar_middle;
+	private String avatar_small;
+	private String last_feed_id;// 最近一条微博ID
+
+	private UserInfoCountBean count_info;
 
 	public String getUid() {
 		return uid;
@@ -64,12 +69,12 @@ public class UserInfoBean implements Parcelable {
 		this.city = city;
 	}
 
-	public String getAvatar_url() {
-		return avatar_url;
+	public void setCount_info(UserInfoCountBean count_info) {
+		this.count_info = count_info;
 	}
 
-	public void setAvatar_url(String avatarUrl) {
-		avatar_url = avatarUrl;
+	public UserInfoCountBean getCount_info() {
+		return count_info;
 	}
 
 	@Override
@@ -87,7 +92,11 @@ public class UserInfoBean implements Parcelable {
 		dest.writeString(sex);
 		dest.writeString(province);
 		dest.writeString(city);
-		dest.writeString(avatar_url);
+		dest.writeString(avatar_big);
+		dest.writeString(avatar_middle);
+		dest.writeString(avatar_small);
+		dest.writeString(last_feed_id);
+		dest.writeParcelable(count_info, flags);
 
 	}
 
@@ -100,7 +109,12 @@ public class UserInfoBean implements Parcelable {
 			ub.sex = in.readString();
 			ub.province = in.readString();
 			ub.city = in.readString();
-			ub.avatar_url = in.readString();
+			ub.avatar_big = in.readString();
+			ub.avatar_middle = in.readString();
+			ub.avatar_small = in.readString();
+			ub.last_feed_id = in.readString();
+			ub.count_info = in.readParcelable(UserInfoCountBean.class
+					.getClassLoader());
 			return ub;
 
 		}
