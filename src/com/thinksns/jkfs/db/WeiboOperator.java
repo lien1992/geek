@@ -10,13 +10,20 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * weibo表操作类
+ * 
+ * @author wangjia
+ * 
+ */
 public class WeiboOperator {
 	public static final String TABLE_NAME = "weibo_table";
 	public static final String ID = "_id";
+	public static final String WID = "wid";// 微博ID
 	public static final String CONTENT = "content";
 	public static final String TIME = "time";
 	public static final String FROM = "from";
-	public static final String UID = "uid";
+	public static final String UID = "uid";// 用户ID
 	public static final String UNAME = "uname";
 	public static final String COMMENT_COUNT = "comment_count";
 	public static final String REPOST_COUNT = "repost_count";
@@ -36,7 +43,7 @@ public class WeiboOperator {
 	}
 
 	/**
-	 * 保存接收到的微博列表
+	 * 保存接收到的微博列表  （做标记，以避免重复存储？）
 	 * 
 	 * @param weiboList
 	 */
@@ -62,12 +69,16 @@ public class WeiboOperator {
 	/**
 	 * 获取缓存的微博列表
 	 * 
+	 * @param limitCount
+	 *            显示的微博数目上限
 	 * @return
 	 */
-	public static WeiboListBean getWeiboList() {
+	public static WeiboListBean getWeiboList(int limitCount) {
 		WeiboListBean wlb = new WeiboListBean();
 		List<WeiboBean> weibos = new ArrayList<WeiboBean>();
-		String sql = "select * from " + TABLE_NAME;
+		String sql = "select * from " + TABLE_NAME + " order by " + ID
+				+ " asc limit " + limitCount;
+		;
 		Cursor c = getWdb().rawQuery(sql, null);
 		while (c.moveToNext()) {
 			WeiboBean weibo = new WeiboBean();
@@ -83,6 +94,14 @@ public class WeiboOperator {
 		}
 		wlb.setWeibos(weibos);
 		return wlb;
+	}
+
+	/**
+	 * 删除所有缓存微博
+	 */
+	public static void deleteAll() {
+		String sql = "delete from " + TABLE_NAME;
+		getWdb().execSQL(sql);
 	}
 
 }
