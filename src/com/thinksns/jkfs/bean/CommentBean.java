@@ -8,17 +8,21 @@ import android.os.Parcelable;
  * 
  */
 public class CommentBean implements Parcelable {
-	private String id;
+	private String comment_id;
 	private String content;
-	private String time;
-	private UserInfoBean user;
+	private String to_comment_id;
+	private String to_uid;
+	private String ctime;
+	private String client_type;
+	private UserInfoBean user_info;
+	// sourceInfo?
 
 	public String getId() {
-		return id;
+		return comment_id;
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.comment_id = id;
 	}
 
 	public String getContent() {
@@ -30,19 +34,43 @@ public class CommentBean implements Parcelable {
 	}
 
 	public String getTime() {
-		return time;
+		return ctime;
 	}
 
 	public void setTime(String time) {
-		this.time = time;
+		this.ctime = time;
+	}
+
+	public void setClient_type(String client_type) {
+		this.client_type = client_type;
+	}
+
+	public String getClient_type() {
+		return client_type;
 	}
 
 	public UserInfoBean getUser() {
-		return user;
+		return user_info;
 	}
 
 	public void setUser(UserInfoBean user) {
-		this.user = user;
+		this.user_info = user;
+	}
+
+	public void setTo_comment_id(String to_comment_id) {
+		this.to_comment_id = to_comment_id;
+	}
+
+	public String getTo_comment_id() {
+		return to_comment_id;
+	}
+
+	public void setTo_uid(String to_uid) {
+		this.to_uid = to_uid;
+	}
+
+	public String getTo_uid() {
+		return to_uid;
 	}
 
 	@Override
@@ -54,19 +82,26 @@ public class CommentBean implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
-		dest.writeString(id);
+		dest.writeString(comment_id);
 		dest.writeString(content);
-		dest.writeString(time);
-		dest.writeParcelable(user, flags);
+		dest.writeString(to_comment_id);
+		dest.writeString(to_uid);
+		dest.writeString(ctime);
+		dest.writeString(client_type);
+		dest.writeParcelable(user_info, flags);
 	}
 
 	public static final Parcelable.Creator<CommentBean> CREATOR = new Parcelable.Creator<CommentBean>() {
 		public CommentBean createFromParcel(Parcel in) {
 			CommentBean cb = new CommentBean();
-			cb.id = in.readString();
+			cb.comment_id = in.readString();
 			cb.content = in.readString();
-			cb.time = in.readString();
-			cb.user = in.readParcelable(UserInfoBean.class.getClassLoader());
+			cb.to_comment_id = in.readString();
+			cb.to_uid = in.readString();
+			cb.ctime = in.readString();
+			cb.client_type = in.readString();
+			cb.user_info = in.readParcelable(UserInfoBean.class
+					.getClassLoader());
 			return cb;
 		}
 
