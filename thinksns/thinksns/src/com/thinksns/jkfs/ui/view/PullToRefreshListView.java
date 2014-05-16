@@ -17,60 +17,68 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
 /**
- * 下拉刷新ListView
+ * ListView, 顶部:下拉刷新 + 底部:加载更多
+ * 使用时实现RefreshAndLoadMoreListener接口，并调用setListener()进行绑定;
+ * 要添加底部加载更多，调用setLoadMoreEnable(true)。
  * 
  */
 public class PullToRefreshListView extends ListView implements OnScrollListener {
 
-	/** 松开刷新 */
-	private final static int RELEASE_TO_REFRESH = 0;
-	/** 下拉刷新 */
-	private final static int PULL_TO_REFRESH = 1;
-	/** 正在刷新中 */
-	private final static int REFRESHING = 2;
-	/** 完成 */
-	private final static int DONE = 3;
-
-	// 实际的padding的距离与界面上偏移距离的比例
-	private final static int RATIO = 3;
-
 	private LayoutInflater inflater;
 
+	/** 顶部下拉刷新 **/
+	private final static int RELEASE_TO_REFRESH = 0;// 松开刷新
+	private final static int PULL_TO_REFRESH = 1;// 下拉刷新
+	private final static int REFRESHING = 2;// 正在刷新中
+	private final static int DONE = 3;// 刷新完成
 	private LinearLayout headView;
-
 	private TextView tipsTextview;
 	private TextView lastUpdatedTextView;
-
 	private ImageView arrowImageView;
 	private ProgressBar progressBar;
+	private boolean isRefreshable;
+	private int headContentHeight;
+	private int state;
+	private boolean isBack;// 是RELEASE_TO_REFRESH状态转变来的
+
+	/** 底部加载更多 **/
+	public final static int STATE_NORMAL = 4; // 加载更多
+	public final static int STATE_READY = 5; // 松开加载更多
+	public final static int STATE_LOADING = 6; // 正在加载
+	private LinearLayout footView;
+	private RelativeLayout footContent;
+	private LinearLayout footProgressBar;
+	private TextView footHintView;
+	private boolean mIsFooterReady;
+	private boolean mEnablePullLoad;// 默认是false
+	private boolean mPullLoading;
+	private int mTotalItemCount;
+	private final static int PULL_LOAD_MORE_DELTA = 50; // 上拉大于50px触发加载更多
 
 	private RotateAnimation animation;
 	private RotateAnimation reverseAnimation;
 
-	private int headContentHeight;
-
-	/** 手势按下的起点位置 */
+	// 手势按下的起点位置
 	private int startY;
 	private int firstItemIndex;
 
-	private int state;
+	private RefreshAndLoadMoreListener listener;
 
-	private boolean isBack;
-
-	private OnRefreshListener refreshListener;
-
-	private boolean isRefreshable;
+	private final static int RATIO = 3;// 实际的padding的距离与界面上偏移距离的比例
 
 	/**
-	 * 下拉刷新监听器接口
+	 * 监听器接口
 	 * 
 	 */
-	public interface OnRefreshListener {
+	public interface RefreshAndLoadMoreListener {
 		public void onRefresh();
+
+		public void onLoadMore();
 	}
 
 	public PullToRefreshListView(Context context) {
@@ -86,10 +94,9 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	private void init(Context context) {
 		inflater = LayoutInflater.from(context);
 
-		headView = (LinearLayout) inflater.inflate(R.layout.refresh_head, null);// 加载头布局
-
+		headView = (LinearLayout) inflater.inflate(R.layout.refresh_head, null);// 顶部下拉刷新
 		arrowImageView = (ImageView) headView
-				.findViewById(R.id.head_arrowImageView);// 箭头
+				.findViewById(R.id.head_arrowImageView);
 		arrowImageView.setMinimumWidth(70);
 		arrowImageView.setMinimumHeight(50);
 		progressBar = (ProgressBar) headView
@@ -99,12 +106,10 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 				.findViewById(R.id.head_lastUpdatedTextView);
 
 		headView.measure(0, 0);
-		headContentHeight = headView.getMeasuredHeight();// 头部高度
+		headContentHeight = headView.getMeasuredHeight();
 		headView.getMeasuredWidth();
-		/*
-		 * 设置padding -1 * headContentHeight就可以把该headview隐藏在屏幕顶部，
-		 * 前提是要得到headview的确切高度
-		 */
+
+		// 设置padding -1 * headContentHeight就可以把该headview隐藏在屏幕顶部
 		headView.setPadding(0, -1 * headContentHeight, 0, 0);
 		/*
 		 * Invalidate the whole view. If the view is visible,
@@ -115,6 +120,15 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 		headView.invalidate();
 
 		addHeaderView(headView, null, false);
+
+		footView = (LinearLayout) inflater.inflate(R.layout.refresh_foot, null);// 底部加载更多
+		footContent = (RelativeLayout) footView
+				.findViewById(R.id.footer_content);
+		footProgressBar = (LinearLayout) footView
+				.findViewById(R.id.footer_progressbar);
+		footHintView = (TextView) footView
+				.findViewById(R.id.footer_hint_textview);
+
 		setOnScrollListener(this);
 
 		animation = new RotateAnimation(0, -180,
@@ -132,15 +146,15 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 		reverseAnimation.setFillAfter(true);
 
 		state = DONE;
-		isRefreshable = false;
 	}
 
 	/**
 	 * 实现OnScrollListener接口的两个方法
 	 */
 	public void onScroll(AbsListView arg0, int firstVisiableItem, int arg2,
-			int arg3) {
+			int totalItemCount) {
 		firstItemIndex = firstVisiableItem;
+		mTotalItemCount = totalItemCount;
 	}
 
 	public void onScrollStateChanged(AbsListView arg0, int arg1) {
@@ -153,7 +167,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	 * 
 	 * 2 ACTION_MOVE：计算当前位置与起始位置的距离，来设置state的状态
 	 * 
-	 * 3 ACTION_UP：根据state的状态来判断是否下载
+	 * 3 ACTION_UP：根据state的状态来判断
 	 */
 	public boolean onTouchEvent(MotionEvent event) {
 
@@ -166,8 +180,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 				break;
 			case MotionEvent.ACTION_MOVE:
 				int tempY = (int) event.getY();
-				if (state == PULL_TO_REFRESH) {
-					setSelection(0);// 这句代码很重要
+				if (getFirstVisiblePosition() == 0 && state == PULL_TO_REFRESH) {
 					// 下拉到可以进入RELEASE_TO_REFRESH的状态
 					if ((tempY - startY) / RATIO >= headContentHeight) {
 						state = RELEASE_TO_REFRESH;
@@ -182,8 +195,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 					headView.setPadding(0, -headContentHeight
 							+ (tempY - startY) / RATIO, 0, 0);
 				}
-				if (state == RELEASE_TO_REFRESH) {
-					setSelection(0);
+				if (getFirstVisiblePosition() == 0
+						&& state == RELEASE_TO_REFRESH) {
 					// 往上推了，推到了屏幕足够掩盖head的程度，但是还没有推到全部掩盖的地步
 					if (((tempY - startY) / RATIO < headContentHeight)
 							&& (tempY - startY) > 0) {
@@ -194,11 +207,16 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 							+ (tempY - startY) / RATIO, 0, 0);
 				}
 				// done状态下
-				if (state == DONE) {
+				if (getFirstVisiblePosition() == 0 && state == DONE) {
 					if (tempY - startY > 0) {
 						state = PULL_TO_REFRESH;
 						changeHeaderViewByState();
 					}
+				}
+				if (getLastVisiblePosition() == mTotalItemCount - 1
+						&& (getBottomMargin() > 0 || tempY - startY < 0)) {
+					// last item, already pulled up or want to pull up.
+					updateFooterHeight(-(tempY - startY) / RATIO);
 				}
 				break;
 			case MotionEvent.ACTION_UP:
@@ -207,16 +225,20 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 					if (state == PULL_TO_REFRESH) {
 						state = DONE;
 						changeHeaderViewByState();
-					}
-					if (state == RELEASE_TO_REFRESH) {
+					} else if (state == RELEASE_TO_REFRESH) {
 						state = REFRESHING;
 						changeHeaderViewByState();
 						onRefresh();
+					} else if (getLastVisiblePosition() == mTotalItemCount - 1) {
+						if (mEnablePullLoad
+								&& getBottomMargin() > PULL_LOAD_MORE_DELTA) {
+							onLoadMore();
+						}
+						footView.invalidate(); // 待定...
 					}
 				}
 				isBack = false;
 				break;
-
 			}
 		}
 
@@ -246,7 +268,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 			arrowImageView.clearAnimation();
 			arrowImageView.setVisibility(View.VISIBLE);
 			tipsTextview.setText("下拉刷新");
-			// 是RELEASE_To_REFRESH状态转变来的
 			if (isBack) {
 				isBack = false;
 				arrowImageView.startAnimation(reverseAnimation);
@@ -271,8 +292,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 		}
 	}
 
-	public void setOnRefreshListener(OnRefreshListener refreshListener) {
-		this.refreshListener = refreshListener;
+	public void setListener(RefreshAndLoadMoreListener listener) {
+		this.listener = listener;
 		isRefreshable = true;
 	}
 
@@ -283,15 +304,113 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	}
 
 	private void onRefresh() {
-		if (refreshListener != null) {
-			refreshListener.onRefresh();
+		if (listener != null) {
+			listener.onRefresh();
 		}
 	}
 
 	@Override
 	public void setAdapter(ListAdapter adapter) {
 		lastUpdatedTextView.setText("最近更新:" + new Date().toLocaleString());
+		if (mIsFooterReady == false) { // 确保footView为最后面的View，只添加一次
+			mIsFooterReady = true;
+			addFooterView(footView);
+		}
 		super.setAdapter(adapter);
+	}
+
+	private void updateFooterHeight(float delta) {
+		int height = getBottomMargin() + (int) delta;
+		if (mEnablePullLoad && !mPullLoading) {
+			if (height > PULL_LOAD_MORE_DELTA) {
+				setState(STATE_READY);
+			} else {
+				setState(STATE_NORMAL);
+			}
+		}
+		setBottomMargin(height);
+	}
+
+	public int getBottomMargin() {
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) footContent
+				.getLayoutParams();
+		return lp.bottomMargin;
+	}
+
+	public void setBottomMargin(int height) {
+		if (height < 0)
+			return;
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) footContent
+				.getLayoutParams();
+		lp.bottomMargin = height;
+		footContent.setLayoutParams(lp);
+	}
+
+	/**
+	 * 使上拉或单击加载更多生效，需要单独调用
+	 * 
+	 * @param enable
+	 */
+	public void setLoadMoreEnable(boolean enable) {
+		mEnablePullLoad = enable;
+		if (!mEnablePullLoad) {
+			hide();
+			footView.setOnClickListener(null);
+		} else {
+			mPullLoading = false;
+			show();
+			setState(STATE_NORMAL);
+			// both "pull up" and "click" will invoke load more.
+			footView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onLoadMore();
+				}
+			});
+		}
+	}
+
+	private void onLoadMore() {
+		mPullLoading = true;
+		setState(STATE_LOADING);
+		if (listener != null) {
+			listener.onLoadMore();
+		}
+	}
+
+	/**
+	 * hide footer when disable pull load more
+	 */
+	public void hide() {
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) footContent
+				.getLayoutParams();
+		lp.height = 0;
+		footContent.setLayoutParams(lp);
+	}
+
+	/**
+	 * show footer
+	 */
+	public void show() {
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) footContent
+				.getLayoutParams();
+		lp.height = LayoutParams.WRAP_CONTENT;
+		footContent.setLayoutParams(lp);
+	}
+
+	public void setState(int state) {
+		footContent.setVisibility(View.INVISIBLE);
+		footProgressBar.setVisibility(View.INVISIBLE);
+		footHintView.setVisibility(View.INVISIBLE);
+		if (state == STATE_READY) {
+			footHintView.setVisibility(View.VISIBLE);
+			footHintView.setText("松开载入更多");
+		} else if (state == STATE_LOADING) {
+			footProgressBar.setVisibility(View.VISIBLE);
+		} else {
+			footHintView.setVisibility(View.VISIBLE);
+			footHintView.setText("加载更多");
+		}
 	}
 
 }
