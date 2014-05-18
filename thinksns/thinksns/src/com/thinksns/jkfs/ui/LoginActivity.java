@@ -17,7 +17,9 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.sina.PreferenceUtil;
 import com.thinksns.jkfs.sina.SinaWeiboUtil;
 import com.thinksns.jkfs.sina.Sinas;
@@ -38,6 +40,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -65,7 +68,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private static Handler handler;
 	private String jsonData;
  // some test
-	public static final String THINKSNS_URL = "http://demo.thinksns.com/t3/";
 
 	/** 第三方登录ThinkSNS暂未实现，目前仅获取用户名发送到RegistActivity **/
 	
@@ -118,6 +120,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				if (!TextUtils.isEmpty(jsonData)) {
 					try {
 						JSONObject response = new JSONObject(jsonData);
+                        Log.d("MOSL", response.toString());
 						String code = response.optString("code");
 						if (!TextUtils.isEmpty(code)) {
 							Toast.makeText(LoginActivity.this, "用户名或密码错误，登录失败",
@@ -129,8 +132,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 						ac.setOauth_token(response.getString("oauth_token"));
 						ac.setOauth_token_secret(response
 								.getString("oauth_token_secret"));
+                        ThinkSNSApplication application=(ThinkSNSApplication)LoginActivity.this.getApplication();
+                        if(application==null)
+                            Log.d("MOSL","is null");
+                        application.setAccount(ac);
 						Intent intent = new Intent(LoginActivity.this,
-								MainActivity.class);
+								MainFragmentActivity.class);
 						intent.putExtra("acount", ac);
 						startActivity(intent);
 						LoginActivity.this.finish();
@@ -179,6 +186,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.login_btn:
+            //startActivity(new Intent(LoginActivity.this,MainFragmentActivity.class));
 			String u_name = name.getText().toString().trim();
 			String u_pwd = pwd.getText().toString().trim();
 			if (u_name.equals("")) {
@@ -211,7 +219,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 					@Override
 					public void run() {
 						jsonData = HttpUtility.getInstance().executeNormalTask(
-								HttpMethod.Post, THINKSNS_URL, map);
+								HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
 						mHandler.sendEmptyMessage(2);
 					}
 				}).start();

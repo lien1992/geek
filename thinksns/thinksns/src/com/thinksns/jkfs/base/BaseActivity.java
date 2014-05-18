@@ -1,6 +1,6 @@
 package com.thinksns.jkfs.base;
 
-import android.app.Activity;
+
 import android.support.v4.app.FragmentActivity;
 
 /**

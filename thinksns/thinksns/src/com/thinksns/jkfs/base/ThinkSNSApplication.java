@@ -1,7 +1,6 @@
 package com.thinksns.jkfs.base;
 
 import com.thinksns.jkfs.bean.AccountBean;
-
 import android.app.Activity;
 import android.app.Application;
 
@@ -16,7 +15,12 @@ public final class ThinkSNSApplication extends Application {
 		super.onCreate();
 		globalContext = this;
 	}
+    public ThinkSNSApplication(){
 
+    }
+    public boolean isLogin(){
+        return account==null;
+    }
 	public static ThinkSNSApplication getInstance() {
 		return globalContext;
 	}
