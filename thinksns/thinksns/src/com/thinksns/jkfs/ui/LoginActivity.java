@@ -130,7 +130,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						ac.setOauth_token_secret(response
 								.getString("oauth_token_secret"));
 						Intent intent = new Intent(LoginActivity.this,
-								MainActivity.class);
+								MainFragmentActivity.class);
 						intent.putExtra("acount", ac);
 						startActivity(intent);
 						LoginActivity.this.finish();
