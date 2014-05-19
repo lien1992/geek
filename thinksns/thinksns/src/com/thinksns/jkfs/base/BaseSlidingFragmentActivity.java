@@ -4,8 +4,10 @@ import com.thinksns.jkfs.ui.view.SlidingActivityBase;
 import com.thinksns.jkfs.ui.view.SlidingActivityHelper;
 import com.thinksns.jkfs.ui.view.SlidingMenu;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;

@@ -24,43 +24,11 @@ import java.util.Map;
 
 public final class HomeFragment extends Fragment {
 
-    private String jsonData;
-    private AccountBean accountBean;
-    private Handler mHandler = new Handler(){
 
-        @Override
-        public void handleMessage(Message msg){
-
-            if(msg.what==2){
-                try {
-                    JSONObject jsonObject=new JSONObject(jsonData);
-                    Log.d("MOSL", jsonObject.toString()+"----");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("MOSL",jsonData);
-            }
-        }
-    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        accountBean= ThinkSNSApplication.getInstance().getAccount(getActivity());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Map<String, String> map = new HashMap<String, String>();
-                map.put("app","api");
-                map.put("mod","Message");
-                map.put("act","get_message_list");
-                map.put("oauth_token",accountBean.getOauth_token());
-                map.put("oauth_token_secret",accountBean.getOauth_token_secret());
-                map.put("format","json");
-                jsonData = HttpUtility.getInstance().executeNormalTask(
-                        HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-                mHandler.sendEmptyMessage(2);
-            }
-        }).start();
+
         return inflater.inflate(R.layout.homefragmentlayout,container,false);
     }
 }

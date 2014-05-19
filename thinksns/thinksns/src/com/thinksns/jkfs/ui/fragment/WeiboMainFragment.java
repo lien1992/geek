@@ -154,9 +154,9 @@ public class WeiboMainFragment extends BaseFragment {
 				convertView = mInflater.inflate(
 						R.layout.main_weibo_listview_item, null);
 				holder.userName = (TextView) convertView
-						.findViewById(R.id.textView1);
+						.findViewById(R.id.user_name);
 				holder.content = (TextView) convertView
-						.findViewById(R.id.textView2);
+						.findViewById(R.id.wb_text);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
