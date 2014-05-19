@@ -51,7 +51,7 @@ public class WeiboMainFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 		application = (ThinkSNSApplication) this.getActivity()
 				.getApplicationContext();
-		//account = application.getAccount();
+		account = application.getAccount(this.getActivity());
 		listView.setListener(this);
 		adapter = new WeiboAdapter();
 		listView.setAdapter(adapter);
@@ -153,10 +153,10 @@ public class WeiboMainFragment extends BaseFragment {
 				holder = new ViewHolder();
 				convertView = mInflater.inflate(
 						R.layout.main_weibo_listview_item, null);
-				holder.userName = (TextView) convertView
-						.findViewById(R.id.user_name);
-				holder.content = (TextView) convertView
-						.findViewById(R.id.wb_text);
+//				holder.userName = (TextView) convertView
+//						.findViewById(R.id.textView1);
+//				holder.content = (TextView) convertView
+//						.findViewById(R.id.textView2);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();

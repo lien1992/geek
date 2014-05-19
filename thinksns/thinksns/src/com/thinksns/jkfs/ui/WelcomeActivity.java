@@ -2,6 +2,7 @@ package com.thinksns.jkfs.ui;
 
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.constant.SettingsUtil;
+import com.thinksns.jkfs.test.TestActivity;
 import com.thinksns.jkfs.util.common.PreferencesUtils;
 
 import android.os.Bundle;

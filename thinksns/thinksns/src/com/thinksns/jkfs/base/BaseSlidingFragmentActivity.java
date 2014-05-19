@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.ViewGroup.LayoutParams;
 
-public class BaseSlidingFragmentActivity extends FragmentActivity implements
+public class BaseSlidingFragmentActivity extends ActionBarActivity implements
 		SlidingActivityBase {
 	private SlidingActivityHelper mHelper;
 
