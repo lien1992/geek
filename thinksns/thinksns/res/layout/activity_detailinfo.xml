@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dip"
+        android:layout_marginRight="28dip"
+        android:layout_marginTop="20dip"
+        android:gravity="center"
+        android:paddingTop="5dip"
+        android:text="uid"
+        android:textColor="#ff333333"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/login_input"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dip"
+        android:layout_marginRight="28dip"
+        android:layout_marginTop="28dip"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="uname"
+            android:textColor="#ff333333"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-8dip"
+            android:gravity="center"
+            android:text="email"
+            android:textColor="#ff333333"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-8dip"
+            android:gravity="center"
+            android:text="sex"
+            android:textColor="#ff333333"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-8dip"
+            android:gravity="center"
+            android:text="address"
+            android:textColor="#ff333333"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-8dip"
+            android:gravity="center"
+            android:text="selfinfo"
+            android:textColor="#ff333333"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>
