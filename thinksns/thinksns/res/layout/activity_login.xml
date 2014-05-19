@@ -35,7 +35,8 @@
             android:paddingLeft="12dip"
             android:textColor="#ff1d1d1d"
             android:textColorHint="#ff666666"
-            android:textSize="16sp" />
+            android:textSize="16sp" 
+            android:text="2645077926@qq.com"/>
 
         <View
             android:layout_width="fill_parent"
@@ -57,7 +58,8 @@
             android:paddingLeft="12dip"
             android:textColor="#ff1d1d1d"
             android:textColorHint="#ff666666"
-            android:textSize="16sp" />
+            android:textSize="16sp" 
+            android:text="19930205moaimei"/>
     </LinearLayout>
 
     <Button
