@@ -1,19 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="用户名" />
+    <ImageView
+        android:id="@+id/user_img"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_launcher" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="微博内容" />
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_toRightOf="@+id/user_img"
+        android:orientation="vertical" >
 
-</LinearLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用户名"
+                android:textColor="#444444"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="2014年5月19日"
+                android:textColor="#444444"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/wb_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:padding="2dp"
+            android:text="微博内容eg:【给孩子做他自己的机会】每个孩子都是一个独立的个体，虽然他的生命来源于父母，但从呱呱坠地那一刻起，他就开启了自己的人生之旅，不再从属于父母，也不再从属于任何人……让孩子成为她自己比成为天才更难！"
+            android:textColor="#444444"
+            android:textSize="16sp" />
+
+        <!-- 微博图片默认visibility="gone" -->
+
+        <ImageView
+            android:id="@+id/wb_pic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone" />
+
+        <!-- 转发微博默认visibility="gone" -->
+
+        <LinearLayout
+            android:id="@+id/wb_repost"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/weibo_item_bg"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/re_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="被转发用户名"
+                android:textColor="#484848"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/re_wb_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="被转发微博内容"
+                android:textColor="#484848"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="30dp" >
+
+            <TextView
+                android:id="@+id/from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="来自 Android客户端"
+                android:textColor="#444444"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/forward" />
+
+                <TextView
+                    android:id="@+id/repost_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="0"
+                    android:textColor="#444444"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/comment" />
+
+                <TextView
+                    android:id="@+id/comment_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="0"
+                    android:textColor="#444444"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>
