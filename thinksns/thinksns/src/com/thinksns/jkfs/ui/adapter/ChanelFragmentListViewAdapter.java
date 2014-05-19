@@ -55,16 +55,16 @@ public class ChanelFragmentListViewAdapter extends BaseAdapter {
 			convertView = mInflater.inflate(R.layout.main_weibo_listview_item,
 					null);
 			viewHolder = new ViewHolder();
-			viewHolder.nameTextView = (TextView) convertView
-					.findViewById(R.id.textView1);
-			viewHolder.weiboTextView = (TextView) convertView
-					.findViewById(R.id.textView2);
+//			viewHolder.nameTextView = (TextView) convertView
+//					.findViewById(R.id.textView1);
+//			viewHolder.weiboTextView = (TextView) convertView
+//					.findViewById(R.id.textView2);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.nameTextView.setText(mlist.get(position).getUname());
-		viewHolder.weiboTextView.setText(mlist.get(position).getContent());
+//		viewHolder.nameTextView.setText(mlist.get(position).getUname());
+//		viewHolder.weiboTextView.setText(mlist.get(position).getContent());
 		return convertView;
 	}
 

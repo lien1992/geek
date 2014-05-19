@@ -153,10 +153,10 @@ public class WeiboMainFragment extends BaseFragment {
 				holder = new ViewHolder();
 				convertView = mInflater.inflate(
 						R.layout.main_weibo_listview_item, null);
-				holder.userName = (TextView) convertView
-						.findViewById(R.id.textView1);
-				holder.content = (TextView) convertView
-						.findViewById(R.id.textView2);
+//				holder.userName = (TextView) convertView
+//						.findViewById(R.id.textView1);
+//				holder.content = (TextView) convertView
+//						.findViewById(R.id.textView2);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
