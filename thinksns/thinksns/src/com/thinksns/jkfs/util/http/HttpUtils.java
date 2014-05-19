@@ -1,6 +1,7 @@
 package com.thinksns.jkfs.util.http;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 
 import com.thinksns.jkfs.util.AppLogger;
@@ -66,6 +67,7 @@ public class HttpUtils {
 			StringBuilder urlBuilder = new StringBuilder(urlStr);
 			urlBuilder.append("?").append(Utility.encodeUrl(param));
 			URL url = new URL(urlBuilder.toString());
+            Log.d("MOSL",url.toString());
 			AppLogger.d("get request" + url);
 			Proxy proxy = getProxy();
 			if (proxy != null)

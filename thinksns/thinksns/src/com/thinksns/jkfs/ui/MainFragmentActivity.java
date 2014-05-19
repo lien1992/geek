@@ -37,15 +37,9 @@ public class MainFragmentActivity extends BaseSlidingFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-//		Intent intent = getIntent();
-//		account = intent.getParcelableExtra("account");
-//		if (account != null) {
-//			ThinkSNSApplication.getInstance().setAccount(account);
-//		}
         ThinkSNSApplication application=ThinkSNSApplication.getInstance();
-        if(application.isLogin()){
-            Toast.makeText(MainFragmentActivity.this, "登录成功",
-                    Toast.LENGTH_SHORT).show();
+        if(!application.isLogin(MainFragmentActivity.this)){
+            return;
         }
 
 		initSlidingMenu();

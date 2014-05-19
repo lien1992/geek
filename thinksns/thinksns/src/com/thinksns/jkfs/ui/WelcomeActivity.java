@@ -1,11 +1,14 @@
 package com.thinksns.jkfs.ui;
 
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.constant.SettingsUtil;
+import com.thinksns.jkfs.util.common.PreferencesUtils;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -14,8 +17,14 @@ public class WelcomeActivity extends Activity {
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			if (msg.what == 0) {
-				startActivity(new Intent(WelcomeActivity.this,
-						LoginActivity.class));
+
+                boolean is_login= PreferencesUtils.getBoolean(WelcomeActivity.this, SettingsUtil.IS_LOGIN);
+                if(is_login)
+                    startActivity(new Intent(WelcomeActivity.this,MainFragmentActivity.class));
+				else{
+                    startActivity(new Intent(WelcomeActivity.this,
+                            LoginActivity.class));
+                }
 				WelcomeActivity.this.finish();
 			}
 		}

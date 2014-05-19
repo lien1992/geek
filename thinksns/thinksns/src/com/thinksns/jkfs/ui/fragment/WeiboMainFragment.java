@@ -51,7 +51,7 @@ public class WeiboMainFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 		application = (ThinkSNSApplication) this.getActivity()
 				.getApplicationContext();
-		account = application.getAccount();
+		//account = application.getAccount();
 		listView.setListener(this);
 		adapter = new WeiboAdapter();
 		listView.setAdapter(adapter);

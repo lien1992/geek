@@ -24,9 +24,6 @@ public abstract class BaseFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		mInflater = inflater;
-		view = inflater.inflate(R.layout.refreshable_listview, null);
-		listView = (PullToRefreshListView) view.findViewById(R.id.list_view);
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 

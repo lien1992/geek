@@ -135,7 +135,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                         ThinkSNSApplication application=(ThinkSNSApplication)LoginActivity.this.getApplication();
                         if(application==null)
                             Log.d("MOSL","is null");
-                        application.setAccount(ac);
+                        application.setAccount(LoginActivity.this,ac);
 						Intent intent = new Intent(LoginActivity.this,
 								MainFragmentActivity.class);
 						intent.putExtra("acount", ac);
