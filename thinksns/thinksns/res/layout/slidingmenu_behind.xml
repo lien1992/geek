@@ -1,21 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sm_behind_menu"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#dadada"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
-    <ListView
-        android:id="@+id/behind_listview"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="top"
-        android:layout_marginBottom="50dp"
-        android:layout_marginTop="40dp"
-        android:cacheColorHint="#0000"
-        android:divider="@drawable/sm_behind_lv_divider"
-        android:listSelector="#0fff" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp" >
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="155dp"
+            android:layout_marginBottom="13dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="13dp"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/sm_behind_avatar"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_launcher" />
+
+            <TextView
+                android:id="@+id/sm_behind_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:singleLine="true"
+                android:text="微博用户名"
+                android:textColor="@color/green"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sm_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50.0dip"
+                android:layout_weight="1"
+                android:background="@null"
+                android:clickable="false"
+                android:drawableLeft="@drawable/slide_ico_green5"
+                android:drawablePadding="8.0dip"
+                android:gravity="left|center"
+                android:paddingLeft="8.0dip"
+                android:paddingRight="8.0dip"
+                android:text="首页"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sm_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50.0dip"
+                android:layout_weight="1"
+                android:background="@null"
+                android:clickable="false"
+                android:drawableLeft="@drawable/slide_ico_green1"
+                android:drawablePadding="8.0dip"
+                android:gravity="left|center"
+                android:paddingLeft="8.0dip"
+                android:paddingRight="8.0dip"
+                android:text="与我有关"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sm_favorite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50.0dip"
+                android:layout_weight="1"
+                android:background="@null"
+                android:clickable="false"
+                android:drawableLeft="@drawable/slide_ico_green4"
+                android:drawablePadding="8.0dip"
+                android:gravity="left|center"
+                android:paddingLeft="8.0dip"
+                android:paddingRight="8.0dip"
+                android:text="收藏"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sm_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50.0dip"
+                android:layout_weight="1"
+                android:background="@null"
+                android:clickable="false"
+                android:drawableLeft="@drawable/slide_ico_green3"
+                android:drawablePadding="8.0dip"
+                android:gravity="left|center"
+                android:paddingLeft="8.0dip"
+                android:paddingRight="8.0dip"
+                android:text="聊天"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sm_channel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50.0dip"
+                android:layout_weight="1"
+                android:background="@null"
+                android:clickable="false"
+                android:drawableLeft="@drawable/slide_ico_green2"
+                android:drawablePadding="8.0dip"
+                android:gravity="left|center"
+                android:paddingLeft="8.0dip"
+                android:paddingRight="8.0dip"
+                android:text="频道"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sm_weiba"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50.0dip"
+                android:layout_weight="1"
+                android:background="@null"
+                android:clickable="false"
+                android:drawableLeft="@drawable/slide_ico_green7"
+                android:drawablePadding="8.0dip"
+                android:gravity="left|center"
+                android:paddingLeft="8.0dip"
+                android:paddingRight="8.0dip"
+                android:text="微吧"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sm_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50.0dip"
+                android:layout_weight="1"
+                android:background="@null"
+                android:clickable="false"
+                android:drawableLeft="@drawable/slide_ico_green6"
+                android:drawablePadding="8.0dip"
+                android:gravity="left|center"
+                android:paddingLeft="8.0dip"
+                android:paddingRight="8.0dip"
+                android:text="设置"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sm_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50.0dip"
+                android:layout_weight="1"
+                android:background="@null"
+                android:clickable="false"
+                android:drawablePadding="8.0dip"
+                android:gravity="left|center"
+                android:paddingLeft="8.0dip"
+                android:paddingRight="8.0dip"
+                android:text="退出当前帐户"
+                android:textColor="@color/grey"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
