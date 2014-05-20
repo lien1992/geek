@@ -1,32 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="SlidingMenu">
-        <attr name="mode">
-            <enum name="left" value="0" />
-            <enum name="right" value="1" />
-        </attr>
-        <attr name="viewAbove" format="reference" />
-        <attr name="viewBehind" format="reference" />
-        <attr name="behindOffset" format="dimension" />
-        <attr name="behindWidth" format="dimension" />
-        <attr name="behindScrollScale" format="float" />
-        <attr name="touchModeAbove">
-            <enum name="margin" value="0" />
-            <enum name="fullscreen" value="1" />
-        </attr>
-        <attr name="touchModeBehind">
-            <enum name="margin" value="0" />
-            <enum name="fullscreen" value="1" />
-        </attr>
-        <attr name="shadowDrawable" format="reference" />
-        <attr name="shadowWidth" format="dimension" />
-        <attr name="fadeEnabled" format="boolean" />
-        <attr name="fadeDegree" format="float" />
-        <attr name="selectorEnabled" format="boolean" />
-        <attr name="selectorDrawable" format="reference" />
-    </declare-styleable>
+    <!--<declare-styleable name="SlidingMenu">-->
+        <!--<attr name="mode">-->
+            <!--<enum name="left" value="0" />-->
+            <!--<enum name="right" value="1" />-->
+        <!--</attr>-->
+        <!--<attr name="viewAbove" format="reference" />-->
+        <!--<attr name="viewBehind" format="reference" />-->
+        <!--<attr name="behindOffset" format="dimension" />-->
+        <!--<attr name="behindWidth" format="dimension" />-->
+        <!--<attr name="behindScrollScale" format="float" />-->
+        <!--<attr name="touchModeAbove">-->
+            <!--<enum name="margin" value="0" />-->
+            <!--<enum name="fullscreen" value="1" />-->
+        <!--</attr>-->
+        <!--<attr name="touchModeBehind">-->
+            <!--<enum name="margin" value="0" />-->
+            <!--<enum name="fullscreen" value="1" />-->
+        <!--</attr>-->
+        <!--<attr name="shadowDrawable" format="reference" />-->
+        <!--<attr name="shadowWidth" format="dimension" />-->
+        <!--<attr name="fadeEnabled" format="boolean" />-->
+        <!--<attr name="fadeDegree" format="float" />-->
+        <!--<attr name="selectorEnabled" format="boolean" />-->
+        <!--<attr name="selectorDrawable" format="reference" />-->
+    <!--</declare-styleable>-->
 
     <item name="selected_view" type="id"/>
 
+    <string-array name="menu_list_array">
+        <item></item>
+        <item>首页</item>
+        <item>与我相关</item>
+        <item>聊天</item>
+        <item>频道</item>
+        <item>微吧</item>
+        <item>收藏</item>
+        <item>设置</item>
+        <item>退出当前账号</item>
+    </string-array>
 </resources>

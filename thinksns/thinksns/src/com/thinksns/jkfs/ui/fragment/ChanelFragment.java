@@ -81,7 +81,7 @@ public class ChanelFragment extends Fragment {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				AccountBean accountBean = ThinkSNSApplication.getInstance()
-						.getAccount();
+						.getAccount(ChanelFragment.this.getActivity());
 				final Map<String, String> map = new HashMap<String, String>();
 				map.put("app", "api");
 				map.put("mod", "Channel");
