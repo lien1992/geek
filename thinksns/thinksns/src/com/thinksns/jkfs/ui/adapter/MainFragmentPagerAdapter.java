@@ -47,7 +47,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 		case 5:
 			return new WeibaFragment();
 		default:
-			return new HomeFragment();
+			return new ChatFragment();
 		}
 	}
 
