@@ -1,9 +1,14 @@
 package com.thinksns.jkfs.ui.fragment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +19,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
- * SlidingMenu左侧菜单
+ * SlidingMenu左侧菜单,待完善..
  * 
+ * @author wangjia
  * 
  */
 public class MenuFragment extends Fragment implements OnClickListener {
@@ -29,11 +35,15 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private LinearLayout weiba;
 	private LinearLayout setting;
 	private LinearLayout logout;
+	private Map<Integer, Object> fragments = new HashMap<Integer, Object>();
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		fragments.put(R.id.sm_home, ((MainFragmentActivity) getActivity())
+				.getWeiboMainFragment());
+
 	}
 
 	@Override
@@ -75,8 +85,12 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.sm_home:
 			changeBackground(R.id.sm_home);
-			// 显示侧滑右侧内容..
-
+			FragmentTransaction ft = getFragmentManager().beginTransaction();
+			// 此处隐藏其他Fragment..
+			WeiboMainFragment fragment = (WeiboMainFragment) fragments
+					.get(R.id.sm_home);
+			ft.show(fragment);
+			ft.commit();
 			break;
 		case R.id.sm_at:
 			changeBackground(R.id.sm_at);
