@@ -1,8 +1,9 @@
 package com.thinksns.jkfs.base;
 
-import com.thinksns.jkfs.ui.view.SlidingActivityBase;
-import com.thinksns.jkfs.ui.view.SlidingActivityHelper;
-import com.thinksns.jkfs.ui.view.SlidingMenu;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityHelper;
 
 import android.app.ActionBar;
 import android.os.Bundle;
