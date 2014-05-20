@@ -49,7 +49,7 @@ public class WeiboMainFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		application = (ThinkSNSApplication) this.getActivity()
+/*		application = (ThinkSNSApplication) this.getActivity()
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
 		listView.setListener(this);
@@ -65,7 +65,7 @@ public class WeiboMainFragment extends BaseFragment {
 				// 查看微博..
 
 			}
-		});
+		});*/
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
@@ -87,7 +87,7 @@ public class WeiboMainFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 
 		// 判断网络已连接..
-
+/*
 		new Thread() {
 
 			@Override
@@ -111,7 +111,7 @@ public class WeiboMainFragment extends BaseFragment {
 				// 缓存微博进数据库..
 
 			}
-		}.start();
+		}.start();*/
 
 	}
 
