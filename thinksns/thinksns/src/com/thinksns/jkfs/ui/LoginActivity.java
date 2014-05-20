@@ -81,6 +81,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private String accessToken;
 	private String mUserId;
 	private HashMap<String, Object> hashMap;
+    private ThinkSNSApplication application;
 
 	private Handler mHandler = new Handler() {
 		@Override
@@ -132,9 +133,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 						ac.setOauth_token(response.getString("oauth_token"));
 						ac.setOauth_token_secret(response
 								.getString("oauth_token_secret"));
-                        ThinkSNSApplication application=(ThinkSNSApplication)LoginActivity.this.getApplication();
-                        if(application==null)
-                            Log.d("MOSL","is null");
                         application.setAccount(LoginActivity.this,ac);
 						Intent intent = new Intent(LoginActivity.this,
 								MainFragmentActivity.class);
@@ -157,6 +155,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
+        application=(ThinkSNSApplication)LoginActivity.this.getApplication();
 		handler = new Handler();
 
 		initViews();
@@ -205,7 +204,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			if (isNetworkAvailable(this)) {
+			if (application.isNewWork(LoginActivity.this)) {
 				mDialog = ProgressDialog.show(LoginActivity.this, "",
 						"正在登录...", true);
 				final Map<String, String> map = new HashMap<String, String>();

@@ -7,6 +7,8 @@ import com.thinksns.jkfs.util.common.PreferencesUtils;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 public final class ThinkSNSApplication extends Application {
 	private static ThinkSNSApplication globalContext = null;
@@ -75,4 +77,30 @@ public final class ThinkSNSApplication extends Application {
         }
 		return null;
 	}
+
+    public boolean quitAccount(Context context){
+
+        if(isLogin(context)){
+            PreferencesUtils.putBoolean(context,SettingsUtil.IS_LOGIN,false);
+            PreferencesUtils.removeKey(context,SettingsUtil.USER_ID);
+            PreferencesUtils.removeKey(context,SettingsUtil.OAUTH_TOKEN_SECRET);
+            PreferencesUtils.removeKey(context,SettingsUtil.OAUTH_TOKEN);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isNewWork(Context context){
+
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        boolean isWifiConn = networkInfo.isConnected();
+        networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        boolean isMobileConn = networkInfo.isConnected();
+
+        if(!isWifiConn&&!isMobileConn)
+            return false;
+        return true;
+    }
 }

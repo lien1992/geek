@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 
 /**
  * Created by mosl on 14-5-20.
@@ -34,17 +35,17 @@ public class MenuFragmentList extends ListFragment {
     public void onListItemClick(ListView lv, View v, int position, long id) {
         Fragment newContent = new HomeFragment();
         if (newContent != null)
-            switchFragment(newContent);
+            switchFragment(position);
     }
 
     // the meat of switching the above fragment
-    private void switchFragment(Fragment fragment) {
+    private void switchFragment(int fragment_id) {
         if (getActivity() == null)
             return;
 
-//        if (getActivity() instanceof ResponsiveUIActivity) {
-//            ResponsiveUIActivity ra = (ResponsiveUIActivity) getActivity();
-//            ra.switchContent(fragment);
-//        }
+        if (getActivity() instanceof MainFragmentActivity) {
+            MainFragmentActivity ra = (MainFragmentActivity) getActivity();
+            ra.switchContent(fragment_id);
+        }
     }
 }

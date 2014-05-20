@@ -8,13 +8,15 @@ import android.view.ViewGroup;
 
 import com.thinksns.jkfs.R;
 
-public class AboutMeFragment extends Fragment {
-
+/**
+ * Created by mosl on 14-5-20.
+ */
+public class SettingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        return inflater.inflate(R.layout.aboutme_fragment_layout,container,false);
+        return inflater.inflate(R.layout.setting_fragment_layout,container,false);
     }
 }

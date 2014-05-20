@@ -17,11 +17,13 @@ import com.thinksns.jkfs.ui.fragment.ChatFragment;
 import com.thinksns.jkfs.ui.fragment.CollectionFragment;
 import com.thinksns.jkfs.ui.fragment.HomeFragment;
 import com.thinksns.jkfs.ui.fragment.MenuFragmentList;
+import com.thinksns.jkfs.ui.fragment.SettingFragment;
 import com.thinksns.jkfs.ui.fragment.WeibaFragment;
 import com.thinksns.jkfs.ui.view.SlidingMenu;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
@@ -47,7 +49,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("sliding menu");
+        setTitle("Think SNS");
 
         setContentView(R.layout.responsive_content_frame);
 
@@ -90,12 +92,12 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
         sm.setBehindScrollScale(0.25f);
         sm.setFadeDegree(0.25f);
 
-        // show the explanation dialog
-        if (savedInstanceState == null)
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.what_is_this)
-                    .setMessage(R.string.responsive_explanation)
-                    .show();
+//        // show the explanation dialog
+//        if (savedInstanceState == null)
+//            new AlertDialog.Builder(this)
+//                    .setTitle(R.string.what_is_this)
+//                    .setMessage(R.string.responsive_explanation)
+//                    .show();
     }
 
     @Override
@@ -113,11 +115,38 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
         getSupportFragmentManager().putFragment(outState, "mContent", mContent);
     }
 
-    public void switchContent(final Fragment fragment) {
-        mContent = fragment;
+    public void switchContent(int fragment_id) {
+        Log.d("MOSL",fragment_id+"");
+        switch (fragment_id){
+
+            case 1:
+                mContent=new HomeFragment();
+                break;
+            case 2:
+                mContent=new AboutMeFragment();
+                break;
+            case 3:
+                mContent=new ChatFragment();
+                break;
+            case 4:
+                mContent=new ChanelFragment();
+                break;
+            case 5:
+                mContent=new WeibaFragment();
+                break;
+            case 6:
+                mContent=new CollectionFragment();
+                break;
+            case 7:
+                mContent=new SettingFragment();
+                break;
+            default:
+                quitTheNumber();
+
+        }
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(R.id.content_frame,  mContent)
                 .commit();
         Handler h = new Handler();
         h.postDelayed(new Runnable() {
@@ -125,6 +154,20 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
                 getSlidingMenu().showContent();
             }
         }, 50);
+    }
+
+    private void quitTheNumber() {
+        new AlertDialog.Builder(this).setPositiveButton("退出",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ThinkSNSApplication application=ThinkSNSApplication.getInstance();
+                application.quitAccount(MainFragmentActivity.this);
+                MainFragmentActivity.this.finish();
+            }
+        })
+                .setTitle(R.string.quit_account)
+                .setMessage(R.string.quit_account_explanation)
+                .show();
     }
 
 //    public void onBirdPressed(int pos) {
