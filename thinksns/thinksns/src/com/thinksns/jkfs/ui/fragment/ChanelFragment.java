@@ -110,8 +110,8 @@ public class ChanelFragment extends Fragment {
 											.getString("channel_category_id"),
 											obj.getString("title"), obj
 													.getString("pid"), obj
-													.getString("sort"),
-											obj.getString("icon_url")));
+													.getString("sort"), obj
+													.getString("icon_url")));
 								}
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block
@@ -124,14 +124,11 @@ public class ChanelFragment extends Fragment {
 				}
 			}
 		});
-		//测试用数据
-		WeiboBean weibo = new WeiboBean();
-		weibo.setContent("啦啦");
-		weibo.setUname("凤飞飞");
 
+		//模拟数据
 		ArrayList<WeiboBean> list = new ArrayList<WeiboBean>();
-		for (int i = 0; i < 30; i++) {
-			list.add(weibo);
+		for (int i = 0; i < 10; i++) {
+			list.add(new WeiboBean());
 		}
 
 		mListView
