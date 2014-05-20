@@ -25,7 +25,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/user_name"
+                android:id="@+id/wb_u_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="用户名"
@@ -33,7 +33,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/time"
+                android:id="@+id/wb_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -96,7 +96,7 @@
             android:layout_height="30dp" >
 
             <TextView
-                android:id="@+id/from"
+                android:id="@+id/wb_from"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -115,14 +115,13 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginTop="2dp"
-                    android:src="@drawable/forward" />
+                    android:src="@drawable/like" />
 
                 <TextView
-                    android:id="@+id/repost_count"
+                    android:id="@+id/wb_like_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
                     android:text="0"
                     android:textColor="#444444"
                     android:textSize="12sp" />
@@ -130,16 +129,31 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/forward" />
+
+                <TextView
+                    android:id="@+id/wb_repost_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="0"
+                    android:textColor="#444444"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="2dp"
                     android:src="@drawable/comment" />
 
                 <TextView
-                    android:id="@+id/comment_count"
+                    android:id="@+id/wb_comment_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
                     android:text="0"
                     android:textColor="#444444"
                     android:textSize="12sp" />
