@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.thinksns.jkfs"
+    android:installLocation="preferExternal"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -32,9 +33,9 @@
         <activity
             android:name="com.thinksns.jkfs.ui.MainFragmentActivity"
             android:configChanges="orientation|screenSize|screenLayout"
+            android:label="@string/title_activity_main"
             android:theme="@style/Theme.Sherlock.Light.DarkActionBar"
-            android:uiOptions="splitActionBarWhenNarrow"
-            android:label="@string/title_activity_main" >
+            android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity
             android:name="com.thinksns.jkfs.ui.LoginActivity"
@@ -61,16 +62,17 @@
                 <data android:scheme="tencent101073421" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.DetailInfoActivity"
-            >
+        <activity android:name=".ui.DetailInfoActivity" >
         </activity>
         <activity android:name=".ui.FanListActivity" >
         </activity>
         <activity android:name=".ui.UserInfoActivity" >
         </activity>
-        <activity android:name=".test.TestActivity" android:configChanges="orientation|screenSize|screenLayout"
+        <activity
+            android:name=".test.TestActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
             android:theme="@style/Theme.Sherlock.Light.DarkActionBar"
-            android:uiOptions="splitActionBarWhenNarrow"/>
+            android:uiOptions="splitActionBarWhenNarrow" />
     </application>
 
 </manifest>
