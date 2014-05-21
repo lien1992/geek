@@ -1,6 +1,7 @@
 package com.thinksns.jkfs.ui.fragment;
 
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -115,30 +116,48 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		switch (id) {
 		case R.id.sm_home:
 			home.setBackgroundResource(R.color.grey);
+            switchFragment(MainFragmentActivity.FragmentId[0]);
 			break;
 		case R.id.sm_at:
 			at.setBackgroundResource(R.color.grey);
+            switchFragment(MainFragmentActivity.FragmentId[1]);
 			break;
 		case R.id.sm_favorite:
 			favorite.setBackgroundResource(R.color.grey);
+            switchFragment(MainFragmentActivity.FragmentId[2]);
 			break;
 		case R.id.sm_chat:
 			chat.setBackgroundResource(R.color.grey);
+            switchFragment(MainFragmentActivity.FragmentId[3]);
 			break;
 		case R.id.sm_channel:
 			channel.setBackgroundResource(R.color.grey);
+            switchFragment(MainFragmentActivity.FragmentId[4]);
 			break;
 		case R.id.sm_weiba:
 			weiba.setBackgroundResource(R.color.grey);
+            switchFragment(MainFragmentActivity.FragmentId[5]);
 			break;
 		case R.id.sm_setting:
 			setting.setBackgroundResource(R.color.grey);
+            switchFragment(MainFragmentActivity.FragmentId[6]);
 			break;
 		case R.id.sm_logout:
 			logout.setBackgroundResource(R.color.grey);
+            switchFragment(MainFragmentActivity.FragmentId[7]);
 			break;
 		}
 
 	}
 
+    // the meat of switching the above fragment
+    private void switchFragment(int fragmentId) {
+        if (getActivity() == null)
+            return;
+
+        if (getActivity() instanceof MainFragmentActivity) {
+            MainFragmentActivity ra = (MainFragmentActivity) getActivity();
+            ra.switchContent(fragmentId);
+        }
+    }
 }

@@ -22,6 +22,7 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.bean.WeiboListBean;
+import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -33,6 +34,10 @@ public class WeiboMainFragment extends BaseFragment {
 	private WeiboListBean weiboList = new WeiboListBean();
 	private WeiboAdapter adapter;
 	private AccountBean account;
+
+    protected PullToRefreshListView listView;
+    protected LayoutInflater mInflater;
+    protected View view;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -52,20 +57,20 @@ public class WeiboMainFragment extends BaseFragment {
 		application = (ThinkSNSApplication) this.getActivity()
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
-		listView.setListener(this);
-		adapter = new WeiboAdapter();
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-
-				// 查看微博..
-
-			}
-		});
+//		listView.setListener(this);
+//		adapter = new WeiboAdapter();
+//		//listView.setAdapter(adapter);
+//		listView.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				// TODO Auto-generated method stub
+//
+//				// 查看微博..
+//
+//			}
+//		});
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 

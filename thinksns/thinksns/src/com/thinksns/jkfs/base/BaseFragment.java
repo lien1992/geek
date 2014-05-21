@@ -16,9 +16,7 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment implements
 		RefreshAndLoadMoreListener {
 
-	protected PullToRefreshListView listView;
-	protected LayoutInflater mInflater;
-	protected View view;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
