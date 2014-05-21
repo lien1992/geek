@@ -42,7 +42,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			sm.setMode(SlidingMenu.LEFT);
 			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 			// show home as up so we can toggle
-			// getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		} else {
 			// add a dummy view
 			View v = new View(this);
@@ -114,7 +114,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		sm.setBehindScrollScale(0.25f);
 		sm.setFadeDegree(0.25f);
 
-		setSlidingActionBarEnabled(true);
+		//setSlidingActionBarEnabled(true);
 
 	}
 
