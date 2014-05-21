@@ -60,31 +60,41 @@ public class ChanelFragmentListViewAdapter extends BaseAdapter {
 			viewHolder = new ViewHolder();
 			viewHolder.user_img = (ImageView) convertView
 					.findViewById(R.id.user_img);
-			viewHolder.user_name = (TextView) convertView
-					.findViewById(R.id.user_name);
-			viewHolder.time = (TextView) convertView.findViewById(R.id.time);
+			viewHolder.wb_u_name = (TextView) convertView
+					.findViewById(R.id.wb_u_name);
+			viewHolder.wb_time = (TextView) convertView
+					.findViewById(R.id.wb_time);
 			viewHolder.wb_text = (TextView) convertView
 					.findViewById(R.id.wb_text);
 			viewHolder.wb_pic = (ImageView) convertView
 					.findViewById(R.id.wb_pic);
+
 			viewHolder.re_user_name = (TextView) convertView
 					.findViewById(R.id.re_user_name);
 			viewHolder.re_wb_text = (TextView) convertView
 					.findViewById(R.id.re_wb_text);
-			viewHolder.from = (TextView) convertView.findViewById(R.id.from);
+			viewHolder.wb_from = (TextView) convertView
+					.findViewById(R.id.wb_from);
+			viewHolder.like = (ImageView) convertView
+					.findViewById(R.drawable.like);
+			viewHolder.wb_like_count = (TextView) convertView
+					.findViewById(R.id.wb_like_count);
+
 			viewHolder.forward = (ImageView) convertView
 					.findViewById(R.drawable.forward);
-			viewHolder.repost_count = (TextView) convertView
-					.findViewById(R.id.repost_count);
+			viewHolder.wb_repost_count = (TextView) convertView
+					.findViewById(R.id.wb_repost_count);
 			viewHolder.comment = (ImageView) convertView
 					.findViewById(R.drawable.comment);
-			viewHolder.comment_count = (TextView) convertView
-					.findViewById(R.id.comment_count);
+			viewHolder.wb_comment_count = (TextView) convertView
+					.findViewById(R.id.wb_comment_count);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		// 还没抓数据
+
+		// 在这里给listview赋值
+		// 还没抓数据,这是错的
 		// viewHolder.user_img.setText(mlist.get(position).getUname());
 		// viewHolder.user_name.setText(mlist.get(position).getContent());
 		// viewHolder.time.setText(mlist.get(position).getUname());
@@ -100,17 +110,19 @@ public class ChanelFragmentListViewAdapter extends BaseAdapter {
 
 	class ViewHolder {
 		ImageView user_img;
-		TextView user_name;
-		TextView time;
+		TextView wb_u_name;
+		TextView wb_time;
 		TextView wb_text;
 		ImageView wb_pic;
 		TextView re_user_name;
 		TextView re_wb_text;
-		TextView from;
+		TextView wb_from;
+		ImageView like;
+		TextView wb_like_count;
 		ImageView forward;
-		TextView repost_count;
+		TextView wb_repost_count;
 		ImageView comment;
-		TextView comment_count;
+		TextView wb_comment_count;
 	}
 
 }
