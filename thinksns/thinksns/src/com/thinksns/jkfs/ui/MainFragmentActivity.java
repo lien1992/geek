@@ -1,5 +1,6 @@
 package com.thinksns.jkfs.ui;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.thinksns.jkfs.R;
@@ -17,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
 /**
  * MainFragmentActivity,待完善..
@@ -33,6 +35,8 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.content_frame);
+		
+		setSlidingActionBarEnabled(true);
 
 		sm = getSlidingMenu();
 		// check if the content frame contains the menu frame
@@ -41,8 +45,11 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			sm.setSlidingEnabled(true);
 			sm.setMode(SlidingMenu.LEFT);
 			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-			// show home as up so we can toggle
-			// getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			// show home as up so we can toggle			
+			//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
+			getSupportActionBar().setIcon(R.drawable.navigation); 
 		} else {
 			// add a dummy view
 			View v = new View(this);
@@ -50,7 +57,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			sm.setSlidingEnabled(false);
 			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 		}
-
+    
 		if (savedInstanceState == null) {
 			Fragment weiboMain = getWeiboMainFragment();
 /*			Fragment atAndComment = getAtAndCommentFragment();
@@ -114,7 +121,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		sm.setBehindScrollScale(0.25f);
 		sm.setFadeDegree(0.25f);
 
-		setSlidingActionBarEnabled(true);
 
 	}
 
