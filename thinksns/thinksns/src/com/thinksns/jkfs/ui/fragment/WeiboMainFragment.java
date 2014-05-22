@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.google.gson.Gson;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseFragment;
@@ -22,6 +24,7 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.bean.WeiboListBean;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -49,7 +52,7 @@ public class WeiboMainFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		application = (ThinkSNSApplication) this.getActivity()
+/*		application = (ThinkSNSApplication) this.getActivity()
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
 		listView.setListener(this);
@@ -65,7 +68,7 @@ public class WeiboMainFragment extends BaseFragment {
 				// 查看微博..
 
 			}
-		});
+		});*/
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
@@ -87,7 +90,7 @@ public class WeiboMainFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 
 		// 判断网络已连接..
-
+/*
 		new Thread() {
 
 			@Override
@@ -111,8 +114,16 @@ public class WeiboMainFragment extends BaseFragment {
 				// 缓存微博进数据库..
 
 			}
-		}.start();
+		}.start();*/
 
+	}
+	
+	public void changeActionBar(){
+		((MainFragmentActivity) getActivity()).getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+	    ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item,new String[]{"分组1","分组2"});
+	    groupAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+	    ((MainFragmentActivity) getActivity()).getSupportActionBar().setListNavigationCallbacks(groupAdapter, null);
+	    
 	}
 
 	class WeiboAdapter extends BaseAdapter {

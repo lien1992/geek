@@ -1,83 +1,137 @@
 package com.thinksns.jkfs.ui;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.thinksns.jkfs.R;
-import com.thinksns.jkfs.base.ThinkSNSApplication;
-import com.thinksns.jkfs.ui.fragment.AboutMeFragment;
+import com.thinksns.jkfs.ui.fragment.AtAndCommentFragment;
 import com.thinksns.jkfs.ui.fragment.ChanelFragment;
 import com.thinksns.jkfs.ui.fragment.ChatFragment;
 import com.thinksns.jkfs.ui.fragment.CollectionFragment;
-import com.thinksns.jkfs.ui.fragment.HomeFragment;
-import com.thinksns.jkfs.ui.fragment.MenuFragmentList;
+import com.thinksns.jkfs.ui.fragment.MenuFragment;
 import com.thinksns.jkfs.ui.fragment.SettingFragment;
 import com.thinksns.jkfs.ui.fragment.WeibaFragment;
+import com.thinksns.jkfs.ui.fragment.WeiboMainFragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.Handler;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
+/**
+ * MainFragmentActivity,待完善..
+ * 
+ * @author wangjia
+ * 
+ */
 public class MainFragmentActivity extends SlidingFragmentActivity {
 
-	private Fragment mContent;
+	private SlidingMenu sm;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle("Think SNS");
 
-		setContentView(R.layout.responsive_content_frame);
+		setContentView(R.layout.content_frame);
+		
+		setSlidingActionBarEnabled(true);
 
+		sm = getSlidingMenu();
 		// check if the content frame contains the menu frame
 		if (findViewById(R.id.menu_frame) == null) {
 			setBehindContentView(R.layout.menu_frame);
-			getSlidingMenu().setSlidingEnabled(true);
-			getSlidingMenu()
-					.setTouchModeAbove(
-							com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.TOUCHMODE_FULLSCREEN);
-			// show home as up so we can toggle
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			sm.setSlidingEnabled(true);
+			sm.setMode(SlidingMenu.LEFT);
+			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+			// show home as up so we can toggle			
+			//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
+			getSupportActionBar().setIcon(R.drawable.navigation); 
 		} else {
 			// add a dummy view
 			View v = new View(this);
 			setBehindContentView(v);
-			getSlidingMenu().setSlidingEnabled(false);
-			getSlidingMenu()
-					.setTouchModeAbove(
-							com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.TOUCHMODE_NONE);
+			sm.setSlidingEnabled(false);
+			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+		}
+    
+		if (savedInstanceState == null) {
+			Fragment weiboMain = getWeiboMainFragment();
+/*			Fragment atAndComment = getAtAndCommentFragment();
+			Fragment collection = getCollectionFragment();
+			Fragment chat = getChatFragment();
+			Fragment channel = getChannelFragment();
+			Fragment weiba = getWeibaFragment();
+			Fragment setting = getSettingFragment();*/
+			// 添加 Fragments, 设置 tag, 并 hide
+			FragmentTransaction transaction = getSupportFragmentManager()
+					.beginTransaction();
+			if (!weiboMain.isAdded()) {
+				transaction.add(R.id.content_frame, weiboMain,
+						WeiboMainFragment.class.getName());
+				transaction.hide(weiboMain);
+			}
+/*			if (!atAndComment.isAdded()) {
+				transaction.add(R.id.content_frame, atAndComment,
+						AtAndCommentFragment.class.getName());
+				transaction.hide(atAndComment);
+			}
+			if (!collection.isAdded()) {
+				transaction.add(R.id.content_frame, collection,
+						CollectionFragment.class.getName());
+				transaction.hide(collection);
+			}
+			if (!chat.isAdded()) {
+				transaction.add(R.id.content_frame, chat, ChatFragment.class
+						.getName());
+				transaction.hide(chat);
+			}
+			if (!channel.isAdded()) {
+				transaction.add(R.id.content_frame, channel,
+						ChanelFragment.class.getName());
+				transaction.hide(channel);
+			}
+			if (!weiba.isAdded()) {
+				transaction.add(R.id.content_frame, weiba, WeibaFragment.class
+						.getName());
+				transaction.hide(weiba);
+			}
+			if (!setting.isAdded()) {
+				transaction.add(R.id.content_frame, setting,
+						SettingFragment.class.getName());
+				transaction.hide(setting);
+			}*/
+			transaction.commit();
+
+			FragmentTransaction menuTransation = getSupportFragmentManager()
+					.beginTransaction();
+			menuTransation.replace(R.id.menu_frame, new MenuFragment(),
+					MenuFragment.class.getName());
+			sm.showContent();
+			menuTransation.commit();
 		}
 
-		// set the Above View Fragment
-		if (savedInstanceState != null)
-			mContent = getSupportFragmentManager().getFragment(
-					savedInstanceState, "mContent");
-		if (mContent == null)
-			mContent = new HomeFragment();
-		getSupportFragmentManager().beginTransaction().replace(
-				R.id.content_frame, mContent).commit();
-
-		// set the Behind View Fragment
-		getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame,
-				new MenuFragmentList()).commit();
-
 		// customize the SlidingMenu
-		com.jeremyfeinstein.slidingmenu.lib.SlidingMenu sm = getSlidingMenu();
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setShadowWidthRes(R.dimen.shadow_width);
-		sm.setShadowDrawable(R.drawable.shadow);
+		sm.setShadowDrawable(R.drawable.slidingmenu_shadow);
 		sm.setBehindScrollScale(0.25f);
 		sm.setFadeDegree(0.25f);
 
-		// // show the explanation dialog
-		// if (savedInstanceState == null)
-		// new AlertDialog.Builder(this)
-		// .setTitle(R.string.what_is_this)
-		// .setMessage(R.string.responsive_explanation)
-		// .show();
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
 	}
 
 	@Override
@@ -90,67 +144,77 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		getSupportFragmentManager().putFragment(outState, "mContent", mContent);
-	}
-
-	public void switchContent(int fragment_id) {
-		Log.d("MOSL", fragment_id + "");
-		switch (fragment_id) {
-
-		case 1:
-			mContent = new HomeFragment();
-			break;
-		case 2:
-			mContent = new AboutMeFragment();
-			break;
-		case 3:
-			mContent = new ChatFragment();
-			break;
-		case 4:
-			mContent = new ChanelFragment();
-			break;
-		case 5:
-			mContent = new WeibaFragment();
-			break;
-		case 6:
-			mContent = new CollectionFragment();
-			break;
-		case 7:
-			mContent = new SettingFragment();
-			break;
-		default:
-			quitTheNumber();
-
+	public void onBackPressed() {
+		if (sm.isMenuShowing()) {
+			sm.showContent();
+		} else {
+			super.onBackPressed();
 		}
-		getSupportFragmentManager().beginTransaction().replace(
-				R.id.content_frame, mContent).commit();
-		Handler h = new Handler();
-		h.postDelayed(new Runnable() {
-			public void run() {
-				getSlidingMenu().showContent();
-			}
-		}, 50);
 	}
 
-	private void quitTheNumber() {
-		new AlertDialog.Builder(this).setPositiveButton("退出",
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						ThinkSNSApplication application = ThinkSNSApplication
-								.getInstance();
-						application.quitAccount(MainFragmentActivity.this);
-						MainFragmentActivity.this.finish();
-					}
-				}).setTitle(R.string.quit_account).setMessage(
-				R.string.quit_account_explanation).show();
+	/* 获得侧滑菜单中的各个Fragment */
+
+	public WeiboMainFragment getWeiboMainFragment() {
+		WeiboMainFragment fragment = ((WeiboMainFragment) getSupportFragmentManager()
+				.findFragmentByTag(WeiboMainFragment.class.getName()));
+		if (fragment == null) {
+			fragment = new WeiboMainFragment();
+		}
+		return fragment;
 	}
 
-	// public void onBirdPressed(int pos) {
-	// Intent intent =new Intent(this,);
-	// startActivity(intent);
-	// }
+	public AtAndCommentFragment getAtAndCommentFragment() {
+		AtAndCommentFragment fragment = ((AtAndCommentFragment) getSupportFragmentManager()
+				.findFragmentByTag(AtAndCommentFragment.class.getName()));
+		if (fragment == null) {
+			fragment = new AtAndCommentFragment();
+		}
+		return fragment;
+	}
+
+	public CollectionFragment getCollectionFragment() {
+		CollectionFragment fragment = ((CollectionFragment) getSupportFragmentManager()
+				.findFragmentByTag(CollectionFragment.class.getName()));
+		if (fragment == null) {
+			fragment = new CollectionFragment();
+		}
+		return fragment;
+	}
+
+	public ChatFragment getChatFragment() {
+		ChatFragment fragment = ((ChatFragment) getSupportFragmentManager()
+				.findFragmentByTag(ChatFragment.class.getName()));
+		if (fragment == null) {
+			fragment = new ChatFragment();
+		}
+		return fragment;
+	}
+
+	public ChanelFragment getChannelFragment() {
+		ChanelFragment fragment = ((ChanelFragment) getSupportFragmentManager()
+				.findFragmentByTag(ChanelFragment.class.getName()));
+		if (fragment == null) {
+			fragment = new ChanelFragment();
+		}
+		return fragment;
+	}
+
+	public WeibaFragment getWeibaFragment() {
+		WeibaFragment fragment = ((WeibaFragment) getSupportFragmentManager()
+				.findFragmentByTag(WeibaFragment.class.getName()));
+		if (fragment == null) {
+			fragment = new WeibaFragment();
+		}
+		return fragment;
+	}
+
+	public SettingFragment getSettingFragment() {
+		SettingFragment fragment = ((SettingFragment) getSupportFragmentManager()
+				.findFragmentByTag(SettingFragment.class.getName()));
+		if (fragment == null) {
+			fragment = new SettingFragment();
+		}
+		return fragment;
+	}
 
 }
