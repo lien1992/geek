@@ -57,6 +57,8 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		fragments.put(R.id.sm_setting, ((MainFragmentActivity) getActivity())
 				.getSettingFragment());
 
+		
+		((WeiboMainFragment) fragments.get(R.id.sm_home)).changeActionBar();
 	}
 
 	@Override
@@ -90,6 +92,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		weiba.setOnClickListener(this);
 		setting.setOnClickListener(this);
 		logout.setOnClickListener(this);
+		changeBackground(R.id.sm_home);
 
 		// 替换头像、微博用户名..
 	}
@@ -112,6 +115,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 					.get(R.id.sm_home);
 			ft_home.show(wmfragment);
 			ft_home.commit();
+			wmfragment.changeActionBar();
 			((MainFragmentActivity) getActivity()).getSlidingMenu()
 					.showContent();
 			break;

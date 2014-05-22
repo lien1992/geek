@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.google.gson.Gson;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseFragment;
@@ -22,7 +24,11 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.bean.WeiboListBean;
+<<<<<<< HEAD
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
+=======
+import com.thinksns.jkfs.ui.MainFragmentActivity;
+>>>>>>> 4ad1834b7ddc4d3739a3b40566ee2ff282915172
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -134,6 +140,14 @@ public class WeiboMainFragment extends BaseFragment {
 			}
 		}.start();*/
 
+	}
+	
+	public void changeActionBar(){
+		((MainFragmentActivity) getActivity()).getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+	    ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item,new String[]{"分组1","分组2"});
+	    groupAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+	    ((MainFragmentActivity) getActivity()).getSupportActionBar().setListNavigationCallbacks(groupAdapter, null);
+	    
 	}
 
 	class WeiboAdapter extends BaseAdapter {
