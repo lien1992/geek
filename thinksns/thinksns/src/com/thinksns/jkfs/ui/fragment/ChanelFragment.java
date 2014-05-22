@@ -81,35 +81,7 @@ public class ChanelFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				ChanelMenu
-				
-				// 这段获取频道，并且解析
-				// AccountBean accountBean = ThinkSNSApplication.getInstance()
-				// .getAccount(ChanelFragment.this.getActivity()); final
-				// Map<String, String> map = new HashMap<String, String>();
-				// map.put("app", "api"); map.put("mod", "Channel");
-				// map.put("act", "get_all_channel"); map.put("oauth_token",
-				// accountBean.getOauth_token()); map.put("oauth_token_secret",
-				// accountBean.getOauth_token_secret()); Log.i(TAG,
-				// accountBean.getOauth_token_secret()); // 每次运行程序只获取一次chanel if
-				// (chanelList == null || chanelList.size() == 0) { new
-				// Thread(new Runnable() {
-				//
-				// @Override public void run() { jsonData =
-				// HttpUtility.getInstance() .executeNormalTask(HttpMethod.Get,
-				// HttpConstant.THINKSNS_URL, map); Log.i(TAG, jsonData); try {
-				// JSONObject response = new JSONObject(jsonData);
-				// Iterator<String> it = response.keys(); JSONObject obj;
-				// chanelList = new ArrayList<ChanelBean>(); while
-				// (it.hasNext()) { obj = response.getJSONObject(it.next());
-				// chanelList.add(new ChanelBean(obj
-				// .getString("channel_category_id"), obj.getString("title"),
-				// obj .getString("pid"), obj .getString("sort"), obj
-				// .getString("icon_url"))); } } catch (JSONException e) { //
-				// TODO Auto-generated catch block e.printStackTrace(); }
-				//
-				// handler.sendEmptyMessage(GETTED_CHANEL_LIST); } }).start(); }
-
+			
 			}
 		});
 
