@@ -54,9 +54,10 @@ public class WeiboMainFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		application = (ThinkSNSApplication) this.getActivity()
+/*		application = (ThinkSNSApplication) this.getActivity()
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
+<<<<<<< HEAD
 //		listView.setListener(this);
 //		adapter = new WeiboAdapter();
 //		//listView.setAdapter(adapter);
@@ -71,6 +72,21 @@ public class WeiboMainFragment extends BaseFragment {
 //
 //			}
 //		});
+=======
+		listView.setListener(this);
+		adapter = new WeiboAdapter();
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+
+				// 查看微博..
+
+			}
+		});*/
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
@@ -92,7 +108,7 @@ public class WeiboMainFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 
 		// 判断网络已连接..
-
+/*
 		new Thread() {
 
 			@Override
@@ -116,7 +132,7 @@ public class WeiboMainFragment extends BaseFragment {
 				// 缓存微博进数据库..
 
 			}
-		}.start();
+		}.start();*/
 
 	}
 
