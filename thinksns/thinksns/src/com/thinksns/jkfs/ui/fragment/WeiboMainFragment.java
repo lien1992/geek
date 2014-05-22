@@ -1,75 +1,78 @@
 package com.thinksns.jkfs.ui.fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
+import com.thinksns.jkfs.ui.adapter.MainFragmentPagerAdapter;
+import com.thinksns.jkfs.ui.view.UnderlinePageIndicator;
 
 import android.os.Bundle;
-import android.os.Handler;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.google.gson.Gson;
-import com.thinksns.jkfs.R;
-import com.thinksns.jkfs.base.BaseFragment;
-import com.thinksns.jkfs.base.ThinkSNSApplication;
-import com.thinksns.jkfs.bean.AccountBean;
-import com.thinksns.jkfs.bean.WeiboBean;
-import com.thinksns.jkfs.bean.WeiboListBean;
-import com.thinksns.jkfs.ui.MainFragmentActivity;
-import com.thinksns.jkfs.util.http.HttpMethod;
-import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 主微博Fragment (just test..)
+ * 主微博Fragment,承载WeiboListFragment和AboutMeFragment
+ * 
+ * @author wangjia
+ * 
  */
-public class WeiboMainFragment extends BaseFragment {
-	private ThinkSNSApplication application;
-	private WeiboListBean weiboList = new WeiboListBean();
-	private WeiboAdapter adapter;
-	private AccountBean account;
-
-	private Handler mHandler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			switch (msg.what) {
-			case 0:
-				adapter.append(weiboList.getWeibos());
-				break;
-			}
-			// case 1 ..
-		};
-	};
+public class WeiboMainFragment extends Fragment {
+	private ViewPager pager;
+	private UnderlinePageIndicator indicator;
+	private MainFragmentPagerAdapter adapter;
+	private View view;
+	private LayoutInflater in;
+	private TextView weiboList, aboutMe;
+	private ImageView navi;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-/*		application = (ThinkSNSApplication) this.getActivity()
-				.getApplicationContext();
-		account = application.getAccount(this.getActivity());
-		listView.setListener(this);
-		adapter = new WeiboAdapter();
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		super.onCreateView(inflater, container, savedInstanceState);
+		in = inflater;
+		view = in.inflate(R.layout.main_weibo_fragment, null);
+		weiboList = (TextView) view.findViewById(R.id.tab_main_weibo_fragment);
+		aboutMe = (TextView) view.findViewById(R.id.tab_about_me_fragment);
+		navi = (ImageView) view.findViewById(R.id.app_navi);
+		indicator = (UnderlinePageIndicator) view
+				.findViewById(R.id.main_weibo_indicator);
+		pager = (ViewPager) view.findViewById(R.id.main_weibo_pager);
+
+		return view;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewCreated(view, savedInstanceState);
+		aboutMe.setTextColor(getResources().getColor(R.color.grey));
+		adapter = new MainFragmentPagerAdapter(getActivity());
+		pager.setOffscreenPageLimit(0);
+		pager.setAdapter(adapter);
+		indicator.setViewPager(pager);
+		indicator.setFades(false);
+		indicator.setSelectedColor(getResources().getColor(R.color.green));
+        indicator.setFadeLength(500);
+		indicator.setOnPageChangeListener(new MyPageChangeListener());
+		navi.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
-				// 查看微博..
-
+				((MainFragmentActivity) getActivity()).getSlidingMenu()
+						.toggle();
 			}
-		});*/
-		return super.onCreateView(inflater, container, savedInstanceState);
+
+		});
 	}
 
 	@Override
@@ -78,112 +81,32 @@ public class WeiboMainFragment extends BaseFragment {
 		super.onActivityCreated(savedInstanceState);
 	}
 
-	@Override
-	public void onLoadMore() {
-		// TODO Auto-generated method stub
+	class MyPageChangeListener implements OnPageChangeListener {
+		@Override
+		public void onPageScrollStateChanged(int arg0) {
+			// TODO Auto-generated method stub
+		}
 
-		// 加载更多..
-	}
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
+			// TODO Auto-generated method stub
+		}
 
-	@Override
-	public void onRefresh() {
-		// TODO Auto-generated method stub
-
-		// 判断网络已连接..
-/*
-		new Thread() {
-
-			@Override
-			public void run() {
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("app", "api");
-				map.put("mod", "User");
-				map.put("act", "show");
-				map.put("oauth_token", account.getOauth_token());
-				map.put("oauth_token_secret", account.getOauth_token_secret());
-				map.put("user_id", account.getUid());
-				map.put("since_id", "");
-				map.put("max_id", "");
-				map.put("count", "");
-				map.put("page", "");
-				String json = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Get, "http://demo.thinksns.com/t3/", map);
-				weiboList = new Gson().fromJson(json, WeiboListBean.class);
-				mHandler.sendEmptyMessage(0);
-
-				// 缓存微博进数据库..
-
+		@Override
+		public void onPageSelected(int arg) {
+			// TODO Auto-generated method stub
+			if (arg == 0) {
+				weiboList.setTextColor(getResources().getColor(R.color.green));
+				aboutMe.setTextColor(getResources().getColor(R.color.grey));
+				((MainFragmentActivity) getActivity()).getSlidingMenu()
+						.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+			} else if (arg == 1) {
+				aboutMe.setTextColor(getResources().getColor(R.color.green));
+				weiboList.setTextColor(getResources().getColor(R.color.grey));
+				((MainFragmentActivity) getActivity()).getSlidingMenu()
+						.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 			}
-		}.start();*/
-
-	}
-	
-	public void changeActionBar(){
-		((MainFragmentActivity) getActivity()).getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-	    ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(getActivity(), R.layout.sherlock_spinner_item,new String[]{"分组1","分组2"});
-	    groupAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-	    ((MainFragmentActivity) getActivity()).getSupportActionBar().setListNavigationCallbacks(groupAdapter, null);
-	    
+		}
 	}
 
-	class WeiboAdapter extends BaseAdapter {
-		List<WeiboBean> wList = new ArrayList<WeiboBean>();
-
-		public void append(List<WeiboBean> lists) {
-			if (lists == null) {
-				return;
-			}
-			wList.addAll(lists);
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return wList.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return wList.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			ViewHolder holder;
-			WeiboBean weibo = wList.get(position);
-			if (convertView == null) {
-				holder = new ViewHolder();
-				convertView = mInflater.inflate(
-						R.layout.main_weibo_listview_item, null);
-				holder.userName = (TextView) convertView
-						.findViewById(R.id.wb_u_name);
-				holder.content = (TextView) convertView
-						.findViewById(R.id.wb_text);
-
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();
-			}
-			holder.userName.setText(weibo.getUname());
-			holder.content.setText(weibo.getContent());
-
-			return convertView;
-		}
-
-	}
-
-	class ViewHolder {
-		public TextView userName;
-		public TextView content;
-		// 其他View..
-	}
 }

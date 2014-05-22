@@ -1,6 +1,5 @@
 package com.thinksns.jkfs.ui;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.thinksns.jkfs.R;
@@ -12,13 +11,10 @@ import com.thinksns.jkfs.ui.fragment.MenuFragment;
 import com.thinksns.jkfs.ui.fragment.SettingFragment;
 import com.thinksns.jkfs.ui.fragment.WeibaFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboMainFragment;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 
 /**
  * MainFragmentActivity,待完善..
@@ -35,8 +31,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.content_frame);
-		
-		setSlidingActionBarEnabled(true);
 
 		sm = getSlidingMenu();
 		// check if the content frame contains the menu frame
@@ -45,11 +39,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			sm.setSlidingEnabled(true);
 			sm.setMode(SlidingMenu.LEFT);
 			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-			// show home as up so we can toggle			
-			//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-			getSupportActionBar().setHomeButtonEnabled(true);
-			getSupportActionBar().setDisplayShowTitleEnabled(false);
-			getSupportActionBar().setIcon(R.drawable.navigation); 
 		} else {
 			// add a dummy view
 			View v = new View(this);
@@ -72,7 +61,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			if (!weiboMain.isAdded()) {
 				transaction.add(R.id.content_frame, weiboMain,
 						WeiboMainFragment.class.getName());
-				transaction.hide(weiboMain);
 			}
 /*			if (!atAndComment.isAdded()) {
 				transaction.add(R.id.content_frame, atAndComment,
@@ -134,14 +122,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		super.onDestroy();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			toggle();
-		}
-		return super.onOptionsItemSelected(item);
-	}
 
 	@Override
 	public void onBackPressed() {

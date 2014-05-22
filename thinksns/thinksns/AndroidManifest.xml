@@ -31,10 +31,8 @@
         </activity>
         <activity
             android:name="com.thinksns.jkfs.ui.MainFragmentActivity"
-            android:configChanges="orientation|screenSize|screenLayout"
-            android:theme="@style/Theme.Sherlock.Light"
-            android:uiOptions="splitActionBarWhenNarrow"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main"
+            android:theme="@style/StyledIndicators" >
         </activity>
         <activity
             android:name="com.thinksns.jkfs.ui.LoginActivity"
@@ -61,16 +59,17 @@
                 <data android:scheme="tencent101073421" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.DetailInfoActivity"
-            >
+        <activity android:name=".ui.DetailInfoActivity" >
         </activity>
         <activity android:name=".ui.FanListActivity" >
         </activity>
         <activity android:name=".ui.UserInfoActivity" >
         </activity>
-        <activity android:name=".test.TestActivity" android:configChanges="orientation|screenSize|screenLayout"
+        <activity
+            android:name=".test.TestActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
             android:theme="@style/Theme.Sherlock.Light"
-            android:uiOptions="splitActionBarWhenNarrow"/>
+            android:uiOptions="splitActionBarWhenNarrow" />
     </application>
 
 </manifest>
