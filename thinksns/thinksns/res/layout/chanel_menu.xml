@@ -1,43 +1,22 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFF00"
+    android:orientation="vertical" >
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="always">
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="10dp" >
+    </TableLayout>
 
-        <menu>
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/chanel_menu_bottom" />
 
-            <item
-                android:id="@+id/action_edit"
-                android:showAsAction="always"
-                android:title="edit_text"/>
-
-            <item
-                android:id="@+id/action_file"
-                android:showAsAction="always"
-                android:title="file">
-
-                <!-- file的二级目录 -->
-
-                <menu>
-
-                    <item
-                        android:id="@+id/action_share"
-                        android:showAsAction="always"
-                        android:title="share"/>
-
-                    <item
-                        android:id="@+id/action_favorite"
-                        android:showAsAction="always"
-                        android:title="favorite"/>
-                </menu>
-            </item>
-
-            <item
-                android:id="@+id/action_about"
-                android:showAsAction="always"
-                android:title="about"/>
-        </menu>
-    </item>
-
-</menu>
+</LinearLayout>
