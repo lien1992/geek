@@ -11,5 +11,11 @@
     <string name="responsive_explanation">This is an example of a UI that responds well to device type. On phones, the menu will be placed inside a SlidingMenu, while on tablets the menu will be exposed alongside the content because we have enough room to always show it.</string>
     <string name="quit_account">退出当前账号?</string>
     <string name="quit_account_explanation">退出后将要重新登录！</string>
+    <string name="myweibonum">0</string>
+    <string name="myfollownum">0</string>
+    <string name="followmenum">0</string>
+
+
+
 
 </resources>
