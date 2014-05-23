@@ -26,6 +26,7 @@ import com.thinksns.jkfs.constant.SettingsUtil;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.adapter.ChanelFragmentListViewAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
+import com.thinksns.jkfs.ui.view.PullToRefreshListView.RefreshAndLoadMoreListener;
 import com.thinksns.jkfs.util.DES;
 import com.thinksns.jkfs.util.MD5;
 import com.thinksns.jkfs.util.db.AccountOperator;
@@ -65,31 +66,38 @@ import android.widget.Toast;
 
 public class ChanelFragment extends Fragment {
 
+	// handler用的
 	static private final int GETTED_CHANEL_LIST_WITHOUT_IMAGE = 0;
 	static private final int CONNECT_WRONG = 1;
 	static private final int DOWNLOAD_IMAGE_FINISHI = 2;
 	static private final int GETTED_WEIBO_LIST = 3;
-
+	// thinksnsAPI用的
 	static private final String TAG = "zcc";
 	static private final String APP = "api";
 	static private final String MOD = "Channel";
 	static private final String ACT_GET_ALL_CHANEL = "get_all_channel";
 	static private final String ACT_GET_WEIBO_BY_CHANEL_ID = "get_channel_feed";
-	static private final int MENU_ITEM_HEIGHT = 80;
-	static private final int MENU_ITEM_COUNT = 4;
 	static private String OAUTH_TOKEN;
 	static private String OAUTH_TOKEN_SECRECT;
+	// 菜单用的
+	static private final int MENU_ITEM_HEIGHT = 80;
+	static private final int MENU_ITEM_COUNT = 4;
+	// 只加载一次
 	static private ArrayList<ChanelBean> chanelList;
+	// 菜单的属性
 	static private int MENU_HEIGHT = 0;
 	static private int DOWNLOAD_IMAGE_COUNT = 0;
+	// 是或否正在初始化，是的话置1，否则0
+	static private int IS_INIT_CHANEL_IMG = 0;
 
 	private Activity mContext;
-	private Button button;
+	private ImageView dropImage;
 	private PullToRefreshListView mListView;
 	private LayoutInflater mInflater;
 	private String jsonData;
 	private Handler handler;
 	private ArrayList<WeiboBean> weiboList;
+	private ChanelFragmentListViewAdapter listViewAdapter;
 
 	private PopupWindow popupWindow;
 	private View mPopupWindowView;
@@ -99,12 +107,11 @@ public class ChanelFragment extends Fragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		init();
-
-		View view = inflater
-				.inflate(R.layout.fragment_chanel, container, false);
+		final View view = inflater.inflate(R.layout.chanel_fragment, container,
+				false);
 		// 测试用button
-		button = (Button) view.findViewById(R.id.zhankaicaidan_btn);
+		dropImage = (ImageView) view
+				.findViewById(R.id.chanel_fragment_title_drop_img);
 		mListView = (PullToRefreshListView) view
 				.findViewById(R.id.chanel_listview);
 		mInflater = LayoutInflater.from(view.getContext());
@@ -117,32 +124,33 @@ public class ChanelFragment extends Fragment {
 				switch (msg.what) {
 				case GETTED_CHANEL_LIST_WITHOUT_IMAGE:
 					chanelList = (ArrayList<ChanelBean>) msg.obj;
-					// 初始化popmenue
+					// 下载图片
+					downloadAllChanelImg();
+					// 加载布局，这时候用的频道图片是默认图片
 					initPopupWindow();
-					button.setOnClickListener(new OnClickListener() {
-
+					Log.i(TAG, "执行了_____GETTED_CHANEL_LIST_WITHOUT_IMAGE");
+					dropImage.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
-							// if (chanelList.size() == 0) {
-							// Toast.makeText(mContext, "加载异常，尝试重新加载",
-							// Toast.LENGTH_SHORT);
-							// init();
-							// initPopupWindow();
-							//
-							// } else {
-							// 基于什么控件显示，xy是该控件的左下偏移量
+							Log.i(TAG, "菜单显示没" + popupWindow.isShowing());
 							if (!popupWindow.isShowing()) {
-								int[] location = new int[2];
-								mListView.getLocationOnScreen(location);
-								// 设置菜单在微博列表的开始
-								popupWindow.showAtLocation(mListView,
-										Gravity.NO_GRAVITY, location[0],
-										location[1]);
+								Log.i(TAG, "菜单显示没" + popupWindow.isShowing());
+								// //这是获取屏幕长宽
+								// int[] location = new int[2];
+								// mListView.getLocationOnScreen(location);
+								// // 这个也是显示popupwindow，指定位置显示
+								// popupWindow.showAtLocation(mListView,
+								// Gravity.NO_GRAVITY, location[0],
+								// location[1]);
+								popupWindow.showAsDropDown(view
+										.findViewById(R.id.chanel_fragment_title));
+								Log.i(TAG, "嗯。。我是萌萌的菜单。。我显示了");
+
 							} else {
 								popupWindow.dismiss();
+								Log.i(TAG, "菜单消失啦");
 							}
-							// }
 						}
 					});
 
@@ -151,21 +159,53 @@ public class ChanelFragment extends Fragment {
 					Toast.makeText(mContext, "网络故障", Toast.LENGTH_SHORT).show();
 					break;
 				case DOWNLOAD_IMAGE_FINISHI:
-					// init();
+					// 下载完频道图片了开始布局了，重新布局，把频道图片加上去
+					initPopupWindow();
+					// 初始化频道图片完成
+					IS_INIT_CHANEL_IMG = 0;
 					break;
 				case GETTED_WEIBO_LIST:
 					weiboList = (ArrayList<WeiboBean>) msg.obj;
+					listViewAdapter.notifyDataSetChanged();
 					// 还有其他操作
 					break;
 				}
 			}
 		};
 
-		button.setOnClickListener(new OnClickListener() {
+		// 先初始化handler再初始化init
+		init();
+		// 菜单按钮
+		dropImage.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(mContext, "获取列表中请稍后", Toast.LENGTH_SHORT).show();
+				if (IS_INIT_CHANEL_IMG == 0) {
+					IS_INIT_CHANEL_IMG = 1;
+					if (chanelList.size() != 0) {
+						handler.obtainMessage(
+								ChanelFragment.GETTED_CHANEL_LIST_WITHOUT_IMAGE,
+								chanelList).sendToTarget();
+					} else {
+						Log.i(TAG, "图片没有而且微博列表是空的，具体的还没这种情况，还没写╮(╯_╰)╭");
+					}
+				}
+			}
+		});
+
+		mListView.setListener(new RefreshAndLoadMoreListener() {
+
+			@Override
+			public void onRefresh() {
+				// TODO Auto-generated method stub
+				// 下拉刷新事件
+			}
+
+			@Override
+			public void onLoadMore() {
+				// TODO Auto-generated method stub
+				// 加载更多
 			}
 		});
 
@@ -175,8 +215,9 @@ public class ChanelFragment extends Fragment {
 			weiboList.add(new WeiboBean());
 		}
 
-		mListView.setAdapter(new ChanelFragmentListViewAdapter(weiboList,
-				mInflater));
+		listViewAdapter = new ChanelFragmentListViewAdapter(weiboList,
+				mInflater);
+		mListView.setAdapter(listViewAdapter);
 		return view;
 	}
 
@@ -199,7 +240,7 @@ public class ChanelFragment extends Fragment {
 	}
 
 	/**
-	 * 初始化popupwindow
+	 * 初始化popupwindow,中间会调用initPopupWindowLayout()来加载布局f
 	 */
 	private void initPopupWindow() {
 
@@ -208,9 +249,11 @@ public class ChanelFragment extends Fragment {
 		initPopupWindowLayout();
 
 		// 初始化popupwindow，绑定显示view，设置该view的宽度/高度
-		popupWindow = new PopupWindow(mPopupWindowView,
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		popupWindow.setFocusable(false);
+		if (popupWindow == null) {
+			popupWindow = new PopupWindow(mPopupWindowView,
+					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		}
+		popupWindow.setFocusable(true);
 		popupWindow.setOutsideTouchable(true);
 		// 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景；使用该方法点击窗体之外，才可关闭窗体
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
@@ -219,11 +262,9 @@ public class ChanelFragment extends Fragment {
 		popupWindow.update();
 		// popupWindow调用dismiss时触发，设置了setOutsideTouchable(true)，点击view之外/按键back的地方也会触发
 		popupWindow.setOnDismissListener(new OnDismissListener() {
-
 			@Override
 			public void onDismiss() {
-				// TODO Auto-generated method stub
-				// showToast("关闭popupwindow");
+				Log.i(TAG, "菜单消失了");
 			}
 		});
 	}
@@ -255,6 +296,7 @@ public class ChanelFragment extends Fragment {
 						.findViewById(R.id.chanel_item_img);
 				// 图片全下载完成后执行
 				if (DOWNLOAD_IMAGE_COUNT == 0
+						&& chanelList.size() != 0
 						&& chanelList.get(position).getIcon_url() != null
 						&& !"null".equals(chanelList.get(position)
 								.getIcon_url())) {
@@ -272,7 +314,6 @@ public class ChanelFragment extends Fragment {
 				tableRow.addView(view);
 
 				ViewGroup.LayoutParams lp = view.getLayoutParams();
-				System.out.println(lp);
 				lp.width = width / MENU_ITEM_COUNT;
 				lp.height = MENU_ITEM_HEIGHT;
 				view.setLayoutParams(lp);
@@ -289,6 +330,9 @@ public class ChanelFragment extends Fragment {
 						// 点击频道的操作
 						getWeibosByChanel(chanelList.get(mPosition)
 								.getChannel_category_id());
+						popupWindow.dismiss();
+						// 菜单按钮不能再被点击，页面刷新完成后焦点true
+						dropImage.setFocusable(false);
 					}
 				});
 			}
@@ -299,24 +343,42 @@ public class ChanelFragment extends Fragment {
 		mytable.setFocusable(false);
 	}
 
+	// 下载全部频道图片
+	private void downloadAllChanelImg() {
+		for (ChanelBean chanel : chanelList) {
+			String url = chanel.getIcon_url();
+			if (url != null && !"null".equals(url)) {
+				DOWNLOAD_IMAGE_COUNT++;
+				Log.i(TAG, "查找json的时候准备开始下载");
+				// 另起线程下载
+				DownLoadChanelImageInThread(chanel.getTitle(), url);
+			}
+		}
+	}
+
 	/**
 	 * 线程中访问网络初始化频道列表
 	 */
 	private void getChanelsInThread() {
 		new Thread() {
 			public void run() {
-				final Map<String, String> map = new HashMap<String, String>();
-				map.put("app", APP);
-				map.put("oauth_token", OAUTH_TOKEN);
-				map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
-				map.put("mod", MOD);
-				map.put("act", ACT_GET_ALL_CHANEL);
-				jsonData = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				Log.i(TAG, jsonData);
-				handler.obtainMessage(
-						ChanelFragment.GETTED_CHANEL_LIST_WITHOUT_IMAGE,
-						JSONToChanels(jsonData)).sendToTarget();
+				try {
+					final Map<String, String> map = new HashMap<String, String>();
+					map.put("app", APP);
+					map.put("oauth_token", OAUTH_TOKEN);
+					map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
+					map.put("mod", MOD);
+					map.put("act", ACT_GET_ALL_CHANEL);
+					jsonData = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					Log.i(TAG, jsonData);
+					handler.obtainMessage(
+							ChanelFragment.GETTED_CHANEL_LIST_WITHOUT_IMAGE,
+							JSONToChanels(jsonData)).sendToTarget();
+				} catch (Exception e) {
+					handler.obtainMessage(ChanelFragment.CONNECT_WRONG)
+							.sendToTarget();
+				}
 			};
 		}.start();
 	}
@@ -339,14 +401,6 @@ public class ChanelFragment extends Fragment {
 						.getString("channel_category_id"), item
 						.getString("title"), item.getString("pid"), item
 						.getString("sort"), item.getString("icon_url")));
-				String url = item.getString("icon_url");
-				if (url != null && !"null".equals(url)) {
-					DOWNLOAD_IMAGE_COUNT++;
-					Log.i(TAG, "查找json的时候准备开始下载");
-
-					DownLoadChanelImageInThread(item.getString("title"),
-							item.getString("icon_url"));
-				}
 			}
 		} catch (JSONException e) {
 			Log.i(TAG, "json出问题");
@@ -453,6 +507,7 @@ public class ChanelFragment extends Fragment {
 				jsonData = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 				Log.i(TAG, "这是微博______" + jsonData);
+				// 将json转化成bean列表，handler出去
 				// handler.obtainMessage(ChanelFragment.GETTED_WEIBO_LIST,
 				// JSONToChanels(jsonData)).sendToTarget();
 			};
@@ -460,12 +515,14 @@ public class ChanelFragment extends Fragment {
 	}
 
 	/**
+	 * 还没写完，因为微博有音频视频什么的
+	 * 
 	 * @param JSONData
 	 *            需要转换的json格式的String
 	 * @return 数组size为0时，出错了
 	 */
-	ArrayList<ChanelBean> JSONToWeibos(String jsonData) {
-		ArrayList<ChanelBean> chanelList = new ArrayList<ChanelBean>();
+	ArrayList<WeiboBean> JSONToWeibos(String jsonData) {
+		ArrayList<WeiboBean> weibolList = new ArrayList<WeiboBean>();
 		try {
 			JSONObject obj = new JSONObject(jsonData);
 			Iterator<String> it = obj.keys();
@@ -473,24 +530,14 @@ public class ChanelFragment extends Fragment {
 
 			while (it.hasNext()) {
 				item = obj.getJSONObject(it.next());
-				chanelList.add(new ChanelBean(item
-						.getString("channel_category_id"), item
-						.getString("title"), item.getString("pid"), item
-						.getString("sort"), item.getString("icon_url")));
-				String url = item.getString("icon_url");
-				if (url != null && !"null".equals(url)) {
-					DOWNLOAD_IMAGE_COUNT++;
-					Log.i(TAG, "查找json的时候准备开始下载");
-
-					DownLoadChanelImageInThread(item.getString("title"),
-							item.getString("icon_url"));
-				}
+				// 解析
+				// weibolList.add(new WeiboBean())
 			}
 		} catch (JSONException e) {
 			Log.i(TAG, "json出问题");
 			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
 		}
 		// 返回空值说明错误
-		return chanelList;
+		return weibolList;
 	}
 }
