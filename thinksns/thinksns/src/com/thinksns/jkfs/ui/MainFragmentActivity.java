@@ -21,6 +21,9 @@ import android.view.View;
 /**
  * MainFragmentActivity,待完善..
  * 
+ * 调试时，只把MainFragmentActivity和MenuFragment里面
+ * 自己的Fragment部分的注释取消，把其他人的Fragments都注释掉。
+ * 
  * @author wangjia
  * 
  */
@@ -37,7 +40,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 
 
 		setSlidingActionBarEnabled(true);
-
 
 
 		sm = getSlidingMenu();
@@ -57,22 +59,22 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		}
 
 		if (savedInstanceState == null) {
-			Fragment weiboMain = getWeiboMainFragment();
-			Fragment atAndComment = getAtAndCommentFragment();
+			//Fragment weiboMain = getWeiboMainFragment();
+/*			Fragment atAndComment = getAtAndCommentFragment();
 			Fragment collection = getCollectionFragment();
 			Fragment chat = getChatFragment();
 			Fragment channel = getChannelFragment();
 			Fragment weiba = getWeibaFragment();
-			Fragment setting = getSettingFragment();
+			Fragment setting = getSettingFragment();*/
 			// 添加 Fragments, 设置 tag, 并 hide
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
-			if (!weiboMain.isAdded()) {
+/*			if (!weiboMain.isAdded()) {
 				transaction.add(R.id.content_frame, weiboMain,
 						WeiboMainFragment.class.getName());
 			}
-
-			if (!atAndComment.isAdded()) {
+*/
+/*			if (!atAndComment.isAdded()) {
 				transaction.add(R.id.content_frame, atAndComment,
 						AtAndCommentFragment.class.getName());
 				transaction.hide(atAndComment);
@@ -101,7 +103,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 				transaction.add(R.id.content_frame, setting,
 						SettingFragment.class.getName());
 				transaction.hide(setting);
-			}
+			}*/
 
 			transaction.commit();
 

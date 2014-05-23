@@ -3,6 +3,8 @@ package com.thinksns.jkfs.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,7 +14,9 @@ import android.view.Display;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -93,6 +97,33 @@ public class Utility {
 	}
 
 	/**
+	 * 根据一个网络连接(String)获取bitmap图像
+	 * 
+	 * @param imageUri
+	 * @return
+	 * @throws MalformedURLException
+	 */
+	public static Bitmap getBitmap(String imageUri) {
+		// 显示网络上的图片
+		Bitmap bitmap = null;
+		try {
+			URL myFileUrl = new URL(imageUri);
+			HttpURLConnection conn = (HttpURLConnection) myFileUrl
+					.openConnection();
+			conn.setDoInput(true);
+			conn.connect();
+			InputStream is = conn.getInputStream();
+			bitmap = BitmapFactory.decodeStream(is);
+			is.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return bitmap;
+	}
+
+	/**
 	 * Parse a URL query and fragment parameters into a key-value bundle.
 	 */
 	public static Bundle parseUrl(String url) {
@@ -168,7 +199,6 @@ public class Utility {
 		}
 		return false;
 	}
-
 
 	public static int getScreenWidth() {
 		Activity activity = ThinkSNSApplication.getInstance().getActivity();

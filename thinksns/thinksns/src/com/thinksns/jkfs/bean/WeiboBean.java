@@ -10,9 +10,11 @@ import android.os.Parcelable;
 public class WeiboBean implements Parcelable {
 	private String feed_id;
 	private String type; // postimage、repost...
+	private String publish_time; // UNIX时间戳
+	private String is_del; // 0、1
 	private String content;
 	private String ctime;
-	private String from; // 0、1、2
+	private String from; // 0、1、2..
 	private String uid;
 	private String uname;
 	private String avatar_big;
@@ -20,10 +22,68 @@ public class WeiboBean implements Parcelable {
 	private String avatar_small;
 	private String has_attach; // 0、1
 
-	private int comment_count; // 评论数
-	private int repost_count; // 转发数
+	private String is_repost; // 是否转发
+	private String comment_count; // 评论数
+	private String repost_count; // 转发数
 
-	private WeiboAttachBean attach;
+	// private WeiboAttachBean attach;
+	private WeiboBean transpond_data; // 被转发微博
+
+	public String getFeed_id() {
+		return feed_id;
+	}
+
+	public void setFeed_id(String feedId) {
+		feed_id = feedId;
+	}
+
+	public String getPublish_time() {
+		return publish_time;
+	}
+
+	public void setPublish_time(String publishTime) {
+		publish_time = publishTime;
+	}
+
+	public String getIs_del() {
+		return is_del;
+	}
+
+	public void setIs_del(String isDel) {
+		is_del = isDel;
+	}
+
+	public String getCtime() {
+		return ctime;
+	}
+
+	public void setCtime(String ctime) {
+		this.ctime = ctime;
+	}
+
+	public String getIs_repost() {
+		return is_repost;
+	}
+
+	public void setIs_repost(String isRepost) {
+		is_repost = isRepost;
+	}
+
+	public String getComment_count() {
+		return comment_count;
+	}
+
+	public void setComment_count(String commentCount) {
+		comment_count = commentCount;
+	}
+
+	public String getRepost_count() {
+		return repost_count;
+	}
+
+	public void setRepost_count(String repostCount) {
+		repost_count = repostCount;
+	}
 
 	public String getAvatar_middle() {
 		return avatar_middle;
@@ -49,28 +109,12 @@ public class WeiboBean implements Parcelable {
 		has_attach = hasAttach;
 	}
 
-	public String getId() {
-		return feed_id;
-	}
-
-	public void setId(String id) {
-		this.feed_id = id;
-	}
-
 	public String getContent() {
 		return content;
 	}
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public String getTime() {
-		return ctime;
-	}
-
-	public void setTime(String time) {
-		this.ctime = time;
 	}
 
 	public String getFrom() {
@@ -113,28 +157,20 @@ public class WeiboBean implements Parcelable {
 		return type;
 	}
 
-	public int getComment_count() {
-		return comment_count;
-	}
-
-	public void setComment_count(int commentCount) {
-		comment_count = commentCount;
-	}
-
-	public int getRepost_count() {
-		return repost_count;
-	}
-
-	public void setRepost_count(int repostCount) {
-		repost_count = repostCount;
-	}
-
-	public void setAttach(WeiboAttachBean attach) {
+/*	public void setAttach(WeiboAttachBean attach) {
 		this.attach = attach;
 	}
 
 	public WeiboAttachBean getAttach() {
 		return attach;
+	}*/
+
+	public void setTranspond_data(WeiboBean transpond_data) {
+		this.transpond_data = transpond_data;
+	}
+
+	public WeiboBean getTranspond_data() {
+		return transpond_data;
 	}
 
 	public static Parcelable.Creator<WeiboBean> getCreator() {
@@ -152,6 +188,8 @@ public class WeiboBean implements Parcelable {
 		// TODO Auto-generated method stub
 		dest.writeString(feed_id);
 		dest.writeString(type);
+		dest.writeString(publish_time);
+		dest.writeString(is_del);
 		dest.writeString(content);
 		dest.writeString(ctime);
 		dest.writeString(from);
@@ -161,9 +199,11 @@ public class WeiboBean implements Parcelable {
 		dest.writeString(avatar_middle);
 		dest.writeString(avatar_small);
 		dest.writeString(has_attach);
-		dest.writeInt(comment_count);
-		dest.writeInt(repost_count);
-		dest.writeParcelable(attach, flags);
+		dest.writeString(is_repost);
+		dest.writeString(comment_count);
+		dest.writeString(repost_count);
+		//dest.writeParcelable(attach, flags);
+		dest.writeParcelable(transpond_data, flags);
 
 	}
 
@@ -172,6 +212,8 @@ public class WeiboBean implements Parcelable {
 			WeiboBean wb = new WeiboBean();
 			wb.feed_id = in.readString();
 			wb.type = in.readString();
+			wb.publish_time = in.readString();
+			wb.is_del = in.readString();
 			wb.content = in.readString();
 			wb.ctime = in.readString();
 			wb.from = in.readString();
@@ -181,9 +223,12 @@ public class WeiboBean implements Parcelable {
 			wb.avatar_middle = in.readString();
 			wb.avatar_small = in.readString();
 			wb.has_attach = in.readString();
-			wb.comment_count = in.readInt();
-			wb.repost_count = in.readInt();
-			wb.attach = in.readParcelable(WeiboAttachBean.class
+			wb.is_repost = in.readString();
+			wb.comment_count = in.readString();
+			wb.repost_count = in.readString();
+		/*	wb.attach = in.readParcelable(WeiboAttachBean.class
+					.getClassLoader());*/
+			wb.transpond_data = in.readParcelable(WeiboBean.class
 					.getClassLoader());
 			return wb;
 		}

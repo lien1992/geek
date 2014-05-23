@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/chanel_fragment_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f6f5ec"
+        android:padding="8dp" >
+
+        <ImageView
+            android:id="@+id/chanel_fragment_title_thinksns"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/chanel_fragment_title_thinksns"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="频道"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/chanel_fragment_title_drop_img"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/droplist" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <com.thinksns.jkfs.ui.view.PullToRefreshListView
+            android:id="@+id/chanel_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </com.thinksns.jkfs.ui.view.PullToRefreshListView>
+    </RelativeLayout>
+
+</LinearLayout>
