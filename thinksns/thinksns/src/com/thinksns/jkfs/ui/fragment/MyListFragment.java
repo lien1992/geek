@@ -46,14 +46,14 @@ public class MyListFragment extends ListFragment implements
 	public MyListFragment() {
 	}
 
-	public MyListFragment(String tag) {
+/*	public MyListFragment(String tag) {
 		mTag = tag;
 		mTotal = AboutMeFragment.TAB_WEIBO.equals(mTag) ? WORDS.length
 				: NUMBERS.length;
 
 		Log.d(TAG, "Constructor: tag=" + tag);
 	}
-
+*/
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -101,8 +101,8 @@ public class MyListFragment extends ListFragment implements
 
 		// add the new item and let the adapter know in order to refresh the
 		// views
-		mItems.add(AboutMeFragment.TAB_WEIBO.equals(mTag) ? WORDS[mPosition]
-				: NUMBERS[mPosition]);
+/*		mItems.add(AboutMeFragment.TAB_WEIBO.equals(mTag) ? WORDS[mPosition]
+				: NUMBERS[mPosition]);*/
 		mAdapter.notifyDataSetChanged();
 
 		// advance in your list with one step
@@ -139,10 +139,10 @@ public class MyListFragment extends ListFragment implements
 			}
 
 			wrapper.getTextView().setText(getItem(position));
-			wrapper.getBar().setBackgroundColor(
+/*			wrapper.getBar().setBackgroundColor(
 					mTag == AboutMeFragment.TAB_WEIBO ? getResources()
 							.getColor(wordBarColor) : getResources().getColor(
-							numberBarColor));
+							numberBarColor));*/
 			return view;
 		}
 
