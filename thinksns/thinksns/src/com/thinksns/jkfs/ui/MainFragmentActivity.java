@@ -44,14 +44,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			sm.setSlidingEnabled(true);
 			sm.setMode(SlidingMenu.LEFT);
 			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-//<<<<<<< HEAD
-//			// show home as up so we can toggle
-//			// getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//			getSupportActionBar().setHomeButtonEnabled(true);
-//			getSupportActionBar().setDisplayShowTitleEnabled(false);
-//			getSupportActionBar().setIcon(R.drawable.navigation);
-//=======
-//>>>>>>> be3854490a74b7fe98b1c1cc96aae489361d9258
 		} else {
 			// add a dummy view
 			View v = new View(this);

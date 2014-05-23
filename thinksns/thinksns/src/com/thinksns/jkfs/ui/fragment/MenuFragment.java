@@ -45,20 +45,6 @@ public class MenuFragment extends Fragment implements OnClickListener {
 				((MainFragmentActivity) getActivity()).getWeiboMainFragment());
 		fragments.put(R.id.sm_at, ((MainFragmentActivity) getActivity())
 				.getAtAndCommentFragment());
-		// <<<<<<< HEAD
-		// fragments.put(R.id.sm_favorite,
-		// ((MainFragmentActivity) getActivity()).getCollectionFragment());
-		// fragments.put(R.id.sm_chat,
-		// ((MainFragmentActivity) getActivity()).getChatFragment());
-		// fragments.put(R.id.sm_channel,
-		// ((MainFragmentActivity) getActivity()).getChannelFragment());
-		// fragments.put(R.id.sm_weiba,
-		// ((MainFragmentActivity) getActivity()).getWeibaFragment());
-		// fragments.put(R.id.sm_setting,
-		// ((MainFragmentActivity) getActivity()).getSettingFragment());
-		//
-		// ((WeiboMainFragment) fragments.get(R.id.sm_home)).changeActionBar();
-		// =======
 		fragments.put(R.id.sm_favorite,
 				((MainFragmentActivity) getActivity()).getCollectionFragment());
 		fragments.put(R.id.sm_chat,
@@ -69,8 +55,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 				((MainFragmentActivity) getActivity()).getWeibaFragment());
 		fragments.put(R.id.sm_setting,
 				((MainFragmentActivity) getActivity()).getSettingFragment());
-		// */
-		// >>>>>>> be3854490a74b7fe98b1c1cc96aae489361d9258
+
 	}
 
 	@Override
