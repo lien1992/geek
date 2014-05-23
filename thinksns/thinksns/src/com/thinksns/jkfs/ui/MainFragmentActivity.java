@@ -31,6 +31,11 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.content_frame);
+//<<<<<<< HEAD
+//
+//		setSlidingActionBarEnabled(true);
+//=======
+//>>>>>>> be3854490a74b7fe98b1c1cc96aae489361d9258
 
 		sm = getSlidingMenu();
 		// check if the content frame contains the menu frame
@@ -46,15 +51,15 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			sm.setSlidingEnabled(false);
 			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 		}
-    
+
 		if (savedInstanceState == null) {
 			Fragment weiboMain = getWeiboMainFragment();
-/*			Fragment atAndComment = getAtAndCommentFragment();
+			Fragment atAndComment = getAtAndCommentFragment();
 			Fragment collection = getCollectionFragment();
 			Fragment chat = getChatFragment();
 			Fragment channel = getChannelFragment();
 			Fragment weiba = getWeibaFragment();
-			Fragment setting = getSettingFragment();*/
+			Fragment setting = getSettingFragment();
 			// 添加 Fragments, 设置 tag, 并 hide
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
@@ -62,7 +67,8 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 				transaction.add(R.id.content_frame, weiboMain,
 						WeiboMainFragment.class.getName());
 			}
-/*			if (!atAndComment.isAdded()) {
+
+			if (!atAndComment.isAdded()) {
 				transaction.add(R.id.content_frame, atAndComment,
 						AtAndCommentFragment.class.getName());
 				transaction.hide(atAndComment);
@@ -73,8 +79,8 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 				transaction.hide(collection);
 			}
 			if (!chat.isAdded()) {
-				transaction.add(R.id.content_frame, chat, ChatFragment.class
-						.getName());
+				transaction.add(R.id.content_frame, chat,
+						ChatFragment.class.getName());
 				transaction.hide(chat);
 			}
 			if (!channel.isAdded()) {
@@ -83,15 +89,16 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 				transaction.hide(channel);
 			}
 			if (!weiba.isAdded()) {
-				transaction.add(R.id.content_frame, weiba, WeibaFragment.class
-						.getName());
+				transaction.add(R.id.content_frame, weiba,
+						WeibaFragment.class.getName());
 				transaction.hide(weiba);
 			}
 			if (!setting.isAdded()) {
 				transaction.add(R.id.content_frame, setting,
 						SettingFragment.class.getName());
 				transaction.hide(setting);
-			}*/
+			}
+
 			transaction.commit();
 
 			FragmentTransaction menuTransation = getSupportFragmentManager()
@@ -108,7 +115,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		sm.setShadowDrawable(R.drawable.slidingmenu_shadow);
 		sm.setBehindScrollScale(0.25f);
 		sm.setFadeDegree(0.25f);
-
 
 	}
 

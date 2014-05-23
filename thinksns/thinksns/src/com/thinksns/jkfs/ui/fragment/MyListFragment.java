@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.thinksns.jkfs.R;
 
+//从git上pull下来以后报错，我先注释掉了
 @SuppressLint("ValidFragment")
 public class MyListFragment extends ListFragment implements
 		LoaderCallbacks<Void> {
@@ -46,14 +47,22 @@ public class MyListFragment extends ListFragment implements
 	public MyListFragment() {
 	}
 
+
 /*	public MyListFragment(String tag) {
 		mTag = tag;
 		mTotal = AboutMeFragment.TAB_WEIBO.equals(mTag) ? WORDS.length
 				: NUMBERS.length;
 
 		Log.d(TAG, "Constructor: tag=" + tag);
-	}
-*/
+=======
+	public MyListFragment(String tag) {
+		/*
+		 * mTag = tag; mTotal = AboutMeFragment.TAB_WEIBO.equals(mTag) ?
+		 * WORDS.length : NUMBERS.length;
+		 * 
+		 * Log.d(TAG, "Constructor: tag=" + tag);
+		 */
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -101,18 +110,17 @@ public class MyListFragment extends ListFragment implements
 
 		// add the new item and let the adapter know in order to refresh the
 		// views
-/*		mItems.add(AboutMeFragment.TAB_WEIBO.equals(mTag) ? WORDS[mPosition]
-				: NUMBERS[mPosition]);*/
-		mAdapter.notifyDataSetChanged();
 
-		// advance in your list with one step
-		mPosition++;
-		if (mPosition < mTotal - 1) {
-			getLoaderManager().restartLoader(0, null, this);
-			Log.d(TAG, "onLoadFinished(): loading next...");
-		} else {
-			Log.d(TAG, "onLoadFinished(): done loading!");
-		}
+		/*
+		 * mItems.add(AboutMeFragment.TAB_WEIBO.equals(mTag) ? WORDS[mPosition]
+		 * : NUMBERS[mPosition]); mAdapter.notifyDataSetChanged();
+		 * 
+		 * // advance in your list with one step mPosition++; if (mPosition <
+		 * mTotal - 1) { getLoaderManager().restartLoader(0, null, this);
+		 * Log.d(TAG, "onLoadFinished(): loading next..."); } else { Log.d(TAG,
+		 * "onLoadFinished(): done loading!"); }
+		 */
+
 	}
 
 	@Override
@@ -128,21 +136,21 @@ public class MyListFragment extends ListFragment implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = convertView;
-			Wrapper wrapper;
 
-			if (view == null) {
-				view = mInflater.inflate(R.layout.people_item, null);
-				wrapper = new Wrapper(view);
-				view.setTag(wrapper);
-			} else {
-				wrapper = (Wrapper) view.getTag();
-			}
-
-			wrapper.getTextView().setText(getItem(position));
-/*			wrapper.getBar().setBackgroundColor(
-					mTag == AboutMeFragment.TAB_WEIBO ? getResources()
-							.getColor(wordBarColor) : getResources().getColor(
-							numberBarColor));*/
+			/*
+			 * Wrapper wrapper;
+			 * 
+			 * if (view == null) { view =
+			 * mInflater.inflate(R.layout.people_item, null); wrapper = new
+			 * Wrapper(view); view.setTag(wrapper); } else { wrapper = (Wrapper)
+			 * view.getTag(); }
+			 * 
+			 * wrapper.getTextView().setText(getItem(position));
+			 * wrapper.getBar().setBackgroundColor( mTag ==
+			 * AboutMeFragment.TAB_WEIBO ? getResources()
+			 * .getColor(wordBarColor) : getResources().getColor(
+			 * numberBarColor));
+			 */
 			return view;
 		}
 
