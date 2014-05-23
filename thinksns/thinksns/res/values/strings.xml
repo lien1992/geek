@@ -15,15 +15,7 @@
     <string name="myfollownum">0</string>
     <string name="followmenum">0</string>
 
-    <string-array name="menu_item">
-        <item>首页</item>
-        <item>聊天</item>
-        <item>\@我</item>
-        <item>收藏</item>
-        <item>频道</item>
-        <item>微吧</item>
-        <item>设置</item>
-        <item>退出当前用户</item>
-    </string-array>
+
+
 
 </resources>

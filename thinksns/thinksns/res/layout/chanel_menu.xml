@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFF00"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="10dp" >
+    </TableLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/chanel_menu_bottom" />
+
+</LinearLayout>

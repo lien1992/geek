@@ -36,13 +36,13 @@ public class ChatFragment extends Fragment {
         public void handleMessage(Message msg){
 
             if(msg.what==2){
-                try {
-                    JSONArray jsonObject=new JSONArray(jsonData);
-                    Log.d("MOSL", jsonObject.toString() + "----");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                //Log.d("MOSL",jsonData);
+//                try {
+//                    //JSONArray jsonObject=new JSONArray(jsonData);
+//                   // Log.d("MOSL", jsonObject.toString() + "----");
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                //Log.d("MOSL",jsonData);
             }
         }
     };
