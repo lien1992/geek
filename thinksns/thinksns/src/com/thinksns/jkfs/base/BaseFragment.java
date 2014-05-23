@@ -1,6 +1,5 @@
 package com.thinksns.jkfs.base;
 
-import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView.RefreshAndLoadMoreListener;
 
@@ -24,6 +23,7 @@ public abstract class BaseFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		mInflater = inflater;
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 

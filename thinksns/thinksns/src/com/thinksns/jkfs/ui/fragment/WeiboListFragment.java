@@ -1,10 +1,10 @@
 package com.thinksns.jkfs.ui.fragment;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -15,9 +15,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
@@ -30,10 +32,17 @@ import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
+/**
+ * 微博列表，待完善..
+ * 
+ * @author wangjia
+ * 
+ */
 public class WeiboListFragment extends BaseFragment {
 
 	private ThinkSNSApplication application;
 	private WeiboListBean weiboList = new WeiboListBean();
+	private List<WeiboBean> weibos = new ArrayList<WeiboBean>();
 	private WeiboAdapter adapter;
 	private AccountBean account;
 
@@ -41,10 +50,17 @@ public class WeiboListFragment extends BaseFragment {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				adapter.append(weiboList.getWeibos());
+				adapter.append(weibos);
 				break;
+			case 1:
+				//
+				break;
+			case 2:
+				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
+						.show();
+				listView.onRefreshComplete();
 			}
-			// case 1 ..
+
 		};
 	};
 
@@ -92,25 +108,32 @@ public class WeiboListFragment extends BaseFragment {
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		new Thread() {
+		if (Utility.isConnected(getActivity())) {
+			new Thread() {
 
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				Gson gson = new Gson();
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("app", "api");
-				map.put("mod", "WeiboStatuses");
-				map.put("act", "public_timeline");
-				// map.put("max_id", "");
-				map.put("oauth_token", account.getOauth_token());
-				map.put("oauth_token_secret", account.getOauth_token_secret());
-				String json = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				weiboList = gson.fromJson(json, WeiboListBean.class);
-				mHandler.sendEmptyMessage(0);
-			}
-		}.start();
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "WeiboStatuses");
+					map.put("act", "public_timeline");
+					// map.put("max_id", "");
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+					}.getType();
+					weibos = gson.fromJson(json, listType);
+					mHandler.sendEmptyMessage(0);
+				}
+			}.start();
+		} else {
+			mHandler.sendEmptyMessage(2);
+		}
 
 	}
 
@@ -178,18 +201,15 @@ public class WeiboListFragment extends BaseFragment {
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			new Thread() {
-				@Override
-				public void run() {
-					Bitmap avatar = Utility.getBitmap(weibo.getAvatar_small());
-					holder.avatar.setImageBitmap(avatar);
-/*					if(weibo.getType().equals("postimage")){
-						Bitmap wb_pic = Utility.getBitmap(weibo.getAttach().getUrl());
-					}*/
 
-				}
-			}.start();
-
+			/*
+			 * Bitmap avatar = Utility.getBitmap(weibo.getAvatar_small());
+			 * holder.avatar.setImageBitmap(avatar);
+			 * 
+			 * if(weibo.getType().equals("postimage")){ Bitmap wb_pic =
+			 * Utility.getBitmap(weibo.getAttach().getUrl()); }
+			 */
+			// 在handler中更新
 			holder.userName.setText(weibo.getUname());
 			holder.content.setText(weibo.getContent());
 			holder.time.setText(weibo.getCtime());
