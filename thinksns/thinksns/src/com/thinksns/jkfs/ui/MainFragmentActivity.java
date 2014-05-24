@@ -64,8 +64,8 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 /*			if (!weiboMain.isAdded()) {
 				transaction.add(R.id.content_frame, weiboMain,
 						WeiboMainFragment.class.getName());
-			}
-*/
+			}*/
+
 /*			if (!atAndComment.isAdded()) {
 				transaction.add(R.id.content_frame, atAndComment,
 						AtAndCommentFragment.class.getName());

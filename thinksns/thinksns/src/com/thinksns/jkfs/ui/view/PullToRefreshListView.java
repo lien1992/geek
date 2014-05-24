@@ -371,6 +371,10 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 		}
 	}
 
+	public boolean getLoadMoreStatus() {
+		return mEnablePullLoad;
+	}
+
 	private void onLoadMore() {
 		mPullLoading = true;
 		setState(STATE_LOADING);

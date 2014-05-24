@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -232,6 +233,19 @@ public class Utility {
 		if (BuildConfig.DEBUG) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	/**
+	 * 检测sdcard是否可用
+	 * 
+	 * @return true为可用，否则为不可用
+	 */
+	public static boolean sdCardIsAvailable() {
+		String status = Environment.getExternalStorageState();
+		if (!status.equals(Environment.MEDIA_MOUNTED))
+			return false;
+		return true;
 	}
 
 }
