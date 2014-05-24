@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
@@ -18,13 +19,16 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
 /**
  * ListView, 顶部:下拉刷新 + 底部:加载更多
- * 使用时实现RefreshAndLoadMoreListener接口，并调用setListener()进行绑定;
- * 要添加底部加载更多，调用setLoadMoreEnable(true)。
+ * 
+ * 【使用】实现RefreshAndLoadMoreListener接口，并调用setListener()进行绑定;
+ * 默认只有下拉刷新；要添加底部加载更多，调用setLoadMoreEnable(true)。
+ * 下拉刷新完成，调用onRefreshComplete()；底部加载更多完成，调用onLoadMoreComplete()。
  * 
  */
 public class PullToRefreshListView extends ListView implements OnScrollListener {
@@ -59,6 +63,9 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	private boolean mPullLoading;
 	private int mTotalItemCount;
 	private final static int PULL_LOAD_MORE_DELTA = 50; // 上拉大于50px触发加载更多
+	private Scroller mScroller;
+	private int mScrollBack;
+	private final static int SCROLLBACK_FOOTER = 123;
 
 	private RotateAnimation animation;
 	private RotateAnimation reverseAnimation;
@@ -92,6 +99,9 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	}
 
 	private void init(Context context) {
+		mScroller = new Scroller(context, new DecelerateInterpolator());
+		super.setOnScrollListener(this);
+
 		inflater = LayoutInflater.from(context);
 
 		headView = (LinearLayout) inflater.inflate(R.layout.refresh_head, null);// 顶部下拉刷新
@@ -161,6 +171,17 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	public void onScrollStateChanged(AbsListView arg0, int arg1) {
 	}
 
+	@Override
+	public void computeScroll() {
+		if (mScroller.computeScrollOffset()) {
+			if (mScrollBack == SCROLLBACK_FOOTER) {
+				setBottomMargin(mScroller.getCurrY());
+			}
+			postInvalidate();
+		}
+		super.computeScroll();
+	}
+
 	/**
 	 * 设置触摸事件
 	 * 
@@ -214,7 +235,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 						changeHeaderViewByState();
 					}
 				}
-				if (getLastVisiblePosition() == mTotalItemCount - 1
+				if (mEnablePullLoad
+						&& getLastVisiblePosition() == mTotalItemCount - 1
 						&& (getBottomMargin() > 0 || tempY - startY < 0)) {
 					// last item, already pulled up or want to pull up.
 					updateFooterHeight(-(tempY - startY) / RATIO);
@@ -230,12 +252,19 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 						state = REFRESHING;
 						changeHeaderViewByState();
 						onRefresh();
-					} else if (getLastVisiblePosition() == mTotalItemCount - 1) {
+					} else if (mEnablePullLoad
+							&& getLastVisiblePosition() == mTotalItemCount - 1) {
 						if (mEnablePullLoad
 								&& getBottomMargin() > PULL_LOAD_MORE_DELTA) {
 							onLoadMore();
 						}
-						footView.invalidate(); // 待定...
+						int bottomMargin = getBottomMargin();
+						if (bottomMargin > 0) {
+							mScroller.startScroll(0, bottomMargin, 0,
+									-bottomMargin, 400);
+							mScrollBack = SCROLLBACK_FOOTER;
+							footView.invalidate();
+						}
 					}
 				}
 				isBack = false;
@@ -260,7 +289,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 			arrowImageView.startAnimation(animation);
 
 			tipsTextview.setText("松开刷新");
-
 			break;
 		case PULL_TO_REFRESH:
 			progressBar.setVisibility(View.GONE);
@@ -273,9 +301,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 				isBack = false;
 				arrowImageView.startAnimation(reverseAnimation);
 			}
-
 			break;
-
 		case REFRESHING:
 			headView.setPadding(0, 0, 0, 0);
 			progressBar.setVisibility(View.VISIBLE);
@@ -298,10 +324,23 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 		isRefreshable = true;
 	}
 
+	/**
+	 * 下拉刷新结束时调用该方法
+	 */
 	public void onRefreshComplete() {
 		state = DONE;
 		lastUpdatedTextView.setText("最近更新:" + new Date().toLocaleString());
 		changeHeaderViewByState();
+	}
+
+	/**
+	 * 底部加载更多结束时调用该方法
+	 */
+	public void onLoadMoreComplete() {
+		if (mPullLoading == true) {
+			mPullLoading = false;
+			setState(STATE_NORMAL);
+		}
 	}
 
 	private void onRefresh() {
@@ -313,10 +352,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	@Override
 	public void setAdapter(ListAdapter adapter) {
 		lastUpdatedTextView.setText("最近更新:" + new Date().toLocaleString());
-		/*
-		 * if (mIsFooterReady == false) { // 确保footView为最后面的View，只添加一次
-		 * mIsFooterReady = true; addFooterView(footView); }
-		 */
 		super.setAdapter(adapter);
 	}
 
@@ -361,6 +396,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 			if (mIsFooterReady == false) { // 确保footView为最后面的View，只添加一次
 				mIsFooterReady = true;
 				addFooterView(footView);
+				footView.setVisibility(View.VISIBLE);
 			}
 			mPullLoading = false;
 			show();
@@ -385,6 +421,16 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 		if (listener != null) {
 			listener.onLoadMore();
 		}
+	}
+
+	public void normal() {
+		footHintView.setVisibility(View.VISIBLE);
+		footProgressBar.setVisibility(View.GONE);
+	}
+
+	public void loading() {
+		footHintView.setVisibility(View.GONE);
+		footProgressBar.setVisibility(View.VISIBLE);
 	}
 
 	/**

@@ -203,8 +203,10 @@ public class HttpUtils {
 				buffer = new BufferedReader(new InputStreamReader(is));
 
 			String line;
-			while ((line = buffer.readLine()) != null) {
-				strBuilder.append(line);
+			if (buffer != null) {
+				while ((line = buffer.readLine()) != null) {
+					strBuilder.append(line);
+				}
 			}
 			AppLogger.d("error result=" + strBuilder.toString());
 

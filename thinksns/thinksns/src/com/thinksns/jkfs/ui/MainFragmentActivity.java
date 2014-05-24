@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -76,38 +75,38 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 						WeiboMainFragment.class.getName());
 			}
 
-			if (!atAndComment.isAdded()) {
+/*			if (!atAndComment.isAdded()) {
 				transaction.add(R.id.content_frame, atAndComment,
 						AtAndCommentFragment.class.getName());
 				//transaction.hide(atAndComment);
-			}
-			if (!collection.isAdded()) {
+			}*/
+/*			if (!collection.isAdded()) {
 				transaction.add(R.id.content_frame, collection,
 						CollectionFragment.class.getName());
 				//transaction.hide(collection);
-			}
+			}*/
 
-			if (!chat.isAdded()) {
+/*			if (!chat.isAdded()) {
 				transaction.add(R.id.content_frame, chat,
 						ChatFragment.class.getName());
 				//transaction.hide(chat);
-			}
+			}*/
 
-			if (!channel.isAdded()) {
+/*			if (!channel.isAdded()) {
 				transaction.add(R.id.content_frame, channel,
 						ChanelFragment.class.getName());
 				//transaction.hide(channel);
-			}
-			if (!weiba.isAdded()) {
+			}*/
+/*			if (!weiba.isAdded()) {
 				transaction.add(R.id.content_frame, weiba,
 						WeibaFragment.class.getName());
 				//transaction.hide(weiba);
-			}
-			if (!setting.isAdded()) {
+			}*/
+/*			if (!setting.isAdded()) {
 				transaction.add(R.id.content_frame, setting,
 						SettingFragment.class.getName());
 				//transaction.hide(setting);
-			}
+			}*/
 
 			transaction.commit();
 
