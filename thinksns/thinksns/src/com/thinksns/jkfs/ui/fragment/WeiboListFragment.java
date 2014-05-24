@@ -18,7 +18,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thinksns.jkfs.R;
-import com.thinksns.jkfs.base.BaseFragment;
+import com.thinksns.jkfs.base.BaseListFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.WeiboBean;
@@ -35,15 +35,17 @@ import com.thinksns.jkfs.util.http.HttpUtility;
  * @author wangjia
  * 
  */
-public class WeiboListFragment extends BaseFragment {
+public class WeiboListFragment extends BaseListFragment {
 
 	private ThinkSNSApplication application;
 	// private WeiboListBean weiboList = new WeiboListBean();
 	private List<WeiboBean> weibos = new ArrayList<WeiboBean>();
 	private WeiboAdapter adapter;
 	private AccountBean account;
+
 	private int currentPage = 2;// 实验ing..
 	private String since_id = "";// 实验ing..
+
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -83,7 +85,7 @@ public class WeiboListFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		view = mInflater.inflate(R.layout.main_weibo_list_fragment, null);
+		View view = mInflater.inflate(R.layout.main_weibo_list_fragment, null);
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.main_weibo_list_view);
 
@@ -110,7 +112,10 @@ public class WeiboListFragment extends BaseFragment {
 
 				// 点击某一条微博
 			}
+
 		});
+
+
 	}
 
 	@Override

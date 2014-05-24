@@ -362,6 +362,18 @@ public class ChanelFragment extends Fragment {
 	private void getChanelsInThread() {
 		new Thread() {
 			public void run() {
+//				final Map<String, String> map = new HashMap<String, String>();
+//				map.put("app", APP);
+//				map.put("oauth_token", OAUTH_TOKEN);
+//				map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
+//				map.put("mod", MOD);
+//				map.put("act", ACT_GET_ALL_CHANEL);
+//				jsonData = HttpUtility.getInstance().executeNormalTask(
+//						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+//				Log.i(TAG, jsonData);
+//				handler.obtainMessage(
+//						ChanelFragment.GETTED_CHANEL_LIST_WITHOUT_IMAGE,
+//						JSONToChanels(jsonData)).sendToTarget();
 				try {
 					final Map<String, String> map = new HashMap<String, String>();
 					map.put("app", APP);

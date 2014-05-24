@@ -3,6 +3,7 @@ package com.thinksns.jkfs.ui;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.ui.fragment.AboutMeFragment;
 import com.thinksns.jkfs.ui.fragment.AtAndCommentFragment;
 import com.thinksns.jkfs.ui.fragment.ChanelFragment;
 import com.thinksns.jkfs.ui.fragment.ChatFragment;
@@ -13,6 +14,7 @@ import com.thinksns.jkfs.ui.fragment.WeibaFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboMainFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
@@ -28,12 +30,17 @@ import android.view.View;
 public class MainFragmentActivity extends SlidingFragmentActivity {
 
 	private SlidingMenu sm;
-
+    public static final int[] FragmentId={1,2,3,4,5,6,7,8};
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+        int a[]=new int[2];
+        int[] b=new int[2];
 		setContentView(R.layout.content_frame);
+
+
+		setSlidingActionBarEnabled(true);
+
 
 		sm = getSlidingMenu();
 		// check if the content frame contains the menu frame
@@ -42,6 +49,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			sm.setSlidingEnabled(true);
 			sm.setMode(SlidingMenu.LEFT);
 			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+
 		} else {
 			// add a dummy view
 			View v = new View(this);
@@ -147,6 +155,48 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		return fragment;
 	}
 
+
+    public void switchContent(int fragmentId) {
+        FragmentManager f=getSupportFragmentManager();
+        FragmentTransaction ft=f.beginTransaction();
+        switch (fragmentId){
+            case 1:
+                WeiboMainFragment weibo=new WeiboMainFragment();
+                ft.replace(R.id.content_frame,weibo);
+                ft.commit();
+                break;
+            case 2:
+                AboutMeFragment aboutme=new AboutMeFragment();
+                ft.replace(R.id.content_frame,aboutme);
+                ft.commit();
+                break;
+            case 3:
+                CollectionFragment collection =new CollectionFragment();
+                ft.replace(R.id.content_frame,collection);
+                ft.commit();
+                break;
+            case 4:
+                ChatFragment chat=new ChatFragment();
+                ft.replace(R.id.content_frame,chat);
+                ft.commit();
+                break;
+            case 5:
+                ChanelFragment chanel=new ChanelFragment();
+                ft.replace(R.id.content_frame,chanel);
+                ft.commit();
+                break;
+            case 6:
+                WeibaFragment weiba=new WeibaFragment();
+                ft.replace(R.id.content_frame,weiba);
+                ft.commit();
+                break;
+            case 7:
+                SettingFragment setting=new SettingFragment();
+                ft.replace(R.id.content_frame,setting);
+                ft.commit();
+                break;
+        }
+    }
 	public AtAndCommentFragment getAtAndCommentFragment() {
 		AtAndCommentFragment fragment = ((AtAndCommentFragment) getSupportFragmentManager()
 				.findFragmentByTag(AtAndCommentFragment.class.getName()));

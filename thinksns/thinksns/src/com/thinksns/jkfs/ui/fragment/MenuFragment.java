@@ -9,6 +9,7 @@ import com.thinksns.jkfs.ui.MainFragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +42,35 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		fragments.put(R.id.sm_home, ((MainFragmentActivity) getActivity())
+				.getWeiboMainFragment());
+		fragments.put(R.id.sm_at, ((MainFragmentActivity) getActivity())
+				.getAtAndCommentFragment());
+		fragments.put(R.id.sm_favorite, ((MainFragmentActivity) getActivity())
+				.getCollectionFragment());
+		fragments.put(R.id.sm_chat, ((MainFragmentActivity) getActivity())
+				.getChatFragment());
+		fragments.put(R.id.sm_channel, ((MainFragmentActivity) getActivity())
+				.getChannelFragment());
+		fragments.put(R.id.sm_weiba, ((MainFragmentActivity) getActivity())
+				.getWeibaFragment());
+		fragments.put(R.id.sm_setting, ((MainFragmentActivity) getActivity())
+				.getSettingFragment());
+
+		
+		//((WeiboMainFragment) fragments.get(R.id.sm_home)).changeActionBar();
+
+		fragments.put(R.id.sm_home,
+				((MainFragmentActivity) getActivity()).getWeiboMainFragment());
+		fragments.put(R.id.sm_at, ((MainFragmentActivity) getActivity())
+				.getAtAndCommentFragment());
+
+
 /*		fragments.put(R.id.sm_home,
 				((MainFragmentActivity) getActivity()).getWeiboMainFragment());*/
 /*		fragments.put(R.id.sm_at, ((MainFragmentActivity) getActivity())
 				.getAtAndCommentFragment());
+>>>>>>> bd798d167940a6d42f6b7fb61cf72853fbbb5039
 		fragments.put(R.id.sm_favorite,
 				((MainFragmentActivity) getActivity()).getCollectionFragment());
 		fragments.put(R.id.sm_chat,
@@ -54,7 +80,11 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		fragments.put(R.id.sm_weiba,
 				((MainFragmentActivity) getActivity()).getWeibaFragment());
 		fragments.put(R.id.sm_setting,
+<<<<<<< HEAD
+				((MainFragmentActivity) getActivity()).getSettingFragment());
+=======
 				((MainFragmentActivity) getActivity()).getSettingFragment());*/
+
 
 	}
 
@@ -233,30 +263,48 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		switch (id) {
 		case R.id.sm_home:
 			home.setBackgroundResource(R.color.grey);
+            //switchFragment(MainFragmentActivity.FragmentId[0]);
 			break;
 		case R.id.sm_at:
 			at.setBackgroundResource(R.color.grey);
+            //switchFragment(MainFragmentActivity.FragmentId[1]);
 			break;
 		case R.id.sm_favorite:
 			favorite.setBackgroundResource(R.color.grey);
+            //switchFragment(MainFragmentActivity.FragmentId[2]);
 			break;
 		case R.id.sm_chat:
 			chat.setBackgroundResource(R.color.grey);
+            //switchFragment(MainFragmentActivity.FragmentId[3]);
 			break;
 		case R.id.sm_channel:
 			channel.setBackgroundResource(R.color.grey);
+            //switchFragment(MainFragmentActivity.FragmentId[4]);
 			break;
 		case R.id.sm_weiba:
 			weiba.setBackgroundResource(R.color.grey);
+            //switchFragment(MainFragmentActivity.FragmentId[5]);
 			break;
 		case R.id.sm_setting:
 			setting.setBackgroundResource(R.color.grey);
+            //switchFragment(MainFragmentActivity.FragmentId[6]);
 			break;
 		case R.id.sm_logout:
 			logout.setBackgroundResource(R.color.grey);
+            //switchFragment(MainFragmentActivity.FragmentId[7]);
 			break;
 		}
 
 	}
 
+    // the meat of switching the above fragment
+    private void switchFragment(int fragmentId) {
+        if (getActivity() == null)
+            return;
+
+        if (getActivity() instanceof MainFragmentActivity) {
+            MainFragmentActivity ra = (MainFragmentActivity) getActivity();
+            ra.switchContent(fragmentId);
+        }
+    }
 }

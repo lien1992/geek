@@ -8,6 +8,7 @@ import com.thinksns.jkfs.ui.view.UnderlinePageIndicator;
 
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -17,6 +18,21 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.google.gson.Gson;
+import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.base.BaseFragment;
+import com.thinksns.jkfs.base.ThinkSNSApplication;
+import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.WeiboBean;
+import com.thinksns.jkfs.bean.WeiboListBean;
+import com.thinksns.jkfs.ui.view.PullToRefreshListView;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
+import com.thinksns.jkfs.util.http.HttpMethod;
+import com.thinksns.jkfs.util.http.HttpUtility;
+
 
 /**
  * 主微博Fragment,承载WeiboListFragment和AboutMeFragment
@@ -24,6 +40,8 @@ import android.widget.TextView;
  * @author wangjia
  * 
  */
+
+
 public class WeiboMainFragment extends Fragment {
 	private ViewPager pager;
 	private UnderlinePageIndicator indicator;
@@ -37,6 +55,42 @@ public class WeiboMainFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+
+/*		application = (ThinkSNSApplication) this.getActivity()
+				.getApplicationContext();
+		account = application.getAccount(this.getActivity());
+<<<<<<< HEAD
+//		listView.setListener(this);
+//		adapter = new WeiboAdapter();
+//		//listView.setAdapter(adapter);
+//		listView.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				// TODO Auto-generated method stub
+//
+//				// 查看微博..
+//
+//			}
+//		});
+=======
+		listView.setListener(this);
+		adapter = new WeiboAdapter();
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+
+				// 查看微博..
+
+			}
+		});*/
+		//return super.onCreateView(inflater, container, savedInstanceState);
+
 		super.onCreateView(inflater, container, savedInstanceState);
 		in = inflater;
 		view = in.inflate(R.layout.main_weibo_fragment, null);
@@ -48,6 +102,7 @@ public class WeiboMainFragment extends Fragment {
 		pager = (ViewPager) view.findViewById(R.id.main_weibo_pager);
 
 		return view;
+
 	}
 
 	@Override
