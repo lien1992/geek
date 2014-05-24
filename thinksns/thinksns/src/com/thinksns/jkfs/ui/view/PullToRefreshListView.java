@@ -313,10 +313,10 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	@Override
 	public void setAdapter(ListAdapter adapter) {
 		lastUpdatedTextView.setText("最近更新:" + new Date().toLocaleString());
-		if (mIsFooterReady == false) { // 确保footView为最后面的View，只添加一次
-			mIsFooterReady = true;
-			addFooterView(footView);
-		}
+		/*
+		 * if (mIsFooterReady == false) { // 确保footView为最后面的View，只添加一次
+		 * mIsFooterReady = true; addFooterView(footView); }
+		 */
 		super.setAdapter(adapter);
 	}
 
@@ -358,6 +358,10 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 			hide();
 			footView.setOnClickListener(null);
 		} else {
+			if (mIsFooterReady == false) { // 确保footView为最后面的View，只添加一次
+				mIsFooterReady = true;
+				addFooterView(footView);
+			}
 			mPullLoading = false;
 			show();
 			setState(STATE_NORMAL);
