@@ -60,12 +60,13 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 
 		if (savedInstanceState == null) {
 			Fragment weiboMain = getWeiboMainFragment();
-			Fragment atAndComment = getAtAndCommentFragment();
-			Fragment collection = getCollectionFragment();
-			Fragment chat = getChatFragment();
-			Fragment channel = getChannelFragment();
-			Fragment weiba = getWeibaFragment();
-			Fragment setting = getSettingFragment();
+			//Fragment atAndComment = getAtAndCommentFragment();
+			//Fragment collection = getCollectionFragment();
+			//Fragment chat = getChatFragment();
+			//Fragment channel = getChannelFragment();
+			//Fragment weiba = getWeibaFragment();
+			//Fragment setting = getSettingFragment();
+			
 			// 添加 Fragments, 设置 tag, 并 hide
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();

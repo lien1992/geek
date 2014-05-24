@@ -6,6 +6,7 @@ import com.thinksns.jkfs.R;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,8 +27,8 @@ import android.widget.AbsListView.OnScrollListener;
 /**
  * ListView, 顶部:下拉刷新 + 底部:加载更多
  * 
- * 【使用】实现RefreshAndLoadMoreListener接口，并调用setListener()进行绑定;
- * 默认只有下拉刷新；要添加底部加载更多，调用setLoadMoreEnable(true)。
+ * 【使用】实现RefreshAndLoadMoreListener接口，并调用setListener()进行绑定; 
+ * 默认情况下同时具备下拉刷新、加载更多；
  * 下拉刷新完成，调用onRefreshComplete()；底部加载更多完成，调用onLoadMoreComplete()。
  * 
  */
@@ -59,7 +60,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	private LinearLayout footProgressBar;
 	private TextView footHintView;
 	private boolean mIsFooterReady;
-	private boolean mEnablePullLoad;// 默认是false
+	private boolean mEnablePullLoad = false;
 	private boolean mPullLoading;
 	private int mTotalItemCount;
 	private final static int PULL_LOAD_MORE_DELTA = 50; // 上拉大于50px触发加载更多
@@ -235,10 +236,11 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 						changeHeaderViewByState();
 					}
 				}
-				if (mEnablePullLoad
+				if (mIsFooterReady && mEnablePullLoad
 						&& getLastVisiblePosition() == mTotalItemCount - 1
 						&& (getBottomMargin() > 0 || tempY - startY < 0)) {
 					// last item, already pulled up or want to pull up.
+					Log.d("it goes here", "action move");
 					updateFooterHeight(-(tempY - startY) / RATIO);
 				}
 				break;
@@ -252,9 +254,10 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 						state = REFRESHING;
 						changeHeaderViewByState();
 						onRefresh();
-					} else if (mEnablePullLoad
+					} else if (mIsFooterReady && mEnablePullLoad
 							&& getLastVisiblePosition() == mTotalItemCount - 1) {
-						if (mEnablePullLoad
+						Log.d("it goes here", "action up");
+						if (mIsFooterReady && mEnablePullLoad
 								&& getBottomMargin() > PULL_LOAD_MORE_DELTA) {
 							onLoadMore();
 						}
@@ -395,8 +398,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 		} else {
 			if (mIsFooterReady == false) { // 确保footView为最后面的View，只添加一次
 				mIsFooterReady = true;
-				addFooterView(footView);
-				footView.setVisibility(View.VISIBLE);
+				// addFooterView(footView);
+				// footView.setVisibility(View.VISIBLE);
 			}
 			mPullLoading = false;
 			show();

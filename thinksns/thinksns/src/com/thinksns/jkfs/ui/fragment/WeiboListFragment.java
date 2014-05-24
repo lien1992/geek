@@ -101,7 +101,7 @@ public class WeiboListFragment extends BaseListFragment {
 		account = application.getAccount(this.getActivity());
 
 		listView.setListener(this);
-		//listView.setLoadMoreEnable(true);
+		//listView.setLoadMoreEnable(false); 待研究..为何false不起作用？
 		adapter = new WeiboAdapter(getActivity(), mInflater, listView);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
