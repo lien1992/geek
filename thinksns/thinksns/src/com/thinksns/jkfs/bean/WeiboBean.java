@@ -1,5 +1,7 @@
 package com.thinksns.jkfs.bean;
 
+import java.util.ArrayList;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -23,7 +25,33 @@ public class WeiboBean implements Parcelable {
 	private int comment_count; // 评论数
 	private int repost_count; // 转发数
 
-	private WeiboAttachBean attach;
+	private ArrayList<WeiboAttachBean> attachList;
+
+	public WeiboBean(String feed_id, String type, String content, String ctime,
+			String from, String uid, String uname, String avatar_big,
+			String avatar_middle, String avatar_small, String has_attach,
+			int comment_count, int repost_count,
+			ArrayList<WeiboAttachBean> attachList) {
+		super();
+		this.feed_id = feed_id;
+		this.type = type;
+		this.content = content;
+		this.ctime = ctime;
+		this.from = from;
+		this.uid = uid;
+		this.uname = uname;
+		this.avatar_big = avatar_big;
+		this.avatar_middle = avatar_middle;
+		this.avatar_small = avatar_small;
+		this.has_attach = has_attach;
+		this.comment_count = comment_count;
+		this.repost_count = repost_count;
+		this.attachList = attachList;
+	}
+
+	public WeiboBean() {
+		super();
+	}
 
 	public String getAvatar_middle() {
 		return avatar_middle;
@@ -129,12 +157,12 @@ public class WeiboBean implements Parcelable {
 		repost_count = repostCount;
 	}
 
-	public void setAttach(WeiboAttachBean attach) {
-		this.attach = attach;
+	public ArrayList<WeiboAttachBean> getAttachList() {
+		return attachList;
 	}
 
-	public WeiboAttachBean getAttach() {
-		return attach;
+	public void setAttachList(ArrayList<WeiboAttachBean> attachList) {
+		this.attachList = attachList;
 	}
 
 	public static Parcelable.Creator<WeiboBean> getCreator() {
@@ -163,7 +191,7 @@ public class WeiboBean implements Parcelable {
 		dest.writeString(has_attach);
 		dest.writeInt(comment_count);
 		dest.writeInt(repost_count);
-		dest.writeParcelable(attach, flags);
+		dest.writeList(attachList);
 
 	}
 
@@ -183,7 +211,7 @@ public class WeiboBean implements Parcelable {
 			wb.has_attach = in.readString();
 			wb.comment_count = in.readInt();
 			wb.repost_count = in.readInt();
-			wb.attach = in.readParcelable(WeiboAttachBean.class
+			wb.attachList = in.readParcelable(WeiboAttachBean.class
 					.getClassLoader());
 			return wb;
 		}

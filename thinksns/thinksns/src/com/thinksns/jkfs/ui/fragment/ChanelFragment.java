@@ -11,14 +11,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.ChanelBean;
+import com.thinksns.jkfs.bean.WeiboAttachBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.CacheConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
@@ -29,6 +33,7 @@ import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView.RefreshAndLoadMoreListener;
 import com.thinksns.jkfs.util.DES;
 import com.thinksns.jkfs.util.MD5;
+import com.thinksns.jkfs.util.common.JSONUtils;
 import com.thinksns.jkfs.util.db.AccountOperator;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
@@ -166,7 +171,7 @@ public class ChanelFragment extends Fragment {
 					break;
 				case GETTED_WEIBO_LIST:
 					weiboList = (ArrayList<WeiboBean>) msg.obj;
-					listViewAdapter.notifyDataSetChanged();
+					// listViewAdapter.notifyDataSetChanged();
 					// 还有其他操作
 					break;
 				}
@@ -406,7 +411,7 @@ public class ChanelFragment extends Fragment {
 			Log.i(TAG, "json出问题");
 			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
 		}
-		// 返回空值说明错误
+		// 返回size==0说明错误
 		return chanelList;
 	}
 
@@ -508,36 +513,24 @@ public class ChanelFragment extends Fragment {
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 				Log.i(TAG, "这是微博______" + jsonData);
 				// 将json转化成bean列表，handler出去
-				// handler.obtainMessage(ChanelFragment.GETTED_WEIBO_LIST,
-				// JSONToChanels(jsonData)).sendToTarget();
+				handler.obtainMessage(ChanelFragment.GETTED_WEIBO_LIST,
+						JSONToWeibos(jsonData)).sendToTarget();
 			};
 		}.start();
 	}
 
-	/**
-	 * 还没写完，因为微博有音频视频什么的
-	 * 
-	 * @param JSONData
-	 *            需要转换的json格式的String
-	 * @return 数组size为0时，出错了
-	 */
-	ArrayList<WeiboBean> JSONToWeibos(String jsonData) {
-		ArrayList<WeiboBean> weibolList = new ArrayList<WeiboBean>();
+	private ArrayList<WeiboBean> JSONToWeibos(String jsonData) {
 		try {
-			JSONObject obj = new JSONObject(jsonData);
-			Iterator<String> it = obj.keys();
-			JSONObject item;
+			ArrayList<WeiboBean> list = JSONUtils.JSONToWeibos(jsonData);
+			Log.i(TAG, "微博个数" + list.size());
+			Log.i(TAG,  list.get(0).getUname());
 
-			while (it.hasNext()) {
-				item = obj.getJSONObject(it.next());
-				// 解析
-				// weibolList.add(new WeiboBean())
-			}
+			return list;
 		} catch (JSONException e) {
-			Log.i(TAG, "json出问题");
-			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		// 返回空值说明错误
-		return weibolList;
+		return new ArrayList<WeiboBean>();
 	}
+
 }

@@ -96,15 +96,19 @@ public class ChanelFragmentListViewAdapter extends BaseAdapter {
 		// 在这里给listview赋值
 		// 还没抓数据,这是错的
 		// viewHolder.user_img.setText(mlist.get(position).getUname());
-		// viewHolder.user_name.setText(mlist.get(position).getContent());
-		// viewHolder.time.setText(mlist.get(position).getUname());
+		// viewHolder.wb_u_name.setText(mlist.get(position).getContent());
+		// viewHolder.wb_time.setText(mlist.get(position).getUname());
 		// viewHolder.wb_text.setText(mlist.get(position).getContent());
 		// viewHolder.wb_pic.setText(mlist.get(position).getUname());
 		// viewHolder.re_user_name.setText(mlist.get(position).getContent());
 		// viewHolder.re_wb_text.setText(mlist.get(position).getUname());
-		// viewHolder.from.setText(mlist.get(position).getContent());
-		// viewHolder.repost_count.setText(mlist.get(position).getContent());
-		// viewHolder.comment_count.setText(mlist.get(position).getContent());
+		// viewHolder.wb_from.setText(mlist.get(position).getContent());
+		// viewHolder.like.setText(mlist.get(position).getContent());
+		// viewHolder.wb_like_count.setText(mlist.get(position).getContent());
+		// viewHolder.forward.setText(mlist.get(position).getContent());
+		// viewHolder.wb_repost_count.setText(mlist.get(position).getContent());
+		// viewHolder.comment.setText(mlist.get(position).getContent());
+		// viewHolder.wb_comment_count.setText(mlist.get(position).getContent());
 		return convertView;
 	}
 
