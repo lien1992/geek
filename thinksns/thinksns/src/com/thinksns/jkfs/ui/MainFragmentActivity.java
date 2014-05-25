@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -60,54 +59,55 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		}
 
 		if (savedInstanceState == null) {
-			Fragment weiboMain = getWeiboMainFragment();
-			Fragment atAndComment = getAtAndCommentFragment();
-			Fragment collection = getCollectionFragment();
-			Fragment chat = getChatFragment();
-			Fragment channel = getChannelFragment();
-			Fragment weiba = getWeibaFragment();
-			Fragment setting = getSettingFragment();
+			//Fragment weiboMain = getWeiboMainFragment();
+			//Fragment atAndComment = getAtAndCommentFragment();
+			//Fragment collection = getCollectionFragment();
+			//Fragment chat = getChatFragment();
+			//Fragment channel = getChannelFragment();
+			//Fragment weiba = getWeibaFragment();
+			//Fragment setting = getSettingFragment();
+			
 			// 添加 Fragments, 设置 tag, 并 hide
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
 
-			if (!weiboMain.isAdded()) {
+/*			if (!weiboMain.isAdded()) {
 				transaction.add(R.id.content_frame, weiboMain,
 						WeiboMainFragment.class.getName());
-			}
+			}*/
 
-			if (!atAndComment.isAdded()) {
+/*			if (!atAndComment.isAdded()) {
 				transaction.add(R.id.content_frame, atAndComment,
 						AtAndCommentFragment.class.getName());
 				//transaction.hide(atAndComment);
-			}
-			if (!collection.isAdded()) {
+			}*/
+/*			if (!collection.isAdded()) {
 				transaction.add(R.id.content_frame, collection,
 						CollectionFragment.class.getName());
 				//transaction.hide(collection);
-			}
+			}*/
 
-			if (!chat.isAdded()) {
+/*			if (!chat.isAdded()) {
 				transaction.add(R.id.content_frame, chat,
 						ChatFragment.class.getName());
 				//transaction.hide(chat);
-			}
+			}*/
 
-			if (!channel.isAdded()) {
+/*			if (!channel.isAdded()) {
 				transaction.add(R.id.content_frame, channel,
 						ChanelFragment.class.getName());
 				//transaction.hide(channel);
-			}
-			if (!weiba.isAdded()) {
+			}*/
+/*			if (!weiba.isAdded()) {
 				transaction.add(R.id.content_frame, weiba,
 						WeibaFragment.class.getName());
 				//transaction.hide(weiba);
-			}
-			if (!setting.isAdded()) {
+			}*/
+/*			if (!setting.isAdded()) {
 				transaction.add(R.id.content_frame, setting,
 						SettingFragment.class.getName());
 				//transaction.hide(setting);
-			}
+			}*/
 
 			transaction.commit();
 
