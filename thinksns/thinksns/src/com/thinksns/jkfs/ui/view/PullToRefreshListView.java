@@ -128,6 +128,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 				.findViewById(R.id.footer_progressbar);
 		footHintView = (TextView) footView
 				.findViewById(R.id.footer_hint_textview);
+		footView.setVisibility(View.GONE);
 
 		setOnScrollListener(this);
 
@@ -368,6 +369,10 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 				}
 			});
 		}
+	}
+
+	public boolean getLoadMoreStatus() {
+		return mEnablePullLoad;
 	}
 
 	private void onLoadMore() {

@@ -5,8 +5,8 @@
     <color name="green">#36C77B</color>
     <color name="blue">#3366cc</color>
     <color name="white">#F7F7F7</color>
-    <color name="pure_white">#000000</color>
-    <color name="black">#ffffff</color>
+    <color name="pure_white">#ffffff</color>
+    <color name="black">#000000</color>
 
     <!-- 测试而用 -->
     <drawable name="transparent">#00000000</drawable>

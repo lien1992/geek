@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <ImageView
-        android:id="@+id/user_img"
+        android:id="@+id/wb_user_img"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_margin="8dp"
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
-        android:layout_toRightOf="@+id/user_img"
+        android:layout_toRightOf="@+id/wb_user_img"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="用户名"
-                android:textColor="#444444"
+                android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <TextView
@@ -39,7 +39,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="2014年5月19日"
-                android:textColor="#444444"
+                android:textColor="@color/grey"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -49,17 +49,38 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:padding="2dp"
-            android:text="微博内容eg:【给孩子做他自己的机会】每个孩子都是一个独立的个体，虽然他的生命来源于父母，但从呱呱坠地那一刻起，他就开启了自己的人生之旅，不再从属于父母，也不再从属于任何人……让孩子成为她自己比成为天才更难！"
+            android:text="微博内容"
             android:textColor="#444444"
             android:textSize="16sp" />
 
-        <!-- 微博图片默认visibility="gone" -->
+        <!-- 微博图片默认visibility="gone" 待定：如果有多张图片，如何更好地呈现？ -->
 
-        <ImageView
-            android:id="@+id/wb_pic"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:visibility="gone" />
+        <LinearLayout
+            android:id="@+id/wb_pics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/wb_pic1"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <ImageView
+                android:id="@+id/wb_pic2"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <ImageView
+                android:id="@+id/wb_pic3"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <ImageView
+                android:id="@+id/wb_pic4"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+        </LinearLayout>
 
         <!-- 转发微博默认visibility="gone" -->
 
@@ -78,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="被转发用户名"
-                android:textColor="#484848"
+                android:textColor="#383838"
                 android:textSize="15sp" />
 
             <TextView
@@ -89,6 +110,35 @@
                 android:text="被转发微博内容"
                 android:textColor="#484848"
                 android:textSize="14sp" />
+
+            <!-- 微博图片默认visibility="gone" 待定：如果有多张图片，如何更好地呈现？ -->
+
+            <LinearLayout
+                android:id="@+id/re_pics"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:id="@+id/re_wb_pic1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+
+                <ImageView
+                    android:id="@+id/re_wb_pic2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+
+                <ImageView
+                    android:id="@+id/re_wb_pic3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+
+                <ImageView
+                    android:id="@+id/re_wb_pic4"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout
@@ -101,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="来自 Android客户端"
-                android:textColor="#444444"
+                android:textColor="@color/grey"
                 android:textSize="12sp" />
 
             <LinearLayout
@@ -123,7 +173,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="0"
-                    android:textColor="#444444"
+                    android:textColor="@color/grey"
                     android:textSize="12sp" />
 
                 <ImageView
@@ -139,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="0"
-                    android:textColor="#444444"
+                    android:textColor="@color/grey"
                     android:textSize="12sp" />
 
                 <ImageView
@@ -155,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="0"
-                    android:textColor="#444444"
+                    android:textColor="@color/grey"
                     android:textSize="12sp" />
             </LinearLayout>
         </RelativeLayout>

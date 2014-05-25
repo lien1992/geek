@@ -1,50 +1,107 @@
 package com.thinksns.jkfs.ui.fragment;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thinksns.jkfs.R;
-import com.thinksns.jkfs.base.BaseFragment;
+import com.thinksns.jkfs.base.BaseListFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.WeiboBean;
-import com.thinksns.jkfs.bean.WeiboListBean;
+import com.thinksns.jkfs.constant.HttpConstant;
+import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
+import com.thinksns.jkfs.ui.view.PullToRefreshListView;
+import com.thinksns.jkfs.util.Utility;
+import com.thinksns.jkfs.util.http.HttpMethod;
+import com.thinksns.jkfs.util.http.HttpUtility;
 
-public class WeiboListFragment extends BaseFragment{
-	
+/**
+ * 微博列表，待完善.. 下拉刷新、加载更多仍存bug, fixing..
+ * 
+ * @author wangjia
+ * 
+ */
+public class WeiboListFragment extends BaseListFragment {
+
 	private ThinkSNSApplication application;
-	private WeiboListBean weiboList = new WeiboListBean();
+	// private WeiboListBean weiboList = new WeiboListBean();
+	private List<WeiboBean> weibos = new ArrayList<WeiboBean>();
 	private WeiboAdapter adapter;
 	private AccountBean account;
+
+	private int currentPage = 2;// 实验ing..
+	private String since_id = "";// 实验ing..
+
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				adapter.append(weiboList.getWeibos());
+				Log.d("WEIBO COUNT", weibos.size() + "");
+				listView.onRefreshComplete();
+				adapter.append(weibos);
+				currentPage++;
 				break;
+			case 1:
+				listView.onRefreshComplete();
+				if (!listView.getLoadMoreStatus()) {
+					listView.setLoadMoreEnable(true);
+				}
+				if (weibos == null) {
+					Toast.makeText(getActivity(), "没有新微博", Toast.LENGTH_SHORT)
+							.show();
+					break;
+				}
+				adapter.insertToHead(weibos);
+				Toast.makeText(getActivity(), "新增微博" + weibos.size() + "条",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 2:
+				listView.onRefreshComplete();
+				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
+						.show();
 			}
-			// case 1 ..
+
 		};
 	};
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-/*		application = (ThinkSNSApplication) this.getActivity()
+		super.onCreateView(inflater, container, savedInstanceState);
+
+		View view = mInflater.inflate(R.layout.main_weibo_list_fragment, null);
+		listView = (PullToRefreshListView) view
+				.findViewById(R.id.main_weibo_list_view);
+
+		return view;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewCreated(view, savedInstanceState);
+		application = (ThinkSNSApplication) this.getActivity()
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
+
 		listView.setListener(this);
-		adapter = new WeiboAdapter();
+		adapter = new WeiboAdapter(getActivity(), mInflater, listView);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -53,84 +110,83 @@ public class WeiboListFragment extends BaseFragment{
 					int position, long id) {
 				// TODO Auto-generated method stub
 
-				// 查看微博..
-
+				// 点击某一条微博
 			}
-		});*/
-		return super.onCreateView(inflater, container, savedInstanceState);
+
+		});
+
+
 	}
 
 	@Override
 	public void onLoadMore() {
 		// TODO Auto-generated method stub
-		
+		if (Utility.isConnected(getActivity())) {
+			// 待添加超时判断
+
+			new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "WeiboStatuses");
+					map.put("act", "public_timeline");
+					map.put("page", currentPage + "");
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+					}.getType();
+					weibos = gson.fromJson(json, listType);
+					mHandler.sendEmptyMessage(0);
+				}
+			}.start();
+		} else {
+			mHandler.sendEmptyMessage(2);
+		}
+
 	}
 
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		
-	}
-	
-	class WeiboAdapter extends BaseAdapter {
-		List<WeiboBean> wList = new ArrayList<WeiboBean>();
+		if (Utility.isConnected(getActivity())) {
 
-		public void append(List<WeiboBean> lists) {
-			if (lists == null) {
-				return;
-			}
-			wList.addAll(lists);
-			notifyDataSetChanged();
+			// 待添加超时判断+新微博判断
+
+			new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "WeiboStatuses");
+					map.put("act", "public_timeline");
+					if (!since_id.equals(""))
+						map.put("max_id", since_id);
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+					}.getType();
+					weibos = gson.fromJson(json, listType);
+					since_id = weibos.get(0).getFeed_id();
+					Log.d("WEIBO SINCE ID", since_id);
+					Log.d("WEIBO SINCE ID CONTENT", weibos.get(0).getContent());
+					mHandler.sendEmptyMessage(1);
+				}
+			}.start();
+		} else {
+			mHandler.sendEmptyMessage(2);
 		}
 
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return wList.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return wList.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			ViewHolder holder;
-			WeiboBean weibo = wList.get(position);
-			if (convertView == null) {
-				holder = new ViewHolder();
-				convertView = mInflater.inflate(
-						R.layout.main_weibo_listview_item, null);
-				holder.userName = (TextView) convertView
-						.findViewById(R.id.wb_u_name);
-				holder.content = (TextView) convertView
-						.findViewById(R.id.wb_text);
-
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();
-			}
-			holder.userName.setText(weibo.getUname());
-			holder.content.setText(weibo.getContent());
-
-			return convertView;
-		}
-
-	}
-
-	class ViewHolder {
-		public TextView userName;
-		public TextView content;
-		// 其他View..
 	}
 
 }

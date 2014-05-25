@@ -47,6 +47,14 @@ public class MyListFragment extends ListFragment implements
 	public MyListFragment() {
 	}
 
+
+/*	public MyListFragment(String tag) {
+		mTag = tag;
+		mTotal = AboutMeFragment.TAB_WEIBO.equals(mTag) ? WORDS.length
+				: NUMBERS.length;
+
+		Log.d(TAG, "Constructor: tag=" + tag);
+=======
 	public MyListFragment(String tag) {
 		/*
 		 * mTag = tag; mTotal = AboutMeFragment.TAB_WEIBO.equals(mTag) ?
@@ -54,7 +62,6 @@ public class MyListFragment extends ListFragment implements
 		 * 
 		 * Log.d(TAG, "Constructor: tag=" + tag);
 		 */
-	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -103,6 +110,7 @@ public class MyListFragment extends ListFragment implements
 
 		// add the new item and let the adapter know in order to refresh the
 		// views
+
 		/*
 		 * mItems.add(AboutMeFragment.TAB_WEIBO.equals(mTag) ? WORDS[mPosition]
 		 * : NUMBERS[mPosition]); mAdapter.notifyDataSetChanged();
@@ -112,6 +120,7 @@ public class MyListFragment extends ListFragment implements
 		 * Log.d(TAG, "onLoadFinished(): loading next..."); } else { Log.d(TAG,
 		 * "onLoadFinished(): done loading!"); }
 		 */
+
 	}
 
 	@Override
@@ -127,6 +136,7 @@ public class MyListFragment extends ListFragment implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = convertView;
+
 			/*
 			 * Wrapper wrapper;
 			 * 
