@@ -98,7 +98,7 @@ public final class ThinkSNSApplication extends Application {
         boolean isWifiConn = networkInfo.isConnected();
         networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         boolean isMobileConn = networkInfo.isConnected();
-        if(!isWifiConn&&!isMobileConn)
+        if(!isWifiConn||isMobileConn)
             return false;
         return true;
     }
