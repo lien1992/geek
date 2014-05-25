@@ -59,7 +59,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		}
 
 		if (savedInstanceState == null) {
-			Fragment weiboMain = getWeiboMainFragment();
+			//Fragment weiboMain = getWeiboMainFragment();
 			//Fragment atAndComment = getAtAndCommentFragment();
 			//Fragment collection = getCollectionFragment();
 			//Fragment chat = getChatFragment();
@@ -71,10 +71,10 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
 
-			if (!weiboMain.isAdded()) {
+/*			if (!weiboMain.isAdded()) {
 				transaction.add(R.id.content_frame, weiboMain,
 						WeiboMainFragment.class.getName());
-			}
+			}*/
 
 /*			if (!atAndComment.isAdded()) {
 				transaction.add(R.id.content_frame, atAndComment,

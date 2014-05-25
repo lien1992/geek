@@ -42,8 +42,8 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		fragments.put(R.id.sm_home, ((MainFragmentActivity) getActivity())
-				.getWeiboMainFragment());
+/*		fragments.put(R.id.sm_home, ((MainFragmentActivity) getActivity())
+				.getWeiboMainFragment());*/
 /*		fragments.put(R.id.sm_at, ((MainFragmentActivity) getActivity())
 				.getAtAndCommentFragment());*/
 /*		fragments.put(R.id.sm_favorite, ((MainFragmentActivity) getActivity())
@@ -102,7 +102,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		case R.id.sm_home:
 			changeBackground(R.id.sm_home);
 
-			FragmentTransaction ft_home = getFragmentManager()
+/*			FragmentTransaction ft_home = getFragmentManager()
 			.beginTransaction();
 			ft_home.hide(fragments.get(R.id.sm_at));
 			ft_home.hide(fragments.get(R.id.sm_favorite));
@@ -113,7 +113,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			WeiboMainFragment wmfragment = (WeiboMainFragment) fragments
 					.get(R.id.sm_home);
 			ft_home.show(wmfragment);
-			ft_home.commit();
+			ft_home.commit();*/
 
 			((MainFragmentActivity) getActivity()).getSlidingMenu()
 					.showContent();
