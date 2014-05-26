@@ -46,7 +46,7 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 微博详细内容及评论、转发、收藏，待完成的部分（添加评论表情、跳转到微博转发界面、图片微博的显示、评论转发赞数目的更新）
+ * 微博详细内容及评论、转发、收藏，待完成的部分（添加评论表情、图片微博的显示、评论转发赞数目的更新）
  * 
  * @author wangjia
  * 
@@ -357,6 +357,10 @@ public class WeiboDetailActivity extends BaseActivity implements
 			}
 			break;
 		case R.id.wb_detail_repost:
+			Intent intent = new Intent(WeiboDetailActivity.this,
+					RepostActivity.class);
+			intent.putExtra("repost", weibo);
+			startActivity(intent);
 			break;
 		case R.id.wb_detail_favorite:
 			if (Utility.isConnected(WeiboDetailActivity.this)) {
