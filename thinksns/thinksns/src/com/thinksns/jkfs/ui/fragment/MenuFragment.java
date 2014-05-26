@@ -6,6 +6,8 @@ import java.util.Map;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -26,6 +28,8 @@ import android.widget.TextView;
  * 
  */
 public class MenuFragment extends Fragment implements OnClickListener {
+
+    private String TAG="MenuFragment";
 	private ImageView avatar;
 	private TextView nick;
 	private LinearLayout home;
@@ -40,29 +44,15 @@ public class MenuFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		Log.d(TAG,"menuFramgnet onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
-/*		fragments.put(R.id.sm_home, ((MainFragmentActivity) getActivity())
-				.getWeiboMainFragment());*/
-/*		fragments.put(R.id.sm_at, ((MainFragmentActivity) getActivity())
-				.getAtAndCommentFragment());*/
-/*		fragments.put(R.id.sm_favorite, ((MainFragmentActivity) getActivity())
-				.getCollectionFragment());*/
-/*		fragments.put(R.id.sm_chat, ((MainFragmentActivity) getActivity())
-				.getChatFragment());*/
-/*		fragments.put(R.id.sm_channel, ((MainFragmentActivity) getActivity())
-				.getChannelFragment());*/
-/*		fragments.put(R.id.sm_weiba, ((MainFragmentActivity) getActivity())
-				.getWeibaFragment());*/
-/*		fragments.put(R.id.sm_setting, ((MainFragmentActivity) getActivity())
-				.getSettingFragment());*/
 
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+        Log.d(TAG,"menuFramgnet onCreateView");
 		final ScrollView view = (ScrollView) inflater.inflate(
 				R.layout.slidingmenu_behind, container, false);
 		avatar = (ImageView) view.findViewById(R.id.sm_behind_avatar);
@@ -80,7 +70,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+        Log.d(TAG,"menuFramgnet onViewCreated");
 		super.onViewCreated(view, savedInstanceState);
 		home.setOnClickListener(this);
 		at.setOnClickListener(this);
@@ -101,144 +91,67 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.sm_home:
 			changeBackground(R.id.sm_home);
-
-/*			FragmentTransaction ft_home = getFragmentManager()
-			.beginTransaction();
-			ft_home.hide(fragments.get(R.id.sm_at));
-			ft_home.hide(fragments.get(R.id.sm_favorite));
-			ft_home.hide(fragments.get(R.id.sm_chat));
-			ft_home.hide(fragments.get(R.id.sm_channel));
-			ft_home.hide(fragments.get(R.id.sm_weiba));
-			ft_home.hide(fragments.get(R.id.sm_setting));
-			WeiboMainFragment wmfragment = (WeiboMainFragment) fragments
-					.get(R.id.sm_home);
-			ft_home.show(wmfragment);
-			ft_home.commit();*/
-
-			((MainFragmentActivity) getActivity()).getSlidingMenu()
-					.showContent();
+            WeiboMainFragment weiboMainFragment=new WeiboMainFragment();
+            if(weiboMainFragment!=null)
+            switchFragment(weiboMainFragment);
 			break;
 		case R.id.sm_at:
 			changeBackground(R.id.sm_at);
-
-/*			FragmentTransaction ft_at = getFragmentManager().beginTransaction();
-			ft_at.hide(fragments.get(R.id.sm_home));
-			ft_at.hide(fragments.get(R.id.sm_favorite));
-			ft_at.hide(fragments.get(R.id.sm_chat));
-			ft_at.hide(fragments.get(R.id.sm_channel));
-			ft_at.hide(fragments.get(R.id.sm_weiba));
-			ft_at.hide(fragments.get(R.id.sm_setting));
-			AtAndCommentFragment acfragment = (AtAndCommentFragment) fragments
-					.get(R.id.sm_at);
-			ft_at.show(acfragment);
-			ft_at.commit();*/
-
-			((MainFragmentActivity) getActivity()).getSlidingMenu()
-					.showContent();
+            AtAndCommentFragment atAndCommentFragment=new AtAndCommentFragment();
+            if(atAndCommentFragment!=null)
+            switchFragment(atAndCommentFragment);
 			break;
 		case R.id.sm_favorite:
 			changeBackground(R.id.sm_favorite);
-
-/*			FragmentTransaction ft_fav = getFragmentManager()
-					.beginTransaction();
-			ft_fav.hide(fragments.get(R.id.sm_home));
-			ft_fav.hide(fragments.get(R.id.sm_at));
-			ft_fav.hide(fragments.get(R.id.sm_chat));
-			ft_fav.hide(fragments.get(R.id.sm_channel));
-			ft_fav.hide(fragments.get(R.id.sm_weiba));
-			ft_fav.hide(fragments.get(R.id.sm_setting));
-			CollectionFragment favfragment = (CollectionFragment) fragments
-					.get(R.id.sm_favorite);
-			ft_fav.show(favfragment);
-			ft_fav.commit();*/
-
-			((MainFragmentActivity) getActivity()).getSlidingMenu()
-					.showContent();
+            CollectionFragment collectionFragment=new CollectionFragment();
+            if(collectionFragment!=null)
+            switchFragment(collectionFragment);
 			break;
 		case R.id.sm_chat:
 			changeBackground(R.id.sm_chat);
-
-/*			FragmentTransaction ft_ct = getFragmentManager().beginTransaction();
-
-			ft_ct.hide(fragments.get(R.id.sm_home));
-			ft_ct.hide(fragments.get(R.id.sm_favorite));
-			ft_ct.hide(fragments.get(R.id.sm_at));
-			ft_ct.hide(fragments.get(R.id.sm_channel));
-			ft_ct.hide(fragments.get(R.id.sm_weiba));
-			ft_ct.hide(fragments.get(R.id.sm_setting));
-
-			ChatFragment ctfragment = (ChatFragment) fragments
-					.get(R.id.sm_chat);
-			ft_ct.show(ctfragment);
-			ft_ct.commit();*/
-
-			((MainFragmentActivity) getActivity()).getSlidingMenu()
-					.showContent();
+            ChatFragment chatFragment=new ChatFragment();
+            if(chatFragment!=null)
+            switchFragment(chatFragment);
 			break;
 		case R.id.sm_channel:
+            ChanelFragment chanelFragment=new ChanelFragment();
+            if(chanelFragment!=null)
+            switchFragment(chanelFragment);
 			changeBackground(R.id.sm_channel);
-
-/*			FragmentTransaction ft_chn = getFragmentManager()
-					.beginTransaction();
-			ft_chn.hide(fragments.get(R.id.sm_home));
-			ft_chn.hide(fragments.get(R.id.sm_favorite));
-			ft_chn.hide(fragments.get(R.id.sm_chat));
-			ft_chn.hide(fragments.get(R.id.sm_at));
-			ft_chn.hide(fragments.get(R.id.sm_weiba));
-			ft_chn.hide(fragments.get(R.id.sm_setting));
-			ChanelFragment chnfragment = (ChanelFragment) fragments
-					.get(R.id.sm_channel);
-			ft_chn.show(chnfragment);
-			ft_chn.commit();*/
-
-			((MainFragmentActivity) getActivity()).getSlidingMenu()
-					.showContent();
 			break;
 		case R.id.sm_weiba:
 			changeBackground(R.id.sm_weiba);
-
-/*			FragmentTransaction ft_wb = getFragmentManager().beginTransaction();
-			ft_wb.hide(fragments.get(R.id.sm_home));
-			ft_wb.hide(fragments.get(R.id.sm_favorite));
-			ft_wb.hide(fragments.get(R.id.sm_chat));
-			ft_wb.hide(fragments.get(R.id.sm_channel));
-			ft_wb.hide(fragments.get(R.id.sm_at));
-			ft_wb.hide(fragments.get(R.id.sm_setting));
-			WeibaFragment wbfragment = (WeibaFragment) fragments
-					.get(R.id.sm_weiba);
-			ft_wb.show(wbfragment);
-			ft_wb.commit();*/
-
-			((MainFragmentActivity) getActivity()).getSlidingMenu()
-					.showContent();
+            WeibaFragment weibaFragment=new WeibaFragment();
+            if(weibaFragment!=null)
+            switchFragment(weibaFragment);
 			break;
 		case R.id.sm_setting:
 			changeBackground(R.id.sm_setting);
-
-/*			FragmentTransaction ft_st = getFragmentManager().beginTransaction();
-			ft_st.hide(fragments.get(R.id.sm_home));
-			ft_st.hide(fragments.get(R.id.sm_favorite));
-			ft_st.hide(fragments.get(R.id.sm_chat));
-			ft_st.hide(fragments.get(R.id.sm_channel));
-			ft_st.hide(fragments.get(R.id.sm_weiba));
-			ft_st.hide(fragments.get(R.id.sm_at));
-			SettingFragment stfragment = (SettingFragment) fragments
-					.get(R.id.sm_setting);
-			ft_st.show(stfragment);
-			ft_st.commit();*/
-
-			((MainFragmentActivity) getActivity()).getSlidingMenu()
-					.showContent();
+            SettingFragment settingFragment=new SettingFragment();
+            if(settingFragment!=null)
+            switchFragment(settingFragment);
 			break;
 		case R.id.sm_logout:
 			changeBackground(R.id.sm_logout);
-			// 注销帐户..
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.quit_account)
+                    .setMessage(R.string.quit_account_explanation).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            }).setNegativeButton("取消",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            }).show();
 			break;
 		}
 	}
 
 	private void changeBackground(int id) {
-		// TODO Auto-generated method stub
+
 		home.setBackgroundResource(R.color.white);
 		at.setBackgroundResource(R.color.white);
 		favorite.setBackgroundResource(R.color.white);
@@ -250,48 +163,40 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		switch (id) {
 		case R.id.sm_home:
 			home.setBackgroundResource(R.color.grey);
-			// switchFragment(MainFragmentActivity.FragmentId[0]);
 			break;
 		case R.id.sm_at:
 			at.setBackgroundResource(R.color.grey);
-			// switchFragment(MainFragmentActivity.FragmentId[1]);
 			break;
 		case R.id.sm_favorite:
 			favorite.setBackgroundResource(R.color.grey);
-			// switchFragment(MainFragmentActivity.FragmentId[2]);
 			break;
 		case R.id.sm_chat:
 			chat.setBackgroundResource(R.color.grey);
-			// switchFragment(MainFragmentActivity.FragmentId[3]);
 			break;
 		case R.id.sm_channel:
 			channel.setBackgroundResource(R.color.grey);
-			// switchFragment(MainFragmentActivity.FragmentId[4]);
 			break;
 		case R.id.sm_weiba:
 			weiba.setBackgroundResource(R.color.grey);
-			// switchFragment(MainFragmentActivity.FragmentId[5]);
 			break;
 		case R.id.sm_setting:
 			setting.setBackgroundResource(R.color.grey);
-			// switchFragment(MainFragmentActivity.FragmentId[6]);
 			break;
 		case R.id.sm_logout:
 			logout.setBackgroundResource(R.color.grey);
-			// switchFragment(MainFragmentActivity.FragmentId[7]);
 			break;
 		}
 
 	}
 
 	// the meat of switching the above fragment
-	private void switchFragment(int fragmentId) {
+	private void switchFragment(Fragment fragment) {
 		if (getActivity() == null)
 			return;
 
 		if (getActivity() instanceof MainFragmentActivity) {
 			MainFragmentActivity ra = (MainFragmentActivity) getActivity();
-			ra.switchContent(fragmentId);
+			ra.switchContent(fragment);
 		}
 	}
 }

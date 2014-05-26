@@ -193,7 +193,7 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/regist_btn"
+        android:id="@+id/regist_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/reg_sex"

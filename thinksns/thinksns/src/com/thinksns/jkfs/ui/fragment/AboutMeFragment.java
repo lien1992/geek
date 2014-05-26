@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +40,7 @@ import com.thinksns.jkfs.util.http.HttpUtility;
 @SuppressLint("HandlerLeak")
 public class AboutMeFragment extends Fragment {
 
+    public static final String TAG="AboutMeFragment";
 	// get the account
 	private ThinkSNSApplication application;
 	private AccountBean account;
@@ -112,7 +114,7 @@ public class AboutMeFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+
 		super.onViewCreated(view, savedInstanceState);
 
 		application = (ThinkSNSApplication) this.getActivity()
@@ -133,10 +135,13 @@ public class AboutMeFragment extends Fragment {
 				map.put("oauth_token_secret", account.getOauth_token_secret());
 				String json = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+//                if(json!=null&&!"".equals(json)){
+//
+//                    userinfo = gson.fromJson(json, UserInfoBean.class);
+//                    headicon = loadBitmap(userinfo.getAvatar());
+//                    mHandler.sendEmptyMessage(0);
+//                }
 
-				userinfo = gson.fromJson(json, UserInfoBean.class);
-				headicon = loadBitmap(userinfo.getAvatar());
-				mHandler.sendEmptyMessage(0);
 
 			}
 		}.start();

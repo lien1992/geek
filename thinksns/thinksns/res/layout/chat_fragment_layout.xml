@@ -33,9 +33,9 @@
             android:src="@drawable/xiala"
             android:layout_alignParentRight="true"/>
         </RelativeLayout>
-    <ListView
-        android:layout_marginTop="10dp"
+    <com.thinksns.jkfs.ui.view.PullToRefreshListView
         android:id="@+id/chat_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </com.thinksns.jkfs.ui.view.PullToRefreshListView>
 </LinearLayout>
