@@ -59,8 +59,9 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		}
 
 		if (savedInstanceState == null) {
+
 //<<<<<<< HEAD
-//			Fragment weiboMain = getWeiboMainFragment();
+			Fragment weiboMain = getWeiboMainFragment();
 //			Fragment atAndComment = getAtAndCommentFragment();
 //			Fragment collection = getCollectionFragment();
 //			Fragment chat = getChatFragment();
@@ -70,10 +71,10 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			// 添加 Fragments, 设置 tag, 并 hide
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
-//			if (!weiboMain.isAdded()) {
-//				transaction.add(R.id.content_frame, weiboMain,
-//						WeiboMainFragment.class.getName());
-//			}
+			if (!weiboMain.isAdded()) {
+				transaction.add(R.id.content_frame, weiboMain,
+						WeiboMainFragment.class.getName());
+			}
 //
 //			if (!atAndComment.isAdded()) {
 //				transaction.add(R.id.content_frame, atAndComment,
@@ -117,39 +118,56 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 //			FragmentTransaction transaction = getSupportFragmentManager()
 //					.beginTransaction();
 /*			if (!weiboMain.isAdded()) {
+=======
+			Fragment weiboMain = getWeiboMainFragment();
+			//Fragment atAndComment = getAtAndCommentFragment();
+			//Fragment collection = getCollectionFragment();
+			//Fragment chat = getChatFragment();
+			//Fragment channel = getChannelFragment();
+			//Fragment weiba = getWeibaFragment();
+			//Fragment setting = getSettingFragment();
+			
+			// 添加 Fragments, 设置 tag, 并 hide
+			FragmentTransaction transaction = getSupportFragmentManager()
+					.beginTransaction();
+
+			if (!weiboMain.isAdded()) {
+>>>>>>> a98666dce69163b5600bbbe969c82cfc97df609d
 				transaction.add(R.id.content_frame, weiboMain,
 						WeiboMainFragment.class.getName());
-			}*/
+			}
 
 /*			if (!atAndComment.isAdded()) {
 				transaction.add(R.id.content_frame, atAndComment,
 						AtAndCommentFragment.class.getName());
-				transaction.hide(atAndComment);
-			}
-			if (!collection.isAdded()) {
+				//transaction.hide(atAndComment);
+			}*/
+/*			if (!collection.isAdded()) {
 				transaction.add(R.id.content_frame, collection,
 						CollectionFragment.class.getName());
-				transaction.hide(collection);
-			}
-			if (!chat.isAdded()) {
+				//transaction.hide(collection);
+			}*/
+
+/*			if (!chat.isAdded()) {
 				transaction.add(R.id.content_frame, chat,
 						ChatFragment.class.getName());
-				transaction.hide(chat);
-			}
-			if (!channel.isAdded()) {
+				//transaction.hide(chat);
+			}*/
+
+/*			if (!channel.isAdded()) {
 				transaction.add(R.id.content_frame, channel,
 						ChanelFragment.class.getName());
-				transaction.hide(channel);
-			}
-			if (!weiba.isAdded()) {
+				//transaction.hide(channel);
+			}*/
+/*			if (!weiba.isAdded()) {
 				transaction.add(R.id.content_frame, weiba,
 						WeibaFragment.class.getName());
-				transaction.hide(weiba);
-			}
-			if (!setting.isAdded()) {
+				//transaction.hide(weiba);
+			}*/
+/*			if (!setting.isAdded()) {
 				transaction.add(R.id.content_frame, setting,
 						SettingFragment.class.getName());
-				transaction.hide(setting);
+				//transaction.hide(setting);
 			}*/
 //>>>>>>> ac5ef81f1fbf34a1c425f76bdc9b3f0b5065bd94
 

@@ -61,9 +61,9 @@ public class ChatFragment extends Fragment {
                 map.put("oauth_token",accountBean.getOauth_token());
                 map.put("oauth_token_secret",accountBean.getOauth_token_secret());
                 map.put("format","json");
-                jsonData = HttpUtility.getInstance().executeNormalTask(
-                        HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-                mHandler.sendEmptyMessage(2);
+//                jsonData = HttpUtility.getInstance().executeNormalTask(
+//                        HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+//                mHandler.sendEmptyMessage(2);
             }
         }).start();
         return inflater.inflate(R.layout.chat_fragment_layout,container,false);

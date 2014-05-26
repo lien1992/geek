@@ -3,7 +3,6 @@ package com.thinksns.jkfs.util.http;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import com.thinksns.jkfs.util.AppLogger;
 import com.thinksns.jkfs.util.Utility;
 
@@ -67,7 +66,7 @@ public class HttpUtils {
 			StringBuilder urlBuilder = new StringBuilder(urlStr);
 			urlBuilder.append("?").append(Utility.encodeUrl(param));
 			URL url = new URL(urlBuilder.toString());
-            Log.d("MOSL",url.toString());
+			Log.d("MOSL", url.toString());
 			AppLogger.d("get request" + url);
 			Proxy proxy = getProxy();
 			if (proxy != null)
@@ -148,7 +147,7 @@ public class HttpUtils {
 		return readResult(httpURLConnection);
 	}
 
-	private  static String handleError(HttpURLConnection urlConnection) {
+	private static String handleError(HttpURLConnection urlConnection) {
 		String result = readError(urlConnection);
 		AppLogger.e("error=" + result);
 		return result;
@@ -200,12 +199,14 @@ public class HttpUtils {
 					&& content_encode.equals("gzip")) {
 				is = new GZIPInputStream(is);
 			}
-
-			buffer = new BufferedReader(new InputStreamReader(is));
+			if (is != null)
+				buffer = new BufferedReader(new InputStreamReader(is));
 
 			String line;
-			while ((line = buffer.readLine()) != null) {
-				strBuilder.append(line);
+			if (buffer != null) {
+				while ((line = buffer.readLine()) != null) {
+					strBuilder.append(line);
+				}
 			}
 			AppLogger.d("error result=" + strBuilder.toString());
 
