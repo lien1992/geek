@@ -160,6 +160,7 @@ public class WeiboListFragment extends BaseListFragment {
 						totalCount += weibos.size();
 					}
 					mHandler.sendEmptyMessage(0);
+					
 				}
 			}.start();
 		} else {

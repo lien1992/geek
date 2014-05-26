@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dip"
+            android:layout_marginRight="28dip"
+            android:layout_marginTop="20dip"
+            android:text="修改信息" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dip"
+            android:layout_marginRight="28dip"
+            android:layout_marginTop="20dip"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="5dip" >
+
+          
+                <!-- profile image -->
+
+                <FrameLayout
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginLeft="5dp" >
+
+                    <ImageView
+                        android:id="@+id/c_head"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/mushishi" />
+                    <!-- image corner -->
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cover" />
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/c_icon"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="28dip"
+                    android:layout_marginRight="28dip"
+                    android:background="@drawable/myinfo_but"
+                    android:gravity="center"
+                    android:paddingTop="5dip"
+                    android:text="上传头像"
+                    android:textColor="#ff333333"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/c_uid"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="28dip"
+                android:layout_marginRight="28dip"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/myinfo_but"
+                android:gravity="center"
+                android:paddingTop="5dip"
+                android:text="uid"
+                android:textColor="#ff333333"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/login_input"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="28dip"
+                android:layout_marginRight="28dip"
+                android:layout_marginTop="28dip"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/c_uname"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/myinfo_but"
+                    android:gravity="center"
+                    android:text="uname"
+                    android:textColor="#ff333333"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/c_email"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-8dip"
+                    android:background="@drawable/myinfo_but"
+                    android:gravity="center"
+                    android:text="email"
+                    android:textColor="#ff333333"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/c_sex"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-8dip"
+                    android:background="@drawable/myinfo_but"
+                    android:gravity="center"
+                    android:text="sex"
+                    android:textColor="#ff333333"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/c_add"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-8dip"
+                    android:background="@drawable/myinfo_but"
+                    android:gravity="center"
+                    android:text="address"
+                    android:textColor="#ff333333"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/c_selfinfo"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-8dip"
+                    android:background="@drawable/myinfo_but"
+                    android:gravity="center"
+                    android:text="selfinfo"
+                    android:textColor="#ff333333"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
