@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <ImageView
+            android:layout_alignParentLeft="true"
+            android:id="@+id/user_image"
+            android:layout_width="60dip"
+            android:layout_height="60dip"
+            android:src="@drawable/ic_launcher"/>
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/user_name"
+            android:layout_toRightOf="@+id/user_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送给是的范德萨sdfsd："/>
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/user_image"
+            android:layout_below="@+id/user_name"
+            android:text="测试一下啊"/>
+        </RelativeLayout>
+
+</LinearLayout>

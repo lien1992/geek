@@ -60,6 +60,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 
 		if (savedInstanceState == null) {
 
+
 //<<<<<<< HEAD
 			Fragment weiboMain = getWeiboMainFragment();
 //			Fragment atAndComment = getAtAndCommentFragment();
@@ -120,6 +121,9 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 /*			if (!weiboMain.isAdded()) {
 =======
 			Fragment weiboMain = getWeiboMainFragment();
+=======
+			//Fragment weiboMain = getWeiboMainFragment();
+>>>>>>> 685a065f82dd0f3461cee99536eec3aa397a60f6
 			//Fragment atAndComment = getAtAndCommentFragment();
 			//Fragment collection = getCollectionFragment();
 			//Fragment chat = getChatFragment();
@@ -131,11 +135,15 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
 
+<<<<<<< HEAD
 			if (!weiboMain.isAdded()) {
 >>>>>>> a98666dce69163b5600bbbe969c82cfc97df609d
+=======
+/*			if (!weiboMain.isAdded()) {
+>>>>>>> 685a065f82dd0f3461cee99536eec3aa397a60f6
 				transaction.add(R.id.content_frame, weiboMain,
 						WeiboMainFragment.class.getName());
-			}
+			}*/
 
 /*			if (!atAndComment.isAdded()) {
 				transaction.add(R.id.content_frame, atAndComment,

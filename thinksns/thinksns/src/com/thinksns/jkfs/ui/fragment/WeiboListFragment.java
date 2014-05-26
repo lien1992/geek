@@ -3,8 +3,10 @@ package com.thinksns.jkfs.ui.fragment;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.HttpConstant;
+import com.thinksns.jkfs.ui.WeiboDetailActivity;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.util.Utility;
@@ -38,14 +41,13 @@ import com.thinksns.jkfs.util.http.HttpUtility;
 public class WeiboListFragment extends BaseListFragment {
 
 	private ThinkSNSApplication application;
-	// private WeiboListBean weiboList = new WeiboListBean();
-	private List<WeiboBean> weibos = new ArrayList<WeiboBean>();
+	private LinkedList<WeiboBean> weibos = new LinkedList<WeiboBean>();
+	private LinkedList<WeiboBean> weibo_all = new LinkedList<WeiboBean>();
 	private WeiboAdapter adapter;
 	private AccountBean account;
-
-	private int currentPage = 2;// 实验ing..
-	private String since_id = "";// 实验ing..
-
+	private int currentPage = 1;
+	private int totalCount = 0;
+	private String since_id = "";
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -53,20 +55,30 @@ public class WeiboListFragment extends BaseListFragment {
 			case 0:
 				Log.d("WEIBO COUNT", weibos.size() + "");
 				listView.onLoadMoreComplete();
+				if (weibos.size() == 0) {
+					Toast.makeText(getActivity(), "没有新微博", Toast.LENGTH_SHORT)
+							.show();
+					break;
+				}
 				adapter.append(weibos);
-				currentPage++;
+				weibo_all.addAll(weibos);
+				currentPage = totalCount / 20 + 1;
 				break;
 			case 1:
 				listView.onRefreshComplete();
 				if (!listView.getLoadMoreStatus()) {
 					listView.setLoadMoreEnable(true);
 				}
-				if (weibos == null) {
+				if (weibos.size() == 0) {
 					Toast.makeText(getActivity(), "没有新微博", Toast.LENGTH_SHORT)
 							.show();
 					break;
 				}
+				if (!listView.getLoadMoreStatus() && totalCount == 20) {
+					listView.setLoadMoreEnable(true);
+				}
 				adapter.insertToHead(weibos);
+				insertToHead(weibos);
 				Toast.makeText(getActivity(), "新增微博" + weibos.size() + "条",
 						Toast.LENGTH_SHORT).show();
 				break;
@@ -101,7 +113,7 @@ public class WeiboListFragment extends BaseListFragment {
 		account = application.getAccount(this.getActivity());
 
 		listView.setListener(this);
-		//listView.setLoadMoreEnable(false); 待研究..为何false不起作用？
+		// listView.setLoadMoreEnable(false);
 		adapter = new WeiboAdapter(getActivity(), mInflater, listView);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -110,12 +122,13 @@ public class WeiboListFragment extends BaseListFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-
-				// 点击某一条微博
+				Intent intent = new Intent(getActivity(),
+						WeiboDetailActivity.class);
+				intent.putExtra("weibo_detail", weibo_all.get(position));
+				startActivity(intent);
 			}
 
 		});
-
 
 	}
 
@@ -143,6 +156,9 @@ public class WeiboListFragment extends BaseListFragment {
 					Type listType = new TypeToken<ArrayList<WeiboBean>>() {
 					}.getType();
 					weibos = gson.fromJson(json, listType);
+					if (weibos.size() > 0) {
+						totalCount += weibos.size();
+					}
 					mHandler.sendEmptyMessage(0);
 					
 				}
@@ -179,9 +195,12 @@ public class WeiboListFragment extends BaseListFragment {
 					Type listType = new TypeToken<ArrayList<WeiboBean>>() {
 					}.getType();
 					weibos = gson.fromJson(json, listType);
-					since_id = weibos.get(0).getFeed_id();
-					Log.d("WEIBO SINCE ID", since_id);
-					Log.d("WEIBO SINCE ID CONTENT", weibos.get(0).getContent());
+					if (weibos.size() > 0) {
+						since_id = weibos.get(0).getFeed_id();
+						Log.d("WEIBO SINCE ID", since_id);
+						Log.d("WEIBO SINCE ID CONTENT", weibos.get(0).getContent());
+						totalCount += weibos.size();
+					}
 					mHandler.sendEmptyMessage(1);
 				}
 			}.start();
@@ -189,6 +208,15 @@ public class WeiboListFragment extends BaseListFragment {
 			mHandler.sendEmptyMessage(2);
 		}
 
+	}
+
+	public void insertToHead(List<WeiboBean> lists) {
+		if (lists == null) {
+			return;
+		}
+		for (int i = lists.size() - 1; i >= 0; --i) {
+			weibo_all.addFirst(lists.get(i));
+		}
 	}
 
 }

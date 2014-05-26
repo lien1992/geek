@@ -75,6 +75,7 @@
             android:configChanges="orientation|screenSize|screenLayout"
             android:theme="@style/Theme.Sherlock.Light"
             android:uiOptions="splitActionBarWhenNarrow" />
+        <activity android:name=".ui.ChatActivity" />
     </application>
 
 </manifest>
