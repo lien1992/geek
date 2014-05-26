@@ -14,12 +14,17 @@ public class UserInfoBean implements Parcelable {
 	private String sex;
 	private String province;
 	private String city;
-	private String avatar_big;
-	private String avatar_middle;
-	private String avatar_small;
-	private String last_feed_id;// 最近一条微博ID
+	private String location;
+	public CountInfoBean count_info;
 
-	private UserInfoCountBean count_info;
+	// private String last_feed_id;// 最近一条微博ID
+	private String avatar_original;
+
+	// private String avatar_big;
+	// private String avatar_middle;
+	// private String avatar_small;
+
+	// private UserInfoCountBean count_info;
 
 	public String getUid() {
 		return uid;
@@ -69,13 +74,21 @@ public class UserInfoBean implements Parcelable {
 		this.city = city;
 	}
 
-	public void setCount_info(UserInfoCountBean count_info) {
-		this.count_info = count_info;
+	public String getAvatar() {
+		return avatar_original;
 	}
 
-	public UserInfoCountBean getCount_info() {
-		return count_info;
+	public void setAvatar(String avatar) {
+		this.avatar_original = avatar;
 	}
+
+	// public void setCount_info(UserInfoCountBean count_info) {
+	// this.count_info = count_info;
+	// }
+	//
+	// public UserInfoCountBean getCount_info() {
+	// return count_info;
+	// }
 
 	@Override
 	public int describeContents() {
@@ -92,13 +105,59 @@ public class UserInfoBean implements Parcelable {
 		dest.writeString(sex);
 		dest.writeString(province);
 		dest.writeString(city);
-		dest.writeString(avatar_big);
-		dest.writeString(avatar_middle);
-		dest.writeString(avatar_small);
-		dest.writeString(last_feed_id);
-		dest.writeParcelable(count_info, flags);
+		// dest.writeString(avatar_big);
+		// dest.writeString(avatar_middle);
+		// dest.writeString(avatar_small);
+		dest.writeString(avatar_original);
+		dest.writeString(location);
+		// dest.writeString(count_info);
+		// dest.writeString(following_count);
+		// dest.writeString(follower_count);
+		// dest.writeString(weibo_count);
+		// dest.writeString(last_feed_id);
+		// dest.writeParcelable(count_info, flags);
 
 	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	// public String getFollowing_count() {
+	// return following_count;
+	// }
+	//
+	// public void setFollowing_count(String following_count) {
+	// this.following_count = following_count;
+	// }
+	//
+	// public String getFollower_count() {
+	// return follower_count;
+	// }
+	//
+	// public void setFollower_count(String follower_count) {
+	// this.follower_count = follower_count;
+	// }
+	//
+	// public String getWeibo_count() {
+	// return weibo_count;
+	// }
+	//
+	// public void setWeibo_count(String weibo_count) {
+	// this.weibo_count = weibo_count;
+	// }
+	//
+	// public String getCount_info() {
+	// return count_info;
+	// }
+	//
+	// public void setCount_info(String count_info) {
+	// this.count_info = count_info;
+	// }
 
 	public static final Parcelable.Creator<UserInfoBean> CREATOR = new Parcelable.Creator<UserInfoBean>() {
 		public UserInfoBean createFromParcel(Parcel in) {
@@ -109,12 +168,18 @@ public class UserInfoBean implements Parcelable {
 			ub.sex = in.readString();
 			ub.province = in.readString();
 			ub.city = in.readString();
-			ub.avatar_big = in.readString();
-			ub.avatar_middle = in.readString();
-			ub.avatar_small = in.readString();
-			ub.last_feed_id = in.readString();
-			ub.count_info = in.readParcelable(UserInfoCountBean.class
-					.getClassLoader());
+			ub.avatar_original = in.readString();
+			ub.location = in.readString();
+			// ub.following_count = in.readString();
+			// ub.follower_count = in.readString();
+			// ub.weibo_count = in.readString();
+			// ub.count_info = in.readString();
+			// ub.avatar_big = in.readString();
+			// ub.avatar_middle = in.readString();
+			// ub.avatar_small = in.readString();
+			// ub.last_feed_id = in.readString();
+			// ub.count_info = in.readParcelable(UserInfoCountBean.class
+			// .getClassLoader());
 			return ub;
 
 		}

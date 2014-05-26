@@ -20,9 +20,9 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 		switch (position) {
-		case 1:
+		case 0:
 			return new WeiboListFragment();
-		case 2:
+		case 1:
 			return new AboutMeFragment();
 		default:
 			return new WeiboListFragment();
