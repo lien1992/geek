@@ -1,6 +1,7 @@
 package com.thinksns.jkfs.base;
 
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.SettingsUtil;
 import com.thinksns.jkfs.util.common.PreferencesUtils;
 
@@ -14,6 +15,7 @@ public final class ThinkSNSApplication extends Application {
 	private static ThinkSNSApplication globalContext = null;
 
 	private Activity activity;
+	private UserInfoBean user;
 
 	@Override
 	public void onCreate() {
@@ -98,9 +100,16 @@ public final class ThinkSNSApplication extends Application {
         boolean isWifiConn = networkInfo.isConnected();
         networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         boolean isMobileConn = networkInfo.isConnected();
-
-        if(!isWifiConn&&!isMobileConn)
+        if(!isWifiConn||isMobileConn)
             return false;
         return true;
     }
+
+	public void setUser(UserInfoBean user) {
+		this.user = user;
+	}
+
+	public UserInfoBean getUser() {
+		return user;
+	}
 }

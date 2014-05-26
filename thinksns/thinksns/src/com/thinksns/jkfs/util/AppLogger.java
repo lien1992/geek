@@ -6,7 +6,7 @@ import com.thinksns.jkfs.BuildConfig;
  * Wrapper API for sending log output.
  */
 public class AppLogger {
-	protected static final String TAG = "weiciyuan";
+	protected static final String TAG = "thinksns";
 
 	private AppLogger() {
 	}

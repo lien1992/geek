@@ -59,15 +59,15 @@ public class ChanelFragmentListViewAdapter extends BaseAdapter {
 
 			viewHolder = new ViewHolder();
 			viewHolder.user_img = (ImageView) convertView
-					.findViewById(R.id.user_img);
+					.findViewById(R.id.wb_user_img);
 			viewHolder.wb_u_name = (TextView) convertView
 					.findViewById(R.id.wb_u_name);
 			viewHolder.wb_time = (TextView) convertView
 					.findViewById(R.id.wb_time);
 			viewHolder.wb_text = (TextView) convertView
 					.findViewById(R.id.wb_text);
-			viewHolder.wb_pic = (ImageView) convertView
-					.findViewById(R.id.wb_pic);
+			/*viewHolder.wb_pic = (ImageView) convertView
+					.findViewById(R.id.wb_pic);*/
 
 			viewHolder.re_user_name = (TextView) convertView
 					.findViewById(R.id.re_user_name);

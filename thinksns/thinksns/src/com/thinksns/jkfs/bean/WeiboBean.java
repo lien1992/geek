@@ -26,6 +26,7 @@ public class WeiboBean implements Parcelable {
 	private int repost_count; // 转发数
 
 	private ArrayList<WeiboAttachBean> attachList;
+	private WeiboBean transpond_data; // 被转发微博
 
 	public WeiboBean(String feed_id, String type, String content, String ctime,
 			String from, String uid, String uname, String avatar_big,
@@ -51,6 +52,30 @@ public class WeiboBean implements Parcelable {
 
 	public WeiboBean() {
 		super();
+	}
+
+	public String getFeed_id() {
+		return feed_id;
+	}
+
+	public void setTranspond_data(WeiboBean transpond_data) {
+		this.transpond_data = transpond_data;
+	}
+
+	public WeiboBean getTranspond_data() {
+		return transpond_data;
+	}
+
+	public void setFeed_id(String feed_id) {
+		this.feed_id = feed_id;
+	}
+
+	public String getCtime() {
+		return ctime;
+	}
+
+	public void setCtime(String ctime) {
+		this.ctime = ctime;
 	}
 
 	public String getAvatar_middle() {
@@ -192,6 +217,7 @@ public class WeiboBean implements Parcelable {
 		dest.writeInt(comment_count);
 		dest.writeInt(repost_count);
 		dest.writeList(attachList);
+		dest.writeParcelable(transpond_data, flags);
 
 	}
 
@@ -213,6 +239,9 @@ public class WeiboBean implements Parcelable {
 			wb.repost_count = in.readInt();
 			wb.attachList = in.readParcelable(WeiboAttachBean.class
 					.getClassLoader());
+			wb.transpond_data = in.readParcelable(WeiboBean.class
+					.getClassLoader());
+
 			return wb;
 		}
 

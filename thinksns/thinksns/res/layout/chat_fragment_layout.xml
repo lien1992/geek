@@ -4,8 +4,38 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="this is chat"/>
+        android:layout_height="wrap_content"
+        android:background="#cccccc"
+        >
+        <ImageView
+            android:id="@+id/menu_icon"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:src="@drawable/ic_launcher"
+            android:layout_alignParentLeft="true"
+            />
+        <EditText
+            android:layout_toRightOf="@+id/menu_icon"
+            android:layout_width="130dip"
+            android:layout_height="40dp"
+            android:text="全部分组"/>
+        <ImageView
+            android:layout_toLeftOf="@+id/xiala"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:src="@drawable/add"/>
+        <ImageView
+            android:id="@+id/xiala"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:src="@drawable/xiala"
+            android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+    <ListView
+        android:layout_marginTop="10dp"
+        android:id="@+id/chat_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

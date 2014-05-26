@@ -24,6 +24,7 @@ import android.widget.TextView;
  * @author wangjia
  * 
  */
+
 public class WeiboMainFragment extends Fragment {
 	private ViewPager pager;
 	private UnderlinePageIndicator indicator;
@@ -48,6 +49,7 @@ public class WeiboMainFragment extends Fragment {
 		pager = (ViewPager) view.findViewById(R.id.main_weibo_pager);
 
 		return view;
+
 	}
 
 	@Override
@@ -61,7 +63,7 @@ public class WeiboMainFragment extends Fragment {
 		indicator.setViewPager(pager);
 		indicator.setFades(false);
 		indicator.setSelectedColor(getResources().getColor(R.color.green));
-        indicator.setFadeLength(500);
+		indicator.setFadeLength(500);
 		indicator.setOnPageChangeListener(new MyPageChangeListener());
 		navi.setOnClickListener(new OnClickListener() {
 
@@ -99,7 +101,7 @@ public class WeiboMainFragment extends Fragment {
 				weiboList.setTextColor(getResources().getColor(R.color.green));
 				aboutMe.setTextColor(getResources().getColor(R.color.grey));
 				((MainFragmentActivity) getActivity()).getSlidingMenu()
-						.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+						.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 			} else if (arg == 1) {
 				aboutMe.setTextColor(getResources().getColor(R.color.green));
 				weiboList.setTextColor(getResources().getColor(R.color.grey));
