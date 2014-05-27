@@ -7,20 +7,25 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#cccccc"
+        android:background="#f6f5ec"
         >
         <ImageView
             android:id="@+id/menu_icon"
             android:layout_width="40dip"
             android:layout_height="40dip"
-            android:src="@drawable/ic_launcher"
+            android:src="@drawable/navigation"
             android:layout_alignParentLeft="true"
             />
-        <EditText
+        <Spinner
             android:layout_toRightOf="@+id/menu_icon"
-            android:layout_width="130dip"
-            android:layout_height="40dp"
-            android:text="全部分组"/>
+            android:id="@+id/group_spinner"
+            android:layout_width="80dp"
+            android:layout_height="40dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dip"
+            android:background="@color/white"
+             />
+
         <ImageView
             android:layout_toLeftOf="@+id/xiala"
             android:layout_width="40dip"
@@ -30,7 +35,7 @@
             android:id="@+id/xiala"
             android:layout_width="40dip"
             android:layout_height="40dip"
-            android:src="@drawable/xiala"
+            android:src="@drawable/droplist"
             android:layout_alignParentRight="true"/>
         </RelativeLayout>
     <com.thinksns.jkfs.ui.view.PullToRefreshListView
