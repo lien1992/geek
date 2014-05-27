@@ -39,7 +39,7 @@
                 android:layout_toRightOf="@+id/wb_detail_back"
                 android:text="查看微博"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <ImageView
                 android:id="@+id/wb_detail_favorite"

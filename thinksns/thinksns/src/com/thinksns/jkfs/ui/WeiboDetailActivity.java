@@ -157,6 +157,11 @@ public class WeiboDetailActivity extends BaseActivity implements
 				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消赞失败了:(",
 						Toast.LENGTH_SHORT).show();
 				break;
+			case 13:
+				listView.onRefreshComplete();
+				Toast.makeText(WeiboDetailActivity.this, "网络未连接，评论列表加载失败:(",
+						Toast.LENGTH_SHORT).show();
+				break;
 
 			}
 		}
@@ -197,7 +202,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 					}
 				}.start();
 			} else {
-				mHandler.sendEmptyMessage(0);
+				mHandler.sendEmptyMessage(13);
 			}
 
 		}
@@ -346,7 +351,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 				}
 			}.start();
 		} else {
-			mHandler.sendEmptyMessage(0);
+			mHandler.sendEmptyMessage(13);
 		}
 	}
 

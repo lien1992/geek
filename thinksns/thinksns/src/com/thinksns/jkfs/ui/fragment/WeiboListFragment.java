@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,6 +26,7 @@ import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.WeiboDetailActivity;
+import com.thinksns.jkfs.ui.WriteWeiboActivity;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.util.Utility;
@@ -32,8 +34,7 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 微博列表，后期改为用户关注的微博，目前暂显示公共微博
- * 待完成的部分（since_id有bug未解决，新微博提醒）
+ * 微博列表，后期改为用户关注的微博，目前暂显示公共微博 待完成的部分（新微博提醒、微博图片及url的显示、微博分组显示）
  * 
  * @author wangjia
  * 
@@ -73,8 +74,8 @@ public class WeiboListFragment extends BaseListFragment {
 								Toast.LENGTH_SHORT).show();
 				}
 				if (weibos == null || weibos.size() == 0) {
-					Toast.makeText(getActivity(), "暂时没有新微博:)", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(getActivity(), "暂时没有新微博:)",
+							Toast.LENGTH_SHORT).show();
 					break;
 				}
 				if (!listView.getLoadMoreStatus() && totalCount == 20) {
@@ -135,6 +136,19 @@ public class WeiboListFragment extends BaseListFragment {
 			}
 
 		});
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(getActivity(),
+						WriteWeiboActivity.class);
+				startActivity(intent);
+				return true;
+			}
+
+		});
 
 		if (totalCount == 0)
 			getWeibos();
@@ -188,8 +202,6 @@ public class WeiboListFragment extends BaseListFragment {
 	private void getWeibos() {
 		// TODO Auto-generated method stub
 		if (Utility.isConnected(getActivity())) {
-
-			// 待添加超时判断+新微博判断
 
 			new Thread() {
 				@Override

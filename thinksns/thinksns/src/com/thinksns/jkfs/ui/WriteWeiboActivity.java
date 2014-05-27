@@ -1,6 +1,5 @@
 package com.thinksns.jkfs.ui;
 
-import java.io.File;
 import java.util.HashMap;
 import com.google.gson.Gson;
 
@@ -22,6 +21,8 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,6 +54,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 	private ImageView at;
 	private ImageView topic;
 	private ImageView emotion;
+	private ImageView pic;
 	private AccountBean account;
 	private ThinkSNSApplication application;
 	private boolean hasImage;
@@ -105,6 +108,8 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 		topic.setOnClickListener(this);
 		emotion = (ImageView) findViewById(R.id.write_weibo_emotion);
 		emotion.setOnClickListener(this);
+		pic = (ImageView) findViewById(R.id.write_weibo_content_pic);
+		pic.setOnClickListener(this);
 		content = (EditText) findViewById(R.id.write_weibo_content);
 		content.addTextChangedListener(new TextWatcher() {
 			private CharSequence temp;
@@ -157,6 +162,10 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 					content.setSelection(content.getText().toString().length());
 				}
 				picPath = getPicPathFromUri(imageFileUri);
+				Bitmap camera = BitmapFactory.decodeFile(picPath);
+				pic.setImageBitmap(camera);
+				pic.setVisibility(View.VISIBLE);
+				hasImage = true;
 				break;
 			case 1002:
 				// 本地图片
@@ -164,7 +173,12 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 					content.setText("分享图片");
 					content.setSelection(content.getText().toString().length());
 				}
+				Uri imageFileUri = intent.getData();
 				picPath = getPicPathFromUri(imageFileUri);
+				Bitmap local = BitmapFactory.decodeFile(picPath);
+				pic.setImageBitmap(local);
+				pic.setVisibility(View.VISIBLE);
+				hasImage = true;
 				break;
 			}
 		}
@@ -232,10 +246,11 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 								String result = HttpUtility.getInstance()
 										.executeNormalTask(HttpMethod.Get,
 												HttpConstant.THINKSNS_URL, map);
-								if (result.equals("1")) {
-									mHandler.sendEmptyMessage(0);
-								} else if (result.equals("0")) {
+								Log.d("post weibo result", result);
+								if (result.equals("0")) {
 									mHandler.sendEmptyMessage(3);
+								} else {
+									mHandler.sendEmptyMessage(0);
 								}
 							}
 						}.start();
@@ -243,7 +258,6 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 						sendDialogShow();
 						final String uploadPicPath = ImageUtils.compressPic(
 								this, picPath, 3);
-						long size = new File(uploadPicPath).length();
 						new Thread() {
 							@Override
 							public void run() {
@@ -335,6 +349,8 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 			break;
 		case R.id.write_weibo_emotion:
 			// 插入表情
+			break;
+		case R.id.write_weibo_content_pic:
 			break;
 
 		}
