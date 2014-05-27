@@ -138,6 +138,7 @@ public class WeiboListFragment extends BaseListFragment {
 		if (Utility.isConnected(getActivity())) {
 			// 待添加超时判断
 
+
 			new Thread() {
 				@Override
 				public void run() {
