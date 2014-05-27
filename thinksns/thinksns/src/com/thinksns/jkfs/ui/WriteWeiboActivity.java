@@ -1,7 +1,7 @@
 package com.thinksns.jkfs.ui;
 
+import java.io.File;
 import java.util.HashMap;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -12,8 +12,10 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.util.Utility;
+import com.thinksns.jkfs.util.common.ImageUtils;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
+import com.thinksns.jkfs.util.http.HttpUtils;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -151,22 +153,20 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 				content.setSelection(index + name.length());
 				break;
 			case 1001:
-				// 拍照..
+				// 拍照
 				if (TextUtils.isEmpty(content.getText().toString())) {
 					content.setText("分享图片");
 					content.setSelection(content.getText().toString().length());
 				}
 				picPath = getPicPathFromUri(imageFileUri);
-
 				break;
 			case 1002:
-				// 本地图片..
+				// 本地图片
 				if (TextUtils.isEmpty(content.getText().toString())) {
 					content.setText("分享图片");
 					content.setSelection(content.getText().toString().length());
 				}
 				picPath = getPicPathFromUri(imageFileUri);
-
 				break;
 			}
 		}
@@ -246,7 +246,9 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 						}.start();
 					} else {
 						sendDialogShow();
-						new Thread() { // 发送图片，待完善..
+	                    final String uploadPicPath = ImageUtils.compressPic(this, picPath,3);
+	                    long size = new File(uploadPicPath).length();
+						new Thread() {
 							@Override
 							public void run() {
 								// TODO Auto-generated method stub
@@ -265,17 +267,14 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 												.getOauth_token());
 								map.put("oauth_token_secret", account
 										.getOauth_token_secret());
-								String json = HttpUtility.getInstance()
-										.executeNormalTask(HttpMethod.Get,
-												HttpConstant.THINKSNS_URL, map);
-
-								JsonObject result = new JsonParser()
-										.parse(json).getAsJsonObject();
-								if (result.getAsInt() == 0) {
-									mHandler.sendEmptyMessage(3);
-								} else {
-									mHandler.sendEmptyMessage(0);
-								}
+								boolean result = HttpUtils.doUploadFile(HttpConstant.THINKSNS_URL, map,
+										uploadPicPath);
+						
+								/*
+								 * if (result.getAsInt() == 0) {
+								 * mHandler.sendEmptyMessage(3); } else {
+								 * mHandler.sendEmptyMessage(0); }
+								 */
 							}
 						}.start();
 
