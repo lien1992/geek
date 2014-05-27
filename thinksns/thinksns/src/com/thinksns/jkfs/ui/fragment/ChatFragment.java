@@ -21,7 +21,7 @@ import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.AdapterBase;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
-import com.thinksns.jkfs.bean.ChanelBean;
+import com.thinksns.jkfs.bean.ChannelBean;
 import com.thinksns.jkfs.bean.ChatBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.adapter.ChatListAdapter;

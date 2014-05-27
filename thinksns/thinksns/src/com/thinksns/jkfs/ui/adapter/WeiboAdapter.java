@@ -140,6 +140,7 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.comment_count = (TextView) convertView
 					.findViewById(R.id.wb_comment_count);
 			convertView.setTag(holder);
+
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
@@ -172,6 +173,8 @@ public class WeiboAdapter extends BaseAdapter {
 		holder.comment_count.setText(weibo.getComment_count() + "");
 		if (weibo.getType().equals("repost")) {
 			WeiboBean weibo_repost = weibo.getTranspond_data();
+			// 验证报错
+			Log.i("zcc", "到底是不是空的" + holder.repost_userName.toString());
 			// 这一行报错,在insert刷新之后只有两个，空指针
 			holder.repost_userName.setText(weibo_repost.getUname());
 			holder.repost_content.setText(weibo_repost.getContent() + "");

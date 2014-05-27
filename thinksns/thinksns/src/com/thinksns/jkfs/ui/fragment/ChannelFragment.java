@@ -15,26 +15,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
-import com.thinksns.jkfs.bean.ChanelBean;
+import com.thinksns.jkfs.bean.ChannelBean;
 import com.thinksns.jkfs.bean.WeiboAttachBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.CacheConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.constant.SettingsUtil;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
-import com.thinksns.jkfs.ui.adapter.ChanelFragmentListViewAdapter;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView.RefreshAndLoadMoreListener;
 import com.thinksns.jkfs.util.DES;
 import com.thinksns.jkfs.util.MD5;
 import com.thinksns.jkfs.util.common.JSONUtils;
+import com.thinksns.jkfs.util.common.PreferencesUtils;
 import com.thinksns.jkfs.util.db.AccountOperator;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
@@ -70,66 +68,96 @@ import android.widget.TextView;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.Toast;
 
-public class ChanelFragment extends Fragment {
+/**
+ * 初始化还是有点问题
+ * 
+ * @author zcc
+ * 
+ */
+public class ChannelFragment extends Fragment {
 
-    public static final String TAG = "ChanelFragment";
+	public static final String TAG = "zcc";
 	// 获取微博时方法用的
-	static private final int CHANEL_DIF = 0;
-	static private final int CHANEL_SAME_REFRESH = 1;
-	static private final int CHANEL_SAME_ON_LOAD_MORE = 2;
+	static private final int channel_DIF = 0;
+	static private final int channel_SAME_REFRESH = 1;
+	static private final int channel_SAME_ON_LOAD_MORE = 2;
 	// handler用的
-	static private final int GETTED_CHANEL_LIST_WITHOUT_IMAGE = 0;
+	static private final int GETTED_channel_LIST_WITHOUT_IMAGE = 0;
 	static private final int CONNECT_WRONG = 1;
 	static private final int DOWNLOAD_IMAGE_FINISHI = 2;
-	static private final int GETTED_DIF_CHANEL_WEIBO_LIST = 3;
-	static private final int GETTED_REFRESH_CHANEL_WEIBO_LIST = 4;
-	static private final int GETTED_ON_LOAD_MORE_CHANEL_WEIBO_LIST = 5;
+	static private final int GETTED_DIF_channel_WEIBO_LIST = 3;
+	static private final int GETTED_REFRESH_channel_WEIBO_LIST = 4;
+	static private final int GETTED_ON_LOAD_MORE_channel_WEIBO_LIST = 5;
 	// thinksnsAPI用的
 	static private final String APP = "api";
 	static private final String MOD = "Channel";
-	static private final String ACT_GET_ALL_CHANEL = "get_all_channel";
-	static private final String ACT_GET_WEIBO_BY_CHANEL_ID = "get_channel_feed";
+	static private final String ACT_GET_ALL_channel = "get_all_channel";
+	static private final String ACT_GET_WEIBO_BY_channel_ID = "get_channel_feed";
 	static private String OAUTH_TOKEN;
 	static private String OAUTH_TOKEN_SECRECT;
 	// 菜单用的
 	static private final int MENU_ITEM_HEIGHT = 80;
 	static private final int MENU_ITEM_COUNT = 4;
 	// 只加载一次
-	static private ArrayList<ChanelBean> chanelList;
+	static private ArrayList<ChannelBean> channelList;
 	// 菜单的属性
 	static private int MENU_HEIGHT = 0;
 	static private int DOWNLOAD_IMAGE_COUNT = 0;
 	// 是或否正在初始化，是的话置1，否则0
-	static private int IS_INIT_CHANEL_IMG = 0;
+	static private int IS_INIT_channel_IMG = 0;
 
 	private Activity mContext;
 	private ImageView dropImage;
+	private ImageView settingImg;
 	private TextView titleName;
+
 	private PullToRefreshListView mListView;
 	private LayoutInflater mInflater;
 	private String jsonData;
 	private Handler handler;
 	private ArrayList<WeiboBean> weiboList;
 	private WeiboAdapter listViewAdapter;
+	private String channelTitle = "官方发言";
+	private String channel_category_id = "";
+	private String weibo_max_id = "";
+	private String weibo_since_id = "";
 
 	private PopupWindow popupWindow;
 	private View mPopupWindowView;
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Log.i(TAG, "onCreate");
+	}
+
+	/**
+	 * 保存选中的频道信息
+	 */
+	private void saveTitle() {
+		PreferencesUtils.putString(mContext, "channelTitle", channelTitle);
+		PreferencesUtils.putString(mContext, "channel_category_id",
+				channel_category_id);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+		Log.i(TAG, "onCreateView");
 
-		final View view = inflater.inflate(R.layout.chanel_fragment, container,
-				false);
-		// 测试用button
+		final View view = inflater.inflate(R.layout.channel_fragment,
+				container, false);
+
 		dropImage = (ImageView) view
-				.findViewById(R.id.chanel_fragment_title_drop_img);
-		// 默认是
+				.findViewById(R.id.channel_fragment_title_drop_img);
+		settingImg = (ImageView) view
+				.findViewById(R.id.channel_fragment_title_setting_img);
 		titleName = (TextView) view
-				.findViewById(R.id.chanel_fragment_title_name);
+				.findViewById(R.id.channel_fragment_title_name);
 		mListView = (PullToRefreshListView) view
-				.findViewById(R.id.chanel_listview);
+				.findViewById(R.id.channel_listview);
 		mInflater = LayoutInflater.from(view.getContext());
 
 		handler = new Handler() {
@@ -138,22 +166,25 @@ public class ChanelFragment extends Fragment {
 				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				switch (msg.what) {
-				case GETTED_CHANEL_LIST_WITHOUT_IMAGE:
-					chanelList = (ArrayList<ChanelBean>) msg.obj;
+				case GETTED_channel_LIST_WITHOUT_IMAGE:
+					channelList = (ArrayList<ChannelBean>) msg.obj;
+					// 初始化微博列表,""是默认id，这样代表没赋值过
+					boolean isNull;
+					if (isNull = "".equals(channel_category_id)) {
+						initWeiboList(isNull);
+					}
 					// 下载图片
-					downloadAllChanelImg();
+					downloadAllChannelImg();
 					// 加载布局，这时候用的频道图片是默认图片
 					initPopupWindow();
-					Log.i(TAG, "执行了_____GETTED_CHANEL_LIST_WITHOUT_IMAGE");
+					Log.i(TAG, "执行了_____GETTED_channel_LIST_WITHOUT_IMAGE");
 					dropImage.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
-							Log.i(TAG, "菜单显示没" + popupWindow.isShowing());
 							if (!popupWindow.isShowing()) {
-								Log.i(TAG, "菜单显示没" + popupWindow.isShowing());
 								popupWindow.showAsDropDown(view
-										.findViewById(R.id.chanel_fragment_title));
+										.findViewById(R.id.channel_fragment_title));
 								Log.i(TAG, "嗯。。我是萌萌的菜单。。我显示了");
 
 							} else {
@@ -171,20 +202,29 @@ public class ChanelFragment extends Fragment {
 					// 下载完频道图片了开始布局了，重新布局，把频道图片加上去
 					initPopupWindow();
 					// 初始化频道图片完成
-					IS_INIT_CHANEL_IMG = 0;
+					IS_INIT_channel_IMG = 0;
 					break;
-				case GETTED_DIF_CHANEL_WEIBO_LIST:
+				case GETTED_DIF_channel_WEIBO_LIST:
+					Log.i(TAG, "GETTED_DIF_channel_WEIBO_LIST");
 					weiboList = (ArrayList<WeiboBean>) msg.obj;
 					listViewAdapter.update(weiboList);
+					Log.i(TAG, weiboList.get(0).getUname());
+					// 保存标题，id
+					saveTitle();
+					// 标题
+					Log.i(TAG, "即将更改的标题ahi" + channelTitle);
+					titleName.setText(channelTitle);
 					break;
-				case GETTED_REFRESH_CHANEL_WEIBO_LIST:
+				case GETTED_REFRESH_channel_WEIBO_LIST:
 					weiboList = (ArrayList<WeiboBean>) msg.obj;
 					listViewAdapter.insertToHead(weiboList);
 					mListView.setSelection(0);
+					mListView.onRefreshComplete();
 					break;
-				case GETTED_ON_LOAD_MORE_CHANEL_WEIBO_LIST:
+				case GETTED_ON_LOAD_MORE_channel_WEIBO_LIST:
 					weiboList = (ArrayList<WeiboBean>) msg.obj;
 					listViewAdapter.append(weiboList);
+					mListView.onLoadMoreComplete();
 					break;
 				}
 			}
@@ -192,52 +232,26 @@ public class ChanelFragment extends Fragment {
 
 		// 先初始化handler再初始化init
 		init();
-		// 菜单按钮
-		dropImage.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(mContext, "获取列表中请稍后", Toast.LENGTH_SHORT).show();
-				if (IS_INIT_CHANEL_IMG == 0) {
-					IS_INIT_CHANEL_IMG = 1;
-					if (chanelList != null || chanelList.size() != 0) {
-
-						handler.obtainMessage(
-								ChanelFragment.GETTED_CHANEL_LIST_WITHOUT_IMAGE,
-								chanelList).sendToTarget();
-					} else {
-						Log.i(TAG, "图片没有而且微博列表是空的，具体的还没这种情况，还没写╮(╯_╰)╭");
-					}
-				}
-			}
-		});
-
+		// 菜单按钮默认
+		setDropDefault();
 		mListView.setListener(new RefreshAndLoadMoreListener() {
 
 			@Override
 			public void onRefresh() {
 				// TODO Auto-generated method stub
 				// 下拉刷新事件
-				String chanelTitle = titleName.getText().toString();
-				for (ChanelBean chanel : chanelList) {
-					if (chanelTitle.equals(chanel.getTitle())) {
-						getWeibosByChanel(chanel.getChannel_category_id(),
-								CHANEL_SAME_REFRESH);
-					}
-				}
+				Log.i(TAG, channelTitle);
+				getWeibosByChannelInThread(channel_SAME_REFRESH,
+						weibo_since_id, "");
+
 			}
 
 			@Override
 			public void onLoadMore() {
 				// TODO Auto-generated method stub
 				// 加载更多
-				String chanelTitle = titleName.getText().toString();
-				for (ChanelBean chanel : chanelList) {
-					if (chanelTitle.equals(chanel.getTitle())) {
-						getWeibosByChanel(chanel.getChannel_category_id(),
-								CHANEL_SAME_ON_LOAD_MORE);
-					}
-				}
+				getWeibosByChannelInThread(channel_SAME_ON_LOAD_MORE, "",
+						weibo_max_id);
 			}
 		});
 
@@ -252,26 +266,60 @@ public class ChanelFragment extends Fragment {
 		ThinkSNSApplication application = ThinkSNSApplication.getInstance();
 		OAUTH_TOKEN = application.getOauth_token(mContext);
 		OAUTH_TOKEN_SECRECT = application.getOauth_token_secret(mContext);
+		listViewAdapter = new WeiboAdapter(mContext, mInflater, mListView);
+		mListView.setAdapter(listViewAdapter);
+		// 获取默认的频道信息
+		getDefaultChannel();
+		initWeiboList("".equals(channel_category_id));
+		// 加载更多
+		mListView.setLoadMoreEnable(true);
 		// 在开始的时候初始化频道列表
-		if (chanelList == null) {
-			getChanelsInThread();
+		if (channelList == null) {
+			getChannelsInThread();
 		}
 		// 检查缓存文件夹是否存在
 		if (!isCacheFolderExist(CacheConstant.imageCachePath)) {
 			createSDDir(CacheConstant.imageCachePath);
 		}
-		// 初始化微博列表
-		initWeiboList();
+
 	}
 
-	private void initWeiboList() {
+	/**
+	 * 
+	 * 获取用户设定的默认频道名称
+	 */
+	private void getDefaultChannel() {
+		channelTitle = PreferencesUtils.getString(mContext, "channelTitle",
+				channelTitle);
+		channel_category_id = PreferencesUtils.getString(mContext,
+				"channel_category_id", channel_category_id);
+	}
 
-		String defaultChanelTitle = "官方发言";
-		getWeibosByChanel(defaultChanelTitle, CHANEL_DIF);
-		titleName.setText(defaultChanelTitle);
+	/**
+	 * 初始化微博列表，默认官方发言,最好能让用户自己选择，存到本地，每次自动加载
+	 * 
+	 * @param isNull
+	 *            本地加载失败，channel_category_id的值是 ""
+	 */
+	private void initWeiboList(boolean isNull) {
+		Toast.makeText(mContext, "加载中，请稍后...", Toast.LENGTH_SHORT);
+		// 初始化
+		titleName.setText(channelTitle);
+		if (isNull) {
+			if (channelList != null) {
+				Log.i(TAG, "本地加载失败");
+				for (ChannelBean channel : channelList) {
+					if (channelTitle.equals(channel.getTitle())) {
+						channel_category_id = channel.getChannel_category_id();
+					}
+				}
+			} else {
+				return;
+			}
+		}
+		Log.i(TAG, "初始化执行了");
+		getWeibosByChannelInThread(channel_DIF, "", "");
 
-		listViewAdapter = new WeiboAdapter(mContext, mInflater, mListView);
-		mListView.setAdapter(listViewAdapter);
 	}
 
 	/**
@@ -280,7 +328,7 @@ public class ChanelFragment extends Fragment {
 	private void initPopupWindow() {
 
 		mPopupWindowView = LayoutInflater.from(mContext).inflate(
-				R.layout.chanel_menu, null);
+				R.layout.channel_menu, null);
 		initPopupWindowLayout();
 
 		// 初始化popupwindow，绑定显示view，设置该view的宽度/高度
@@ -310,7 +358,7 @@ public class ChanelFragment extends Fragment {
 	private void initPopupWindowLayout() {
 		TableLayout mytable = (TableLayout) mPopupWindowView
 				.findViewById(R.id.tableLayout);
-		int length = chanelList.size();
+		int length = channelList.size();
 		int rows = length / MENU_ITEM_COUNT + 1;
 		int position = 0;
 		// 屏幕宽度
@@ -325,26 +373,24 @@ public class ChanelFragment extends Fragment {
 				}
 
 				LayoutInflater inflater = mContext.getLayoutInflater();
-				View view = inflater.inflate(R.layout.chanel_menu_item, null);
+				View view = inflater.inflate(R.layout.channel_menu_item, null);
 
 				ImageView imageView = (ImageView) view
-						.findViewById(R.id.chanel_item_img);
+						.findViewById(R.id.channel_item_img);
 				// 图片全下载完成后执行
 				if (DOWNLOAD_IMAGE_COUNT == 0
-						&& chanelList.size() != 0
-						&& chanelList.get(position).getIcon_url() != null
-						&& !"null".equals(chanelList.get(position)
+						&& channelList.size() != 0
+						&& channelList.get(position).getIcon_url() != null
+						&& !"null".equals(channelList.get(position)
 								.getIcon_url())) {
 					String path = CacheConstant.imageCachePath + "/"
-							+ chanelList.get(position).getTitle() + ".png";
+							+ channelList.get(position).getTitle() + ".png";
 					Bitmap bitMap = BitmapFactory.decodeFile(path);
 					imageView.setImageBitmap(bitMap);
 				}
 				TextView textView = (TextView) view
-						.findViewById(R.id.chanel_item_text);
-				textView.setText(chanelList.get(position).getTitle());
-
-				position += 1;
+						.findViewById(R.id.channel_item_text);
+				textView.setText(channelList.get(position).getTitle());
 
 				tableRow.addView(view);
 
@@ -356,24 +402,33 @@ public class ChanelFragment extends Fragment {
 
 				imageView.setLayoutParams(new RelativeLayout.LayoutParams(width
 						/ MENU_ITEM_COUNT, MENU_ITEM_HEIGHT / 2));
-				final int mPosition = position;
-				view.setOnClickListener(new OnClickListener() {
 
+				final int mPosition = position;
+				// 菜单上每个频道对应的点击事件
+				view.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
+						Log.i(TAG, "点击菜单了");
 						// 点击频道的操作
-						// 如果点击的频道相同，没反应,不同则刷新
-						if (titleName.getText().toString()
-								.equals(chanelList.get(mPosition).getTitle())) {
-							getWeibosByChanel(chanelList.get(mPosition)
-									.getChannel_category_id(), CHANEL_DIF);
+						// 如果点击的频道不同，才刷新
+						if (!titleName.getText().toString()
+								.equals(channelList.get(mPosition).getTitle())) {
+							channelTitle = channelList.get(mPosition)
+									.getTitle();
+							Log.i(TAG, channelTitle + "___点击的");
+							channel_category_id = channelList.get(mPosition)
+									.getChannel_category_id();
+							getWeibosByChannelInThread(channel_DIF, "", "");
 						}
 						popupWindow.dismiss();
 						// 菜单按钮不能再被点击，页面刷新完成后焦点true
 						dropImage.setFocusable(false);
 					}
 				});
+				// 最后再+1，否则上面view的点击事件会出错
+				position += 1;
+
 			}
 			mytable.addView(tableRow, new LayoutParams(width, MENU_ITEM_HEIGHT));
 			MENU_HEIGHT += MENU_ITEM_HEIGHT;
@@ -383,14 +438,13 @@ public class ChanelFragment extends Fragment {
 	}
 
 	// 下载全部频道图片
-	private void downloadAllChanelImg() {
-		for (ChanelBean chanel : chanelList) {
-			String url = chanel.getIcon_url();
+	private void downloadAllChannelImg() {
+		for (ChannelBean channel : channelList) {
+			String url = channel.getIcon_url();
 			if (url != null && !"null".equals(url)) {
 				DOWNLOAD_IMAGE_COUNT++;
-				Log.i(TAG, "查找json的时候准备开始下载");
 				// 另起线程下载
-				DownLoadChanelImageInThread(chanel.getTitle(), url);
+				DownLoadChannelImageInThread(channel.getTitle(), url);
 			}
 		}
 	}
@@ -398,37 +452,27 @@ public class ChanelFragment extends Fragment {
 	/**
 	 * 线程中访问网络初始化频道列表
 	 */
-	private void getChanelsInThread() {
+	private void getChannelsInThread() {
 		new Thread() {
 			public void run() {
-				// final Map<String, String> map = new HashMap<String,
-				// String>();
-				// map.put("app", APP);
-				// map.put("oauth_token", OAUTH_TOKEN);
-				// map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
-				// map.put("mod", MOD);
-				// map.put("act", ACT_GET_ALL_CHANEL);
-				// jsonData = HttpUtility.getInstance().executeNormalTask(
-				// HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				// Log.i(TAG, jsonData);
-				// handler.obtainMessage(
-				// ChanelFragment.GETTED_CHANEL_LIST_WITHOUT_IMAGE,
-				// JSONToChanels(jsonData)).sendToTarget();
 				try {
 					final Map<String, String> map = new HashMap<String, String>();
 					map.put("app", APP);
 					map.put("oauth_token", OAUTH_TOKEN);
 					map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
 					map.put("mod", MOD);
-					map.put("act", ACT_GET_ALL_CHANEL);
+					map.put("act", ACT_GET_ALL_channel);
 					jsonData = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Log.i(TAG, jsonData);
-					handler.obtainMessage(
-							ChanelFragment.GETTED_CHANEL_LIST_WITHOUT_IMAGE,
-							JSONToChanels(jsonData)).sendToTarget();
+					ArrayList<ChannelBean> channelList = JSONToChannels(jsonData);
+					if (channelList.size() != 0) {
+						handler.obtainMessage(
+								ChannelFragment.GETTED_channel_LIST_WITHOUT_IMAGE,
+								channelList).sendToTarget();
+					}
 				} catch (Exception e) {
-					handler.obtainMessage(ChanelFragment.CONNECT_WRONG)
+					handler.obtainMessage(ChannelFragment.CONNECT_WRONG)
 							.sendToTarget();
 				}
 			};
@@ -440,8 +484,8 @@ public class ChanelFragment extends Fragment {
 	 *            需要转换的json格式的String
 	 * @return 数组size为0时，出错了
 	 */
-	ArrayList<ChanelBean> JSONToChanels(String jsonData) {
-		ArrayList<ChanelBean> chanelList = new ArrayList<ChanelBean>();
+	ArrayList<ChannelBean> JSONToChannels(String jsonData) {
+		ArrayList<ChannelBean> channelList = new ArrayList<ChannelBean>();
 		try {
 			JSONObject obj = new JSONObject(jsonData);
 			Iterator<String> it = obj.keys();
@@ -449,7 +493,7 @@ public class ChanelFragment extends Fragment {
 
 			while (it.hasNext()) {
 				item = obj.getJSONObject(it.next());
-				chanelList.add(new ChanelBean(item
+				channelList.add(new ChannelBean(item
 						.getString("channel_category_id"), item
 						.getString("title"), item.getString("pid"), item
 						.getString("sort"), item.getString("icon_url")));
@@ -459,11 +503,11 @@ public class ChanelFragment extends Fragment {
 			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
 		}
 		// 返回size==0说明错误
-		return chanelList;
+		return channelList;
 	}
 
 	// 下载频道图片
-	private void DownLoadChanelImageInThread(final String name,
+	private void DownLoadChannelImageInThread(final String name,
 			final String imgUrl) {
 		new Thread() {
 			public void run() {
@@ -472,26 +516,16 @@ public class ChanelFragment extends Fragment {
 					String path = CacheConstant.imageCachePath + "/" + fileName;
 					// 如果文件已存在不继续
 					if (!isCacheFolderExist(path)) {
-						Log.i(TAG, "准备下");
-						Log.i(TAG, imgUrl);
-
 						URL url = new URL(imgUrl);
 
 						HttpURLConnection conn = (HttpURLConnection) url
 								.openConnection();
-						Log.i(TAG, "获得了连接");
-
 						conn.setConnectTimeout(5000);
 						// conn.setReadTimeout(50000);
 
 						conn.setRequestMethod("GET");
 						int code = conn.getResponseCode();
-						Log.i(TAG, "200 快到了了");
-
 						if (code == 200) {
-							System.out.println("正确获得资源连接");
-							Log.i(TAG, "200 着了");
-
 							// 文件大小
 							int fileLength = conn.getContentLength();
 							System.out.println("fileLength:" + fileLength);
@@ -512,14 +546,13 @@ public class ChanelFragment extends Fragment {
 								raf.write(buffer, 0, length);
 							}
 							raf.close();
-							Log.i(TAG, "下完一个");
 						}
 
 					}
 					DOWNLOAD_IMAGE_COUNT--;
 					if (DOWNLOAD_IMAGE_COUNT == 0) {
 						handler.obtainMessage(
-								ChanelFragment.DOWNLOAD_IMAGE_FINISHI)
+								ChannelFragment.DOWNLOAD_IMAGE_FINISHI)
 								.sendToTarget();
 						Log.i(TAG, "全下完");
 
@@ -547,16 +580,22 @@ public class ChanelFragment extends Fragment {
 
 	/**
 	 * 
-	 * 获取微博列表，还没分页处理
+	 * 获取微博列表
 	 * 
 	 * @param category_id
-	 *            chanel的id
-	 * @param ifChanelSameOfDif
-	 *            chanel是否是一样的。CHANEL_DIF,CHANEL_REFRESH,CHANEL_ON_LOAD_MORE
+	 *            channel的id
+	 * @param ifchannelSameOfDif
+	 *            channel是否是一样的。channel_DIF,channel_REFRESH,channel_ON_LOAD_MORE
+	 * @param since_id
+	 *            下拉刷新用,默认是空字符串""
+	 * @param max_id
+	 *            加载更多用，默认是空字符串""
 	 * 
 	 */
-	private void getWeibosByChanel(final String category_id,
-			final int ifChanelSameOfDif) {
+	private void getWeibosByChannelInThread(final int ifchannelSameOfDif,
+			final String since_id, final String max_id) {
+
+		Log.i(TAG, "获取微博中chaneltitle" + channelTitle);
 		new Thread() {
 			public void run() {
 				final Map<String, String> map = new HashMap<String, String>();
@@ -564,24 +603,33 @@ public class ChanelFragment extends Fragment {
 				map.put("oauth_token", OAUTH_TOKEN);
 				map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
 				map.put("mod", MOD);
-				map.put("act", ACT_GET_WEIBO_BY_CHANEL_ID);
-				map.put("category_id", category_id);
-
+				map.put("act", ACT_GET_WEIBO_BY_channel_ID);
+				map.put("category_id", channel_category_id);
+				map.put("count", "20");
+				if (!"".equals(max_id)) {
+					map.put("max_id", max_id);
+				}
+				if (!"".equals(since_id)) {
+					map.put("since_id", since_id);
+				}
+				Log.i(TAG, "获取微博");
 				jsonData = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				Log.i(TAG, "这是微博______" + jsonData);
+
 				// 将json转化成bean列表，handler出去
-				if (ifChanelSameOfDif == CHANEL_DIF) {
+				if (ifchannelSameOfDif == channel_DIF) {
+					Log.i(TAG, "在这开始向handler传消息");
+
 					handler.obtainMessage(
-							ChanelFragment.GETTED_DIF_CHANEL_WEIBO_LIST,
+							ChannelFragment.GETTED_DIF_channel_WEIBO_LIST,
 							JSONToWeibos(jsonData)).sendToTarget();
-				} else if (ifChanelSameOfDif == CHANEL_SAME_REFRESH) {
+				} else if (ifchannelSameOfDif == channel_SAME_REFRESH) {
 					handler.obtainMessage(
-							ChanelFragment.GETTED_REFRESH_CHANEL_WEIBO_LIST,
+							ChannelFragment.GETTED_REFRESH_channel_WEIBO_LIST,
 							JSONToWeibos(jsonData)).sendToTarget();
-				} else if (ifChanelSameOfDif == CHANEL_SAME_ON_LOAD_MORE) {
+				} else if (ifchannelSameOfDif == channel_SAME_ON_LOAD_MORE) {
 					handler.obtainMessage(
-							ChanelFragment.GETTED_ON_LOAD_MORE_CHANEL_WEIBO_LIST,
+							ChannelFragment.GETTED_ON_LOAD_MORE_channel_WEIBO_LIST,
 							JSONToWeibos(jsonData)).sendToTarget();
 				}
 
@@ -593,8 +641,11 @@ public class ChanelFragment extends Fragment {
 		try {
 			ArrayList<WeiboBean> list = JSONUtils.JSONToWeibos(jsonData);
 			Log.i(TAG, "微博个数" + list.size());
-			Log.i(TAG, list.get(0).getUname());
-
+			if (list.size() != 0) {
+				Log.i(TAG, list.get(0).getUname());
+				weibo_max_id = list.get(list.size() - 1).getId();
+				weibo_since_id = list.get(0).getId();
+			}
 			return list;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -603,4 +654,24 @@ public class ChanelFragment extends Fragment {
 		return new ArrayList<WeiboBean>();
 	}
 
+	private void setDropDefault() {
+		dropImage.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(mContext, "获取列表中请稍后", Toast.LENGTH_SHORT).show();
+				if (IS_INIT_channel_IMG == 0) {
+					IS_INIT_channel_IMG = 1;
+					if (channelList != null && channelList.size() != 0) {
+
+						handler.obtainMessage(
+								ChannelFragment.GETTED_channel_LIST_WITHOUT_IMAGE,
+								channelList).sendToTarget();
+					} else {
+						Log.i(TAG, "图片没有而且微博列表是空的，具体的还没这种情况，还没写╮(╯_╰)╭");
+					}
+				}
+			}
+		});
+	}
 }

@@ -52,10 +52,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 
 		if (savedInstanceState == null) {
 
-<<<<<<< HEAD
-			
-		
-=======
 
             Fragment weiboMain = getWeiboMainFragment();
             FragmentTransaction transaction = getSupportFragmentManager()
@@ -66,8 +62,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
             }
 
             transaction.commit();
->>>>>>> a6b18c7b7c580bdc1f30e31a0937e156b9b91157
-
             FragmentTransaction menuTransation = getSupportFragmentManager()
                     .beginTransaction();
             menuTransation.replace(R.id.menu_frame, new MenuFragment(),

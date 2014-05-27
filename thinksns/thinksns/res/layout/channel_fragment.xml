@@ -5,36 +5,43 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:id="@+id/chanel_fragment_title"
+        android:id="@+id/channel_fragment_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#f6f5ec"
         android:padding="8dp" >
 
         <ImageView
-            android:id="@+id/chanel_fragment_title_thinksns"
+            android:id="@+id/channel_fragment_title_thinksns"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_launcher" />
 
         <TextView
-            android:id="@+id/chanel_fragment_title_name"
+            android:id="@+id/channel_fragment_title_name"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/chanel_fragment_title_thinksns"
+            android:layout_toRightOf="@id/channel_fragment_title_thinksns"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:text="频道"
+            android:text="官方发言"
             android:textSize="15sp" />
 
         <ImageView
-            android:id="@+id/chanel_fragment_title_drop_img"
+            android:id="@+id/channel_fragment_title_drop_img"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/droplist" />
+
+        <ImageView
+            android:id="@+id/channel_fragment_title_setting_img"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@id/channel_fragment_title_drop_img"
+            android:src="@drawable/navigation" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -42,7 +49,7 @@
         android:layout_height="wrap_content" >
 
         <com.thinksns.jkfs.ui.view.PullToRefreshListView
-            android:id="@+id/chanel_listview"
+            android:id="@+id/channel_listview"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
         </com.thinksns.jkfs.ui.view.PullToRefreshListView>
