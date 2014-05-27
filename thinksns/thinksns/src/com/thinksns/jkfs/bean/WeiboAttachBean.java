@@ -11,6 +11,9 @@ public class WeiboAttachBean implements Parcelable{
 	private String attach_id;
 	private String attach_name;
 	private String attach_url;
+	private String attach_small;
+	private String attach_middle;
+	
 
 	public String getId() {
 		return attach_id;
@@ -43,9 +46,26 @@ public class WeiboAttachBean implements Parcelable{
 	}
 
 	@Override
-	public void writeToParcel(Parcel dest, int flags) {
+	public void writeToParcel(Parcel arg0, int arg1) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void setAttach_small(String attach_small) {
+		this.attach_small = attach_small;
+	}
+
+	public String getAttach_small() {
+		return attach_small;
+	}
+
+	public void setAttach_middle(String attach_middle) {
+		this.attach_middle = attach_middle;
+	}
+
+	public String getAttach_middle() {
+		return attach_middle;
+	}
+
 
 }

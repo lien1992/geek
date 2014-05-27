@@ -67,7 +67,9 @@ public class WeiboDetailActivity extends BaseActivity implements
 	private TextView from;
 	private TextView time;
 	private TextView content;
+	private ImageView pic;
 	private LinearLayout repost_layout;
+	private ImageView repost_pic;
 	private TextView re_user_name;
 	private TextView re_content;
 	private PullToRefreshListView listView;
@@ -243,7 +245,9 @@ public class WeiboDetailActivity extends BaseActivity implements
 		from = (TextView) findViewById(R.id.wb_detail_from);
 		time = (TextView) findViewById(R.id.wb_detail_time);
 		content = (TextView) findViewById(R.id.wb_detail_text);
+		pic = (ImageView) findViewById(R.id.wb_detail_pic1);
 		repost_layout = (LinearLayout) findViewById(R.id.wb_detail_repost_layout);
+		repost_pic = (ImageView) findViewById(R.id.re_detail_wb_pic1);
 		re_user_name = (TextView) findViewById(R.id.re_detail_user_name);
 		re_content = (TextView) findViewById(R.id.re_detail_wb_text);
 		like_count = (TextView) findViewById(R.id.wb_detail_like_count);
@@ -301,9 +305,24 @@ public class WeiboDetailActivity extends BaseActivity implements
 			WeiboBean weibo_repost = weibo.getTranspond_data();
 			re_user_name.setText(weibo_repost.getUname());
 			re_content.setText(weibo_repost.getContent());
+			if (weibo_repost.getType().equals("postimage")) {
+				ImageUtils.setThumbnailView(weibo_repost.getAttach().get(0)
+						.getAttach_middle(), repost_pic, this, callback);
+			}
 			repost_layout.setVisibility(View.VISIBLE);
+			repost_pic.setVisibility(View.VISIBLE);
+
 		}
-		like_count.setText("0");
+		if (weibo.getType().equals("postimage")) {
+			Log.d("weibo detail attach is null?", (weibo.getAttach() == null)
+					+ "");
+			/*
+			 * ImageUtils.setThumbnailView(weibo.getAttach().get(0)
+			 * .getAttach_middle(), pic, this, callback);
+			 */
+			pic.setVisibility(View.VISIBLE);
+		}
+		like_count.setText(weibo.getDigg_count() + "");
 		repost_count.setText(weibo.getRepost_count() + "");
 		comment_count.setText(weibo.getComment_count() + "");
 	}
@@ -509,7 +528,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 							map.put("app", "api");
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "add_digg");
-							//map.put("", weibo.getFeed_id());
+							// map.put("", weibo.getFeed_id());
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -535,7 +554,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 							map.put("app", "api");
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "delete_digg");
-							//map.put("", weibo.getFeed_id());
+							// map.put("", weibo.getFeed_id());
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());

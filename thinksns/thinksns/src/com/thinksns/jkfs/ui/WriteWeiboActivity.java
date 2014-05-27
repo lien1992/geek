@@ -40,7 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * 发送微博，尚未完成的部分（发送图片、at用户、添加表情）
+ * 发送微博，尚未完成的部分（at用户、添加表情）
  * 
  * @author wangjia
  * 
