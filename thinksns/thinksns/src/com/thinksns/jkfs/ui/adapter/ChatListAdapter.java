@@ -79,4 +79,6 @@ public class ChatListAdapter extends BaseAdapter {
         TextView text;
         ImageView icon;
     }
+
+
 }
