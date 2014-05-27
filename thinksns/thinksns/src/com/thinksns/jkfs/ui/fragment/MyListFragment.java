@@ -130,7 +130,7 @@ public class MyListFragment extends ListFragment implements
 	private class MyAdapter extends ArrayAdapter<String> {
 
 		public MyAdapter(Context context, List<String> objects) {
-			super(context, R.layout.people_item, R.id.item_name, objects);
+			super(context, R.layout.people_item, R.id.people_item_name, objects);
 		}
 
 		@Override
@@ -170,14 +170,14 @@ public class MyListFragment extends ListFragment implements
 
 		public TextView getTextView() {
 			if (mText == null) {
-				mText = (TextView) mRoot.findViewById(R.id.item_name);
+				mText = (TextView) mRoot.findViewById(R.id.people_item_name);
 			}
 			return mText;
 		}
 
 		public View getBar() {
 			if (mBar == null) {
-				mBar = mRoot.findViewById(R.id.item_weibo);
+				mBar = mRoot.findViewById(R.id.people_item_weibo);
 			}
 			return mBar;
 		}

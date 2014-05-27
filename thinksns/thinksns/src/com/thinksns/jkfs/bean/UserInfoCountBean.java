@@ -8,68 +8,48 @@ import android.os.Parcelable;
  * 
  */
 public class UserInfoCountBean implements Parcelable {
-	private int following_count;
-	private int follower_count;
-	private int feed_count;
-	private int favorite_count;
-	private int weibo_count;
-	private int unread_atme;
-	private int unread_comment;
+	private String following_count;
+	private String follower_count;
+	private String weibo_count;
 
-	public int getFollowing_count() {
+	public UserInfoCountBean() {
+	}
+
+	public UserInfoCountBean(String follower_count, String following_count,
+			String weibo_count) {
+		this.follower_count = follower_count;
+		this.following_count = following_count;
+		this.weibo_count = weibo_count;
+	}
+
+	public String getFollowing_count() {
 		return following_count;
 	}
 
-	public void setFollowing_count(int followingCount) {
-		following_count = followingCount;
+	public void setFollowing_count(String following_count) {
+		this.following_count = following_count;
 	}
 
-	public int getFollower_count() {
+	public String getFollower_count() {
 		return follower_count;
 	}
 
-	public void setFollower_count(int followerCount) {
-		follower_count = followerCount;
+	public void setFollower_count(String follower_count) {
+		this.follower_count = follower_count;
 	}
 
-	public int getFeed_count() {
-		return feed_count;
-	}
-
-	public void setFeed_count(int feedCount) {
-		feed_count = feedCount;
-	}
-
-	public int getFavorite_count() {
-		return favorite_count;
-	}
-
-	public void setFavorite_count(int favoriteCount) {
-		favorite_count = favoriteCount;
-	}
-
-	public int getWeibo_count() {
+	public String getWeibo_count() {
 		return weibo_count;
 	}
 
-	public void setWeibo_count(int weiboCount) {
-		weibo_count = weiboCount;
+	public void setWeibo_count(String weibo_count) {
+		this.weibo_count = weibo_count;
 	}
 
-	public int getUnread_atme() {
-		return unread_atme;
-	}
-
-	public void setUnread_atme(int unreadAtme) {
-		unread_atme = unreadAtme;
-	}
-
-	public int getUnread_comment() {
-		return unread_comment;
-	}
-
-	public void setUnread_comment(int unreadComment) {
-		unread_comment = unreadComment;
+	@Override
+	public String toString() {
+		return "count_info =  " + this.follower_count + this.following_count
+				+ this.weibo_count;
 	}
 
 	@Override

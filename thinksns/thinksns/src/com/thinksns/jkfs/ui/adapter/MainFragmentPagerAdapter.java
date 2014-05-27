@@ -23,7 +23,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 		case 0:
 			return new WeiboListFragment();
 		case 1:
-			//return new AboutMeFragment();
+			return new AboutMeFragment();
 		default:
 			return new WeiboListFragment();
 		}
