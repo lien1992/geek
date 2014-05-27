@@ -246,8 +246,9 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 						}.start();
 					} else {
 						sendDialogShow();
-	                    final String uploadPicPath = ImageUtils.compressPic(this, picPath,3);
-	                    long size = new File(uploadPicPath).length();
+						final String uploadPicPath = ImageUtils.compressPic(
+								this, picPath, 3);
+						long size = new File(uploadPicPath).length();
 						new Thread() {
 							@Override
 							public void run() {
@@ -267,14 +268,15 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 												.getOauth_token());
 								map.put("oauth_token_secret", account
 										.getOauth_token_secret());
-								boolean result = HttpUtils.doUploadFile(HttpConstant.THINKSNS_URL, map,
+								boolean result = HttpUtils.doUploadFile(
+										HttpConstant.THINKSNS_URL, map,
 										uploadPicPath);
-						
-								/*
-								 * if (result.getAsInt() == 0) {
-								 * mHandler.sendEmptyMessage(3); } else {
-								 * mHandler.sendEmptyMessage(0); }
-								 */
+								if (result == true) {
+									mHandler.sendEmptyMessage(0);
+								} else {
+									mHandler.sendEmptyMessage(3);
+								}
+
 							}
 						}.start();
 
