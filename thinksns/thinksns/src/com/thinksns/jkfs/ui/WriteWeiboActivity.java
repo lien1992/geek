@@ -3,8 +3,6 @@ package com.thinksns.jkfs.ui;
 import java.io.File;
 import java.util.HashMap;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
@@ -77,7 +75,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 						Toast.LENGTH_SHORT).show();
 			case 3:
 				sendDialogDismiss();
-				Toast.makeText(WriteWeiboActivity.this, "微博发送失败",
+				Toast.makeText(WriteWeiboActivity.this, "出现意外，微博发送失败:(",
 						Toast.LENGTH_SHORT).show();
 			}
 		}
@@ -98,7 +96,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 		back.setOnClickListener(this);
 		send = (ImageView) findViewById(R.id.write_weibo_send);
 		send.setOnClickListener(this);
-		count = (TextView) findViewById(R.id.write_weibo_count);
+		count = (TextView) findViewById(R.id.write_weibo_word_count);
 		add_pic = (ImageView) findViewById(R.id.write_weibo_add_pic);
 		add_pic.setOnClickListener(this);
 		at = (ImageView) findViewById(R.id.write_weibo_at);
@@ -224,23 +222,20 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 								map
 										.put("content", content.getText()
 												.toString());
-								map.put("from", "2");
+								map.put("from", "3");
 
 								map
 										.put("oauth_token", account
 												.getOauth_token());
 								map.put("oauth_token_secret", account
 										.getOauth_token_secret());
-								String json = HttpUtility.getInstance()
+								String result = HttpUtility.getInstance()
 										.executeNormalTask(HttpMethod.Get,
 												HttpConstant.THINKSNS_URL, map);
-
-								JsonObject result = new JsonParser()
-										.parse(json).getAsJsonObject();
-								if (result.getAsInt() == 0) {
-									mHandler.sendEmptyMessage(3);
-								} else {
+								if (result.equals("1")) {
 									mHandler.sendEmptyMessage(0);
+								} else if (result.equals("0")) {
+									mHandler.sendEmptyMessage(3);
 								}
 							}
 						}.start();
@@ -261,7 +256,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 								map
 										.put("content", content.getText()
 												.toString());
-								map.put("from", "2");
+								map.put("from", "3");
 
 								map
 										.put("oauth_token", account

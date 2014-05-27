@@ -1,9 +1,8 @@
 package com.thinksns.jkfs.ui;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -14,6 +13,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -26,8 +26,6 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
@@ -77,12 +75,13 @@ public class WeiboDetailActivity extends BaseActivity implements
 	private ThinkSNSApplication application;
 	private WeiboBean weibo;
 	private CommentAdapter adapter;
-	private List<CommentBean> comments = new ArrayList<CommentBean>();
+	private LinkedList<CommentBean> comments = new LinkedList<CommentBean>();
 	private int currentPage = 1;
 	private int totalCount = 0;
 	private String since_id = "";
 	private boolean isFavorite;
 	private boolean isLike;
+	private boolean firstLoad = true;
 	private ProgressDialog sendProgress;
 
 	private Handler mHandler = new Handler() {
@@ -90,27 +89,27 @@ public class WeiboDetailActivity extends BaseActivity implements
 			switch (msg.what) {
 			case 0:
 				listView.onRefreshComplete();
-				Toast.makeText(WeiboDetailActivity.this, "网络未连接",
+				Toast.makeText(WeiboDetailActivity.this, "网络未连接，评论列表加载失败:(",
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 1:
 				listView.onRefreshComplete();
-				if (comments==null||comments.size() == 0) {
-					Toast.makeText(WeiboDetailActivity.this, "没有新评论",
-							Toast.LENGTH_SHORT).show();
+				if (comments == null || comments.size() == 0) {
 					break;
 				}
 				if (!listView.getLoadMoreStatus() && totalCount == 10) {
 					listView.setLoadMoreEnable(true);
 				}
 				adapter.insertToHead(comments);
-				Toast.makeText(WeiboDetailActivity.this,
-						"新增评论" + comments.size() + "条", Toast.LENGTH_SHORT)
-						.show();
+				if (!firstLoad) {
+					Toast.makeText(WeiboDetailActivity.this,
+							"新增评论" + comments.size() + "条", Toast.LENGTH_SHORT)
+							.show();
+				}
 				break;
 			case 2:
 				listView.onLoadMoreComplete();
-				if (comments==null||comments.size() == 0) {
+				if (comments == null || comments.size() == 0) {
 					Toast.makeText(WeiboDetailActivity.this, "没有新评论",
 							Toast.LENGTH_SHORT).show();
 					break;
@@ -125,14 +124,38 @@ public class WeiboDetailActivity extends BaseActivity implements
 				break;
 			case 4:
 				sendDialogDismiss();
-				Toast.makeText(WeiboDetailActivity.this, "出现意外，收藏微博失败了:(",
+				Toast.makeText(WeiboDetailActivity.this, "出现意外，收藏微博失败:(",
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 5:
-				// like_count.setText(text); 添加赞
+				Toast.makeText(WeiboDetailActivity.this, "收藏微博成功",
+						Toast.LENGTH_SHORT).show();
 				break;
 			case 6:
-				// like_count.setText(text); 取消赞
+				Toast.makeText(WeiboDetailActivity.this, "出现意外，收藏微博失败:(",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 7:
+				Toast.makeText(WeiboDetailActivity.this, "取消收藏成功",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 8:
+				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消收藏失败:(",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 9:
+				// 赞成功
+				break;
+			case 10:
+				Toast.makeText(WeiboDetailActivity.this, "出现意外，赞失败了:(",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 11:
+				// 取消赞成功
+				break;
+			case 12:
+				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消赞失败了:(",
+						Toast.LENGTH_SHORT).show();
 				break;
 
 			}
@@ -164,10 +187,10 @@ public class WeiboDetailActivity extends BaseActivity implements
 						String json = HttpUtility.getInstance()
 								.executeNormalTask(HttpMethod.Get,
 										HttpConstant.THINKSNS_URL, map);
-						Type listType = new TypeToken<ArrayList<CommentBean>>() {
+						Type listType = new TypeToken<LinkedList<CommentBean>>() {
 						}.getType();
 						comments = gson.fromJson(json, listType);
-						if (comments!=null&&comments.size() > 0) {
+						if (comments != null && comments.size() > 0) {
 							totalCount += comments.size();
 						}
 						mHandler.sendEmptyMessage(2);
@@ -183,6 +206,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 		public void onRefresh() {
 			// TODO Auto-generated method stub
 			getComments();
+			firstLoad = false;
 		}
 
 	};
@@ -203,8 +227,6 @@ public class WeiboDetailActivity extends BaseActivity implements
 	private void initViews() {
 		// TODO Auto-generated method stub
 		root = (RelativeLayout) findViewById(R.id.wb_detail_root);
-/*		root = (RelativeLayout) this.getLayoutInflater().inflate(
-				R.id.wb_detail_root, null);*/
 		back = (ImageView) findViewById(R.id.wb_detail_back);
 		back.setOnClickListener(this);
 		repost = (ImageView) findViewById(R.id.wb_detail_repost);
@@ -230,7 +252,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 		like.setOnClickListener(this);
 		comment_content = (EditText) findViewById(R.id.wb_detail_edit_comment);
 		listView = (PullToRefreshListView) findViewById(R.id.wb_detail_comment_list_view);
-		adapter = new CommentAdapter(this, this.getLayoutInflater(), listView);
+		adapter = new CommentAdapter(this, LayoutInflater.from(this), listView);
 		listView.setAdapter(adapter);
 		listView.setListener(listener);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -277,8 +299,8 @@ public class WeiboDetailActivity extends BaseActivity implements
 			repost_layout.setVisibility(View.VISIBLE);
 		}
 		like_count.setText("0");
-		repost_count.setText(weibo.getRepost_count()+"");
-		comment_count.setText(weibo.getComment_count()+"");
+		repost_count.setText(weibo.getRepost_count() + "");
+		comment_count.setText(weibo.getComment_count() + "");
 	}
 
 	@Override
@@ -304,18 +326,20 @@ public class WeiboDetailActivity extends BaseActivity implements
 					map.put("act", "comments");
 					map.put("id", weibo.getFeed_id());
 					if (!since_id.equals(""))
-						map.put("max_id", since_id);
+						map.put("since_id", since_id);
 					map.put("count", "10");
 					map.put("oauth_token", account.getOauth_token());
 					map.put("oauth_token_secret", account
 							.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-					Type listType = new TypeToken<ArrayList<CommentBean>>() {
+					Log.d("comment list content", json);
+					Type listType = new TypeToken<LinkedList<CommentBean>>() {
 					}.getType();
 					comments = gson.fromJson(json, listType);
-					if (comments!=null&&comments.size() > 0) {
-						// since_id = comments.get(0).getFeed_id();
+					if (comments != null && comments.size() > 0) {
+						Log.d("comment list count", comments.size() + "");
+						since_id = comments.get(0).getId();
 						totalCount += comments.size();
 					}
 					mHandler.sendEmptyMessage(1);
@@ -380,20 +404,15 @@ public class WeiboDetailActivity extends BaseActivity implements
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
-							String json = HttpUtility.getInstance()
+							String result = HttpUtility.getInstance()
 									.executeNormalTask(HttpMethod.Get,
 											HttpConstant.THINKSNS_URL, map);
-/*							JsonObject result = new JsonParser().parse(json)
-									.getAsJsonObject();
-							if (result.getAsInt() == 0) {
-								Toast.makeText(WeiboDetailActivity.this,
-										"出现意外，收藏微博失败了:(", Toast.LENGTH_SHORT)
-										.show();
-							} else {
+							if (result.equals("1")) {
 								isFavorite = true;
-								Toast.makeText(WeiboDetailActivity.this,
-										"收藏微博成功", Toast.LENGTH_SHORT).show();
-							}*/
+								mHandler.sendEmptyMessage(5);
+							} else if (result.equals("0")) {
+								mHandler.sendEmptyMessage(6);
+							}
 						}
 					}.start();
 				} else {
@@ -411,20 +430,16 @@ public class WeiboDetailActivity extends BaseActivity implements
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
-							String json = HttpUtility.getInstance()
+							String result = HttpUtility.getInstance()
 									.executeNormalTask(HttpMethod.Get,
 											HttpConstant.THINKSNS_URL, map);
-/*							JsonObject result = new JsonParser().parse(json)
-									.getAsJsonObject();
-							if (result.getAsInt() == 0) {
-								Toast.makeText(WeiboDetailActivity.this,
-										"出现意外，取消收藏失败了:(", Toast.LENGTH_SHORT)
-										.show();
-							} else {
+							if (result.equals("1")) {
 								isFavorite = false;
-								Toast.makeText(WeiboDetailActivity.this,
-										"取消收藏成功", Toast.LENGTH_SHORT).show();
-							}*/
+								mHandler.sendEmptyMessage(7);
+
+							} else if (result.equals("0")) {
+								mHandler.sendEmptyMessage(8);
+							}
 						}
 					}.start();
 				}
@@ -460,17 +475,15 @@ public class WeiboDetailActivity extends BaseActivity implements
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
-							String json = HttpUtility.getInstance()
+							String result = HttpUtility.getInstance()
 									.executeNormalTask(HttpMethod.Get,
 											HttpConstant.THINKSNS_URL, map);
-							Log.d("send weibo return what?", json);
-/*							JsonObject result = new JsonParser().parse(json)
-									.getAsJsonObject();
-							if (result.getAsInt() == 0) {
-								mHandler.sendEmptyMessage(4);
-							} else {
+							Log.d("send weibo return what?", result);
+							if (result.equals("1")) {
 								mHandler.sendEmptyMessage(3);
-							}*/
+							} else if (result.equals("0")) {
+								mHandler.sendEmptyMessage(4);
+							}
 						}
 					}.start();
 				} else {
@@ -491,22 +504,19 @@ public class WeiboDetailActivity extends BaseActivity implements
 							map.put("app", "api");
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "add_digg");
+							//map.put("", weibo.getFeed_id());
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
-							String json = HttpUtility.getInstance()
+							String result = HttpUtility.getInstance()
 									.executeNormalTask(HttpMethod.Get,
 											HttpConstant.THINKSNS_URL, map);
-	/*						JsonObject result = new JsonParser().parse(json)
-									.getAsJsonObject();
-							if (result.getAsInt() == 0) {
-								Toast.makeText(WeiboDetailActivity.this,
-										"出现意外，赞失败了:(", Toast.LENGTH_SHORT)
-										.show();
-							} else {
+							if (result.equals("1")) {
 								isLike = true;
-								mHandler.sendEmptyMessage(5);
-							}*/
+								mHandler.sendEmptyMessage(9);
+							} else if (result.equals("0")) {
+								mHandler.sendEmptyMessage(10);
+							}
 						}
 					}.start();
 
@@ -520,22 +530,19 @@ public class WeiboDetailActivity extends BaseActivity implements
 							map.put("app", "api");
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "delete_digg");
+							//map.put("", weibo.getFeed_id());
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
-							String json = HttpUtility.getInstance()
+							String result = HttpUtility.getInstance()
 									.executeNormalTask(HttpMethod.Get,
 											HttpConstant.THINKSNS_URL, map);
-/*							JsonObject result = new JsonParser().parse(json)
-									.getAsJsonObject();
-							if (result.getAsInt() == 0) {
-								Toast.makeText(WeiboDetailActivity.this,
-										"出现意外，赞失败了:(", Toast.LENGTH_SHORT)
-										.show();
-							} else {
+							if (result.equals("1")) {
 								isLike = false;
-								mHandler.sendEmptyMessage(6);
-							}*/
+								mHandler.sendEmptyMessage(11);
+							} else if (result.equals("0")) {
+								mHandler.sendEmptyMessage(12);
+							}
 						}
 					}.start();
 				}

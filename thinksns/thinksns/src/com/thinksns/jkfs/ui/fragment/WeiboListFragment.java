@@ -1,7 +1,6 @@
 package com.thinksns.jkfs.ui.fragment;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +32,8 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 微博列表，待完善.. 下拉刷新、加载更多仍存bug, fixing..
+ * 微博列表，后期改为用户关注的微博，目前暂显示公共微博
+ * 待完成的部分（since_id有bug未解决，新微博提醒）
  * 
  * @author wangjia
  * 
@@ -45,19 +45,20 @@ public class WeiboListFragment extends BaseListFragment {
 	private LinkedList<WeiboBean> weibo_all = new LinkedList<WeiboBean>();
 	private WeiboAdapter adapter;
 	private AccountBean account;
-	private int currentPage = 1;
+	private int currentPage;
 	private int totalCount = 0;
 	private String since_id = "";
+	private boolean firstLoad = true;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				//Log.d("WEIBO COUNT", weibos.size() + "");
+				// Log.d("WEIBO COUNT", weibos.size() + "");
 				listView.onLoadMoreComplete();
-				if (weibos==null||weibos.size() == 0) {
-					Toast.makeText(getActivity(), "没有新微博", Toast.LENGTH_SHORT)
-							.show();
+				if (weibos == null || weibos.size() == 0) {
+					Toast.makeText(getActivity(), "没有更多微博了亲:(",
+							Toast.LENGTH_SHORT).show();
 					break;
 				}
 				adapter.append(weibos);
@@ -66,11 +67,13 @@ public class WeiboListFragment extends BaseListFragment {
 				break;
 			case 1:
 				listView.onRefreshComplete();
-				if (!listView.getLoadMoreStatus()) {
-					listView.setLoadMoreEnable(true);
+				if (firstLoad) {
+					if (weibos == null || weibos.size() == 0)
+						Toast.makeText(getActivity(), "出现意外，微博加载失败:(",
+								Toast.LENGTH_SHORT).show();
 				}
-				if (weibos==null||weibos.size() == 0) {
-					Toast.makeText(getActivity(), "没有新微博", Toast.LENGTH_SHORT)
+				if (weibos == null || weibos.size() == 0) {
+					Toast.makeText(getActivity(), "暂时没有新微博:)", Toast.LENGTH_SHORT)
 							.show();
 					break;
 				}
@@ -79,8 +82,11 @@ public class WeiboListFragment extends BaseListFragment {
 				}
 				adapter.insertToHead(weibos);
 				insertToHead(weibos);
-				Toast.makeText(getActivity(), "新增微博" + weibos.size() + "条",
-						Toast.LENGTH_SHORT).show();
+				Log.d("all weibos", weibo_all.size() + "");
+				if (!firstLoad)
+					Toast.makeText(getActivity(), "新增微博" + weibos.size() + "条",
+							Toast.LENGTH_SHORT).show();
+				currentPage = totalCount / 20 + 1;
 				break;
 			case 2:
 				listView.onRefreshComplete();
@@ -113,7 +119,6 @@ public class WeiboListFragment extends BaseListFragment {
 		account = application.getAccount(this.getActivity());
 
 		listView.setListener(this);
-		// listView.setLoadMoreEnable(false);
 		adapter = new WeiboAdapter(getActivity(), mInflater, listView);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -124,12 +129,15 @@ public class WeiboListFragment extends BaseListFragment {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(getActivity(),
 						WeiboDetailActivity.class);
-				intent.putExtra("weibo_detail", weibo_all.get(position));
+				Log.d("listview item pos", position + "");
+				intent.putExtra("weibo_detail", weibo_all.get(position - 1));
 				startActivity(intent);
 			}
 
 		});
 
+		if (totalCount == 0)
+			getWeibos();
 	}
 
 	@Override
@@ -156,11 +164,11 @@ public class WeiboListFragment extends BaseListFragment {
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 					}.getType();
 					weibos = gson.fromJson(json, listType);
-					if (weibos!=null&&weibos.size() > 0) {
+					if (weibos != null && weibos.size() > 0) {
 						totalCount += weibos.size();
 					}
 					mHandler.sendEmptyMessage(0);
-					
+
 				}
 			}.start();
 		} else {
@@ -171,6 +179,13 @@ public class WeiboListFragment extends BaseListFragment {
 
 	@Override
 	public void onRefresh() {
+		// TODO Auto-generated method stub
+		getWeibos();
+		firstLoad = false;
+
+	}
+
+	private void getWeibos() {
 		// TODO Auto-generated method stub
 		if (Utility.isConnected(getActivity())) {
 
@@ -186,7 +201,7 @@ public class WeiboListFragment extends BaseListFragment {
 					map.put("mod", "WeiboStatuses");
 					map.put("act", "public_timeline");
 					if (!since_id.equals(""))
-						map.put("max_id", since_id);
+						map.put("since_id", since_id);
 					map.put("oauth_token", account.getOauth_token());
 					map.put("oauth_token_secret", account
 							.getOauth_token_secret());
@@ -195,10 +210,11 @@ public class WeiboListFragment extends BaseListFragment {
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 					}.getType();
 					weibos = gson.fromJson(json, listType);
-					if (weibos!=null&&weibos.size() > 0) {
+					if (weibos != null && weibos.size() > 0) {
 						since_id = weibos.get(0).getFeed_id();
 						Log.d("WEIBO SINCE ID", since_id);
-						Log.d("WEIBO SINCE ID CONTENT", weibos.get(0).getContent());
+						Log.d("WEIBO SINCE ID CONTENT", weibos.get(0)
+								.getContent());
 						totalCount += weibos.size();
 					}
 					mHandler.sendEmptyMessage(1);
@@ -207,7 +223,6 @@ public class WeiboListFragment extends BaseListFragment {
 		} else {
 			mHandler.sendEmptyMessage(2);
 		}
-
 	}
 
 	public void insertToHead(List<WeiboBean> lists) {
