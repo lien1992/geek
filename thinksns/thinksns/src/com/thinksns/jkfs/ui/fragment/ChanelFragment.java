@@ -72,6 +72,7 @@ import android.widget.Toast;
 
 public class ChanelFragment extends Fragment {
 
+    public static final String TAG = "ChanelFragment";
 	// 获取微博时方法用的
 	static private final int CHANEL_DIF = 0;
 	static private final int CHANEL_SAME_REFRESH = 1;
@@ -84,7 +85,6 @@ public class ChanelFragment extends Fragment {
 	static private final int GETTED_REFRESH_CHANEL_WEIBO_LIST = 4;
 	static private final int GETTED_ON_LOAD_MORE_CHANEL_WEIBO_LIST = 5;
 	// thinksnsAPI用的
-	static private final String TAG = "zcc";
 	static private final String APP = "api";
 	static private final String MOD = "Channel";
 	static private final String ACT_GET_ALL_CHANEL = "get_all_channel";

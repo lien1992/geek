@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import android.widget.TextView;
  */
 
 public class WeiboMainFragment extends Fragment {
+
+    private String TAG="WeiboMainFragment";
 	private ViewPager pager;
 	private UnderlinePageIndicator indicator;
 	private MainFragmentPagerAdapter adapter;
@@ -37,7 +40,7 @@ public class WeiboMainFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+        Log.d(TAG, "onCreateView");
 		super.onCreateView(inflater, container, savedInstanceState);
 		in = inflater;
 		view = in.inflate(R.layout.main_weibo_fragment, null);
@@ -54,7 +57,6 @@ public class WeiboMainFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 		aboutMe.setTextColor(getResources().getColor(R.color.grey));
 		adapter = new MainFragmentPagerAdapter(getActivity());
@@ -69,7 +71,7 @@ public class WeiboMainFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
 				((MainFragmentActivity) getActivity()).getSlidingMenu()
 						.toggle();
 			}
@@ -79,7 +81,7 @@ public class WeiboMainFragment extends Fragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+
 		super.onActivityCreated(savedInstanceState);
 	}
 
@@ -96,7 +98,7 @@ public class WeiboMainFragment extends Fragment {
 
 		@Override
 		public void onPageSelected(int arg) {
-			// TODO Auto-generated method stub
+
 			if (arg == 0) {
 				weiboList.setTextColor(getResources().getColor(R.color.green));
 				aboutMe.setTextColor(getResources().getColor(R.color.grey));

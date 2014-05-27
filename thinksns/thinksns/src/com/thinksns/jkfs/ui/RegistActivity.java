@@ -129,7 +129,7 @@ public class RegistActivity extends Activity {
 
 	private void initViews() {
 
-		regBtn = (Button) findViewById(R.id.regist_btn);
+		regBtn = (Button) findViewById(R.id.regist_button);
 		back = (ImageView) findViewById(R.id.back_login);
 		email = (EditText) findViewById(R.id.regist_email);
 		nick = (EditText) findViewById(R.id.regist_nick);
