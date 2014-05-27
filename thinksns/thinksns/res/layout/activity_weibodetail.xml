@@ -156,8 +156,8 @@
 
                     <ImageView
                         android:id="@+id/wb_detail_pic1"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:src="@drawable/ic_launcher"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -201,8 +201,8 @@
 
                         <ImageView
                             android:id="@+id/re_detail_wb_pic1"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:src="@drawable/ic_launcher"
                             android:visibility="gone" />
                     </LinearLayout>

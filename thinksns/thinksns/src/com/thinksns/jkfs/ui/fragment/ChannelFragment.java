@@ -3,18 +3,22 @@ package com.thinksns.jkfs.ui.fragment;
 import java.io.File;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
@@ -638,20 +642,20 @@ public class ChannelFragment extends Fragment {
 	}
 
 	private ArrayList<WeiboBean> JSONToWeibos(String jsonData) {
-		try {
-			ArrayList<WeiboBean> list = JSONUtils.JSONToWeibos(jsonData);
-			Log.i(TAG, "微博个数" + list.size());
-			if (list.size() != 0) {
-				Log.i(TAG, list.get(0).getUname());
-				weibo_max_id = list.get(list.size() - 1).getId();
-				weibo_since_id = list.get(0).getId();
-			}
-			return list;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		ArrayList<WeiboBean> list = new ArrayList<WeiboBean>();
+
+		Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+		}.getType();
+		list = new Gson().fromJson(jsonData, listType);
+
+		Log.i(TAG, "微博个数" + list.size());
+		if (list.size() != 0) {
+			Log.i(TAG, list.get(0).getUname());
+			weibo_max_id = list.get(list.size() - 1).getId();
+			weibo_since_id = list.get(0).getId();
 		}
-		return new ArrayList<WeiboBean>();
+		return list;
 	}
 
 	private void setDropDefault() {
