@@ -3,6 +3,7 @@
     android:id="@+id/write_wb_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/white"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -144,7 +145,7 @@
         <LinearLayout
             android:id="@+id/write_weibo_count"
             android:layout_width="100dip"
-            android:layout_height="30dip"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/write_weibo_bottom"
             android:layout_alignParentRight="true"
             android:gravity="right"

@@ -20,9 +20,9 @@ public class UserInfoBean implements Parcelable {
 	// private String last_feed_id;// 最近一条微博ID
 	private String avatar_original;
 
-	// private String avatar_big;
-	// private String avatar_middle;
-	// private String avatar_small;
+	private String avatar_big;
+	private String avatar_middle;
+	private String avatar_small;
 
 	// private UserInfoCountBean count_info;
 
@@ -105,10 +105,10 @@ public class UserInfoBean implements Parcelable {
 		dest.writeString(sex);
 		dest.writeString(province);
 		dest.writeString(city);
-		// dest.writeString(avatar_big);
-		// dest.writeString(avatar_middle);
-		// dest.writeString(avatar_small);
 		dest.writeString(avatar_original);
+		dest.writeString(avatar_big);
+		dest.writeString(avatar_middle);
+		dest.writeString(avatar_small);
 		dest.writeString(location);
 		// dest.writeString(count_info);
 		// dest.writeString(following_count);
@@ -159,6 +159,30 @@ public class UserInfoBean implements Parcelable {
 	// this.count_info = count_info;
 	// }
 
+	public void setAvatar_big(String avatar_big) {
+		this.avatar_big = avatar_big;
+	}
+
+	public String getAvatar_big() {
+		return avatar_big;
+	}
+
+	public void setAvatar_middle(String avatar_middle) {
+		this.avatar_middle = avatar_middle;
+	}
+
+	public String getAvatar_middle() {
+		return avatar_middle;
+	}
+
+	public void setAvatar_small(String avatar_small) {
+		this.avatar_small = avatar_small;
+	}
+
+	public String getAvatar_small() {
+		return avatar_small;
+	}
+
 	public static final Parcelable.Creator<UserInfoBean> CREATOR = new Parcelable.Creator<UserInfoBean>() {
 		public UserInfoBean createFromParcel(Parcel in) {
 			UserInfoBean ub = new UserInfoBean();
@@ -169,14 +193,14 @@ public class UserInfoBean implements Parcelable {
 			ub.province = in.readString();
 			ub.city = in.readString();
 			ub.avatar_original = in.readString();
+			ub.avatar_big = in.readString();
+			ub.avatar_middle = in.readString();
+			ub.avatar_small = in.readString();
 			ub.location = in.readString();
 			// ub.following_count = in.readString();
 			// ub.follower_count = in.readString();
 			// ub.weibo_count = in.readString();
 			// ub.count_info = in.readString();
-			// ub.avatar_big = in.readString();
-			// ub.avatar_middle = in.readString();
-			// ub.avatar_small = in.readString();
 			// ub.last_feed_id = in.readString();
 			// ub.count_info = in.readParcelable(UserInfoCountBean.class
 			// .getClassLoader());

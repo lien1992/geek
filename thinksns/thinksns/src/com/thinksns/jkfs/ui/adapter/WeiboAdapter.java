@@ -41,6 +41,7 @@ public class WeiboAdapter extends BaseAdapter {
 			return;
 		}
 		wList.addAll(lists);
+		Log.d("adapter all weibos", wList.size() + "");
 		notifyDataSetChanged();
 	}
 

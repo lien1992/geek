@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/wb_detail_root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@color/white" >
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -13,7 +14,8 @@
         <RelativeLayout
             android:id="@+id/wb_detail_header"
             android:layout_width="match_parent"
-            android:layout_height="50dp" >
+            android:layout_height="50dp"
+            android:background="@color/white" >
 
             <ImageView
                 android:id="@+id/wb_detail_back"
@@ -156,7 +158,8 @@
                         android:id="@+id/wb_detail_pic1"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_launcher" />
+                        android:src="@drawable/ic_launcher"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <!-- 转发微博默认visibility="gone" -->
@@ -169,7 +172,8 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/weibo_item_bg"
                     android:orientation="vertical"
-                    android:padding="8dp" >
+                    android:padding="8dp"
+                    android:visibility="gone" >
 
                     <TextView
                         android:id="@+id/re_detail_user_name"
@@ -177,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:text="被转发用户名"
                         android:textColor="#383838"
-                        android:textSize="15sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/re_detail_wb_text"
@@ -192,14 +196,15 @@
 
                     <LinearLayout
                         android:id="@+id/re_detail_pics"
-                        android:layout_width="fill_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content" >
 
                         <ImageView
                             android:id="@+id/re_detail_wb_pic1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/ic_launcher" />
+                            android:src="@drawable/ic_launcher"
+                            android:visibility="gone" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -304,7 +309,7 @@
                 <com.thinksns.jkfs.ui.view.PullToRefreshListView
                     android:id="@+id/wb_detail_comment_list_view"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:cacheColorHint="#0000"
                     android:divider="@drawable/lv_divider" />

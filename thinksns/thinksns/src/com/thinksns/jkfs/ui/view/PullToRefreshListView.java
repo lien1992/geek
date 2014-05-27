@@ -28,7 +28,7 @@ import android.widget.AbsListView.OnScrollListener;
  * ListView, 顶部:下拉刷新 + 底部:加载更多
  * 
  * 【使用】实现RefreshAndLoadMoreListener接口，并调用setListener()进行绑定; 
- * 默认情况下同时具备下拉刷新、加载更多；
+ * 默认情况下只有下拉刷新；需要加载更多需再多调用setLoadMoreEnable(true);；
  * 下拉刷新完成，调用onRefreshComplete()；底部加载更多完成，调用onLoadMoreComplete()。
  * 
  */
@@ -398,8 +398,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 		} else {
 			if (mIsFooterReady == false) { // 确保footView为最后面的View，只添加一次
 				mIsFooterReady = true;
-				// addFooterView(footView);
-				// footView.setVisibility(View.VISIBLE);
+				addFooterView(footView);
+				footView.setVisibility(View.VISIBLE);
 			}
 			mPullLoading = false;
 			show();
