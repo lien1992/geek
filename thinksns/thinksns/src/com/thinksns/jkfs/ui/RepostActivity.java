@@ -219,13 +219,13 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 									.executeNormalTask(HttpMethod.Get,
 											HttpConstant.THINKSNS_URL, map);
 
-							JsonObject result = new JsonParser().parse(json)
+	/*						JsonObject result = new JsonParser().parse(json)
 									.getAsJsonObject();
 							if (result.getAsInt() == 0) {
 								mHandler.sendEmptyMessage(3);
 							} else {
 								mHandler.sendEmptyMessage(0);
-							}
+							}*/
 						}
 					}.start();
 

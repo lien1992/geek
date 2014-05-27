@@ -10,6 +10,7 @@ import com.thinksns.jkfs.R;
 
 public class CollectionFragment extends Fragment {
 
+    public static final String TAG="CollectionFragment";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        super.onCreateView(inflater, container, savedInstanceState);

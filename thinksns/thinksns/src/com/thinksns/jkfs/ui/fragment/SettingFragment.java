@@ -13,6 +13,7 @@ import com.thinksns.jkfs.R;
  */
 public class SettingFragment extends Fragment {
 
+    public static final String TAG="SettingFragment";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);

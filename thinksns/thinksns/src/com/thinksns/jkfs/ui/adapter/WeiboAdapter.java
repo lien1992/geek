@@ -55,6 +55,18 @@ public class WeiboAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
+	// 更新微博列表，不要原来的数据
+	public void update(List<WeiboBean> lists) {
+		if (lists == null) {
+			return;
+		}
+		wList.clear();
+		for (int i = lists.size() - 1; i >= 0; --i) {
+			wList.addFirst(lists.get(i));
+		}
+		notifyDataSetChanged();
+	}
+
 	// 图片加载回调
 	ImageCallback callback = new ImageCallback() {
 		@Override
@@ -156,12 +168,13 @@ public class WeiboAdapter extends BaseAdapter {
 			break;
 		}
 		holder.like_count.setText("0");// 待定，API中暂未找到赞的数目
-		holder.repost_content.setText(weibo.getRepost_count());
-		holder.comment_count.setText(weibo.getComment_count());
+		holder.repost_content.setText(weibo.getRepost_count() + "");
+		holder.comment_count.setText(weibo.getComment_count() + "");
 		if (weibo.getType().equals("repost")) {
 			WeiboBean weibo_repost = weibo.getTranspond_data();
+			// 这一行报错,在insert刷新之后只有两个，空指针
 			holder.repost_userName.setText(weibo_repost.getUname());
-			holder.repost_content.setText(weibo_repost.getContent());
+			holder.repost_content.setText(weibo_repost.getContent() + "");
 			holder.repost.setVisibility(View.VISIBLE);
 		}
 		if (weibo.getType().equals("postimage")) {

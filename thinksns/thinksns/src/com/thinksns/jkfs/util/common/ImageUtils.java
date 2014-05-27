@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.util.FileManager;
 import com.thinksns.jkfs.util.MD5;
 import com.thinksns.jkfs.util.ThreadPoolManager;
 import com.thinksns.jkfs.util.Utility;
@@ -46,8 +47,7 @@ public class ImageUtils {
 	 */
 	private static LinkedHashMap<String, SoftReference> imageCache = new LinkedHashMap<String, SoftReference>(
 			20);
-	
-	
+
 	// 回调接口
 	public interface ImageCallback {
 		public void loadImage(Bitmap bitmap, String imagePath);
@@ -110,8 +110,7 @@ public class ImageUtils {
 	private static void setThumbnailImage(ImageView view, String imageUrl,
 			String cachePath, ImageCallback callback) {
 		Bitmap bitmap = null;
-		bitmap = ImageUtils
-				.loadThumbnailImage(cachePath, imageUrl, callback);
+		bitmap = ImageUtils.loadThumbnailImage(cachePath, imageUrl, callback);
 		if (bitmap == null) {// 查找本地sd卡,若没有则从网站加载,若网站上没有图片或错误时返回null
 			// 设置默认图片
 			view.setImageResource(Default_Img);
@@ -290,7 +289,6 @@ public class ImageUtils {
 		return MD5.getMD5Code(paramString);
 	}
 
-
 	/**
 	 * 每次打开含有大量图片的activity时,开一个新线程,检查并清理缓存
 	 * 
@@ -396,6 +394,63 @@ public class ImageUtils {
 			fileSizeString = df.format((double) fileS / 1073741824) + "G";
 		}
 		return fileSizeString;
+	}
+
+	/**
+	 * 压缩图片
+	 * 
+	 * @param context
+	 * @param picPath
+	 * @param quality
+	 *            1.不压缩 2.压缩到50% 3.压缩到25%
+	 * @return 图片路径
+	 */
+	public static String compressPic(Context context, String picPath,
+			int quality) {
+
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = false;
+		options.inSampleSize = 1;
+
+		switch (quality) {
+		case 1:
+			return picPath; // 不压缩
+		case 2:
+			options.inSampleSize = 2; // 压缩到50%
+			break;
+		case 3:
+			options.inSampleSize = 4; // 压缩到25%
+			break;
+		case 4:
+			options.inSampleSize = 2;
+
+			if (Utility.isWifi(context)) {
+				return picPath;
+			}
+			break;
+		}
+
+		Bitmap bitmap = BitmapFactory.decodeFile(picPath, options);
+		FileOutputStream stream = null;
+		String tmp = FileManager.getUploadPicTempFile();
+		try {
+			new File(tmp).getParentFile().mkdirs();
+			new File(tmp).createNewFile();
+			stream = new FileOutputStream(new File(tmp));
+		} catch (IOException ignored) {
+
+		}
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+		if (stream != null) {
+			try {
+				stream.close();
+				bitmap.recycle();
+			} catch (IOException ignored) {
+
+			}
+		}
+		return tmp;
 	}
 
 }

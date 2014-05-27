@@ -11,9 +11,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +23,12 @@ import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.AdapterBase;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.ChanelBean;
 import com.thinksns.jkfs.bean.ChatBean;
 import com.thinksns.jkfs.constant.HttpConstant;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
+import com.thinksns.jkfs.ui.adapter.ChatListAdapter;
+import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -37,46 +43,60 @@ import java.util.List;
 import java.util.Map;
 
 public class ChatFragment extends Fragment {
+
+    public static final String TAG="ChatFragment";
+
+    public static final int HANDLER_GET_JSON=2;
+
+    private static final String[] m={"全部分组","B型","O型","AB型","其他"};
     private String jsonData;
     private AccountBean accountBean;
-    private ListView chat_listview;
+    private PullToRefreshListView chat_listview;
     private ChatListAdapter chatListAdapter;
     private List<ChatBean> listChat=new ArrayList<ChatBean>();
-    ThinkSNSApplication application;
+    private LayoutInflater mInflater;
+    private View mMenuSlide;
+    private ThinkSNSApplication application;
+    private ArrayAdapter<String> adapter;
+    private Spinner mSpinner;
     private Handler mHandler = new Handler(){
 
         @Override
         public void handleMessage(Message msg){
 
-            if(msg.what==2){
+            if(msg.what==HANDLER_GET_JSON){
                 try {
                    JSONArray jsonObject=new JSONArray(jsonData);
                     if(jsonObject!=null)
                     for(int i=0;i<jsonObject.length();i++){
-
                         JSONObject obj=jsonObject.getJSONObject(i);
                         listChat.add(ChatBean.JsonToBean(obj));
                     }
-                   Log.d("MOSL",listChat.size()+"");
 
-                    chatListAdapter=new ChatListAdapter(listChat);
+                    chatListAdapter=new ChatListAdapter(listChat,getActivity(),mInflater);
                     chat_listview.setAdapter(chatListAdapter);
                     chatListAdapter.notifyDataSetChanged();
                    } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //Log.d("MOSL",jsonData);
             }
         }
     };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        Log.d(TAG,"onCreateview is create");
+        mInflater=inflater;
         application = ThinkSNSApplication.getInstance();
         accountBean=application.getAccount(getActivity());
         setHasOptionsMenu(true);
         View view=inflater.inflate(R.layout.chat_fragment_layout,container,false);
-        chat_listview=(ListView)view.findViewById(R.id.chat_list);
+        initViews(view);
+        adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,m);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner=(Spinner)view.findViewById(R.id.group_spinner);
+        mSpinner.setAdapter(adapter);
         if(application.isNewWork(getActivity())){
             new Thread(new Runnable() {
                 @Override
@@ -90,7 +110,7 @@ public class ChatFragment extends Fragment {
                     map.put("format","json");
                     jsonData = HttpUtility.getInstance().executeNormalTask(
                             HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-                    mHandler.sendEmptyMessage(2);
+                    mHandler.sendEmptyMessage(HANDLER_GET_JSON);
 
                 }
             }).start();
@@ -98,71 +118,35 @@ public class ChatFragment extends Fragment {
         else{
             Toast.makeText(getActivity(), "没有联网", 1000).show();
         }
+
+        chat_listview.setListener(new PullToRefreshListView.RefreshAndLoadMoreListener() {
+
+            @Override
+            public void onRefresh() {
+
+            }
+
+            @Override
+            public void onLoadMore() {
+
+            }
+        });
+
         return view;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    private void initViews(View view){
 
-        inflater.inflate(R.menu.menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO Auto-generated method stub
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    private class ChatListAdapter extends BaseAdapter{
-
-        ChatListAdapter(List<ChatBean> list){
-            mList=list;
-        }
-        private  List<ChatBean> mList = new LinkedList<ChatBean>();
-
-        public List<ChatBean> getList(){
-            return mList;
-        }
-
-        public void appendToList(List<ChatBean> list) {
-            if (list == null) {
-                return;
+        chat_listview=(PullToRefreshListView)view.findViewById(R.id.chat_list);
+        mMenuSlide=(View)view.findViewById(R.id.menu_icon);
+        mMenuSlide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainFragmentActivity) getActivity()).getSlidingMenu()
+                        .toggle();
             }
-            mList.addAll(list);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return mList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView==null){
-                convertView=LayoutInflater.from(ChatFragment.this.getActivity()).inflate(R.layout.chat_fragment_item,parent,false);
-            }
-            if(getList().size()==0)return convertView;
-            ImageView userImage=(ImageView)convertView.findViewById(R.id.user_image);
-            TextView  userName=(TextView)convertView.findViewById(R.id.user_name);
-            TextView content=(TextView)convertView.findViewById(R.id.content);
-            ChatBean chatBean=(ChatBean)getList().get(position);
-            userName.setText(chatBean.from_uname);
-            content.setText(chatBean.content);
-            return convertView;
-        }
+        });
     }
+
+
 }

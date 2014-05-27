@@ -24,7 +24,7 @@ import com.thinksns.jkfs.R;
 public class MyListFragment extends ListFragment implements
 		LoaderCallbacks<Void> {
 
-	private static final String TAG = "FragmentTabs";
+	private static final String TAG = "MyListFragment";
 
 	private String mTag;
 	private MyAdapter mAdapter;

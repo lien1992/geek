@@ -157,14 +157,13 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/ic_launcher" />
-
                 </LinearLayout>
 
                 <!-- 转发微博默认visibility="gone" -->
 
                 <LinearLayout
                     android:id="@+id/wb_detail_repost_layout"
-                    android:layout_width="290dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
@@ -324,7 +323,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="3dip" >
+        android:background="@color/white" >
 
         <ImageView
             android:id="@+id/wb_detail_emotions"

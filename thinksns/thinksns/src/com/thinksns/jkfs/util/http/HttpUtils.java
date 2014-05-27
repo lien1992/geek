@@ -3,15 +3,18 @@ package com.thinksns.jkfs.util.http;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.util.AppLogger;
 import com.thinksns.jkfs.util.Utility;
 
 import javax.net.ssl.*;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -219,6 +222,147 @@ public class HttpUtils {
 		}
 		return strBuilder.toString();
 
+	}
+
+	private static String getBoundry() {
+		StringBuffer _sb = new StringBuffer();
+		for (int t = 1; t < 12; t++) {
+			long time = System.currentTimeMillis() + t;
+			if (time % 3 == 0) {
+				_sb.append((char) time % 9);
+			} else if (time % 3 == 1) {
+				_sb.append((char) (65 + time % 26));
+			} else {
+				_sb.append((char) (97 + time % 26));
+			}
+		}
+		return _sb.toString();
+	}
+
+	/**
+	 * 文件上传
+	 * 
+	 * @param urlStr
+	 * @param param
+	 * @param path
+	 * @return
+	 */
+	public static boolean doUploadFile(String urlStr,
+			Map<String, String> param, String path) {
+		String BOUNDARYSTR = getBoundry();
+		String BOUNDARY = "--" + BOUNDARYSTR + "\r\n";
+		HttpURLConnection urlConnection = null;
+		BufferedOutputStream out = null;
+		FileInputStream fis = null;
+		ThinkSNSApplication globalContext = ThinkSNSApplication.getInstance();
+		globalContext = null;
+		InputStream is = null;
+		try {
+			URL url = null;
+
+			url = new URL(urlStr);
+
+			Proxy proxy = getProxy();
+			if (proxy != null)
+				urlConnection = (HttpURLConnection) url.openConnection(proxy);
+			else
+				urlConnection = (HttpURLConnection) url.openConnection();
+
+			urlConnection.setConnectTimeout(5000);
+			urlConnection.setReadTimeout(5000);
+			urlConnection.setDoInput(true);
+			urlConnection.setDoOutput(true);
+			urlConnection.setRequestMethod("POST");
+			urlConnection.setUseCaches(false);
+			urlConnection.setRequestProperty("Connection", "Keep-Alive");
+			urlConnection.setRequestProperty("Charset", "UTF-8");
+			urlConnection.setRequestProperty("Content-type",
+					"multipart/form-data;boundary=" + BOUNDARYSTR);
+			urlConnection.connect();
+
+			out = new BufferedOutputStream(urlConnection.getOutputStream());
+
+			StringBuilder sb = new StringBuilder();
+
+			Map<String, String> paramMap = new HashMap<String, String>();
+
+			for (String key : param.keySet()) {
+				if (param.get(key) != null) {
+					paramMap.put(key, param.get(key));
+				}
+			}
+
+			for (String str : paramMap.keySet()) {
+				sb.append(BOUNDARY);
+				sb.append("Content-Disposition:form-data;name=\"");
+				sb.append(str);
+				sb.append("\"\r\n\r\n");
+				sb.append(param.get(str));
+				sb.append("\r\n");
+			}
+
+			out.write(sb.toString().getBytes());
+
+			File file = new File(path);
+			out.write(BOUNDARY.getBytes());
+			StringBuilder filenamesb = new StringBuilder();
+			filenamesb
+					.append("Content-Disposition:form-data;Content-Type:application/octet-stream;name=\"pic");
+			filenamesb.append("\";filename=\"");
+			filenamesb.append(file.getName() + "\"\r\n\r\n");
+			out.write(filenamesb.toString().getBytes());
+
+			fis = new FileInputStream(file);
+
+			int bytesRead;
+			int bytesAvailable;
+			int bufferSize;
+			byte[] buffer;
+			int maxBufferSize = 1 * 1024;
+
+			bytesAvailable = fis.available();
+			bufferSize = Math.min(bytesAvailable, maxBufferSize);
+			buffer = new byte[bufferSize];
+			bytesRead = fis.read(buffer, 0, bufferSize);
+			long transferred = 0;
+			final Thread thread = Thread.currentThread();
+			while (bytesRead > 0) {
+
+				if (thread.isInterrupted()) {
+					file.delete();
+					throw new InterruptedIOException();
+				}
+				out.write(buffer, 0, bufferSize);
+				bytesAvailable = fis.available();
+				bufferSize = Math.min(bytesAvailable, maxBufferSize);
+				bytesRead = fis.read(buffer, 0, bufferSize);
+				transferred += bytesRead;
+				if (transferred % 50 == 0)
+					out.flush();
+
+			}
+
+			out.write("\r\n\r\n".getBytes());
+			fis.close();
+
+			out.write(("--" + BOUNDARYSTR + "--\r\n").getBytes());
+			out.flush();
+			out.close();
+			int status = urlConnection.getResponseCode();
+			if (status != HttpURLConnection.HTTP_OK) {
+				String error = handleError(urlConnection);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			Utility.closeSilently(fis);
+			Utility.closeSilently(out);
+			if (urlConnection != null)
+				urlConnection.disconnect();
+		}
+
+		return true;
 	}
 
 }

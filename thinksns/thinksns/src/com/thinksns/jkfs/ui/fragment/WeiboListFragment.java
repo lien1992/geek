@@ -53,9 +53,9 @@ public class WeiboListFragment extends BaseListFragment {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				Log.d("WEIBO COUNT", weibos.size() + "");
+				//Log.d("WEIBO COUNT", weibos.size() + "");
 				listView.onLoadMoreComplete();
-				if (weibos.size() == 0) {
+				if (weibos==null||weibos.size() == 0) {
 					Toast.makeText(getActivity(), "没有新微博", Toast.LENGTH_SHORT)
 							.show();
 					break;
@@ -69,7 +69,7 @@ public class WeiboListFragment extends BaseListFragment {
 				if (!listView.getLoadMoreStatus()) {
 					listView.setLoadMoreEnable(true);
 				}
-				if (weibos.size() == 0) {
+				if (weibos==null||weibos.size() == 0) {
 					Toast.makeText(getActivity(), "没有新微博", Toast.LENGTH_SHORT)
 							.show();
 					break;
@@ -154,10 +154,10 @@ public class WeiboListFragment extends BaseListFragment {
 							.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-					Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 					}.getType();
 					weibos = gson.fromJson(json, listType);
-					if (weibos.size() > 0) {
+					if (weibos!=null&&weibos.size() > 0) {
 						totalCount += weibos.size();
 					}
 					mHandler.sendEmptyMessage(0);
@@ -193,10 +193,10 @@ public class WeiboListFragment extends BaseListFragment {
 							.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-					Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 					}.getType();
 					weibos = gson.fromJson(json, listType);
-					if (weibos.size() > 0) {
+					if (weibos!=null&&weibos.size() > 0) {
 						since_id = weibos.get(0).getFeed_id();
 						Log.d("WEIBO SINCE ID", since_id);
 						Log.d("WEIBO SINCE ID CONTENT", weibos.get(0).getContent());

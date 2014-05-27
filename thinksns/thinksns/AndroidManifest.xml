@@ -45,6 +45,12 @@
             android:name="com.thinksns.jkfs.ui.RegistActivity"
             android:label="@string/title_activity_regist" >
         </activity>
+        <activity android:name=".ui.WriteWeiboActivity" >
+        </activity>
+        <activity android:name=".ui.WeiboDetailActivity" >
+        </activity>
+        <activity android:name=".ui.RepostActivity" >
+        </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
