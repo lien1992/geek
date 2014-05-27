@@ -1,10 +1,7 @@
 package com.thinksns.jkfs.ui;
 
-import java.io.File;
 import java.util.HashMap;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
@@ -24,6 +21,8 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +30,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,6 +54,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 	private ImageView at;
 	private ImageView topic;
 	private ImageView emotion;
+	private ImageView pic;
 	private AccountBean account;
 	private ThinkSNSApplication application;
 	private boolean hasImage;
@@ -77,7 +78,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 						Toast.LENGTH_SHORT).show();
 			case 3:
 				sendDialogDismiss();
-				Toast.makeText(WriteWeiboActivity.this, "微博发送失败",
+				Toast.makeText(WriteWeiboActivity.this, "出现意外，微博发送失败:(",
 						Toast.LENGTH_SHORT).show();
 			}
 		}
@@ -98,7 +99,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 		back.setOnClickListener(this);
 		send = (ImageView) findViewById(R.id.write_weibo_send);
 		send.setOnClickListener(this);
-		count = (TextView) findViewById(R.id.write_weibo_count);
+		count = (TextView) findViewById(R.id.write_weibo_word_count);
 		add_pic = (ImageView) findViewById(R.id.write_weibo_add_pic);
 		add_pic.setOnClickListener(this);
 		at = (ImageView) findViewById(R.id.write_weibo_at);
@@ -107,6 +108,8 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 		topic.setOnClickListener(this);
 		emotion = (ImageView) findViewById(R.id.write_weibo_emotion);
 		emotion.setOnClickListener(this);
+		pic = (ImageView) findViewById(R.id.write_weibo_content_pic);
+		pic.setOnClickListener(this);
 		content = (EditText) findViewById(R.id.write_weibo_content);
 		content.addTextChangedListener(new TextWatcher() {
 			private CharSequence temp;
@@ -159,6 +162,10 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 					content.setSelection(content.getText().toString().length());
 				}
 				picPath = getPicPathFromUri(imageFileUri);
+				Bitmap camera = BitmapFactory.decodeFile(picPath);
+				pic.setImageBitmap(camera);
+				pic.setVisibility(View.VISIBLE);
+				hasImage = true;
 				break;
 			case 1002:
 				// 本地图片
@@ -166,7 +173,12 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 					content.setText("分享图片");
 					content.setSelection(content.getText().toString().length());
 				}
+				Uri imageFileUri = intent.getData();
 				picPath = getPicPathFromUri(imageFileUri);
+				Bitmap local = BitmapFactory.decodeFile(picPath);
+				pic.setImageBitmap(local);
+				pic.setVisibility(View.VISIBLE);
+				hasImage = true;
 				break;
 			}
 		}
@@ -224,20 +236,18 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 								map
 										.put("content", content.getText()
 												.toString());
-								map.put("from", "2");
+								map.put("from", "3");
 
 								map
 										.put("oauth_token", account
 												.getOauth_token());
 								map.put("oauth_token_secret", account
 										.getOauth_token_secret());
-								String json = HttpUtility.getInstance()
+								String result = HttpUtility.getInstance()
 										.executeNormalTask(HttpMethod.Get,
 												HttpConstant.THINKSNS_URL, map);
-
-								JsonObject result = new JsonParser()
-										.parse(json).getAsJsonObject();
-								if (result.getAsInt() == 0) {
+								Log.d("post weibo result", result);
+								if (result.equals("0")) {
 									mHandler.sendEmptyMessage(3);
 								} else {
 									mHandler.sendEmptyMessage(0);
@@ -246,8 +256,8 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 						}.start();
 					} else {
 						sendDialogShow();
-	                    final String uploadPicPath = ImageUtils.compressPic(this, picPath,3);
-	                    long size = new File(uploadPicPath).length();
+						final String uploadPicPath = ImageUtils.compressPic(
+								this, picPath, 3);
 						new Thread() {
 							@Override
 							public void run() {
@@ -260,21 +270,22 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 								map
 										.put("content", content.getText()
 												.toString());
-								map.put("from", "2");
+								map.put("from", "3");
 
 								map
 										.put("oauth_token", account
 												.getOauth_token());
 								map.put("oauth_token_secret", account
 										.getOauth_token_secret());
-								boolean result = HttpUtils.doUploadFile(HttpConstant.THINKSNS_URL, map,
+								boolean result = HttpUtils.doUploadFile(
+										HttpConstant.THINKSNS_URL, map,
 										uploadPicPath);
-						
-								/*
-								 * if (result.getAsInt() == 0) {
-								 * mHandler.sendEmptyMessage(3); } else {
-								 * mHandler.sendEmptyMessage(0); }
-								 */
+								if (result == true) {
+									mHandler.sendEmptyMessage(0);
+								} else {
+									mHandler.sendEmptyMessage(3);
+								}
+
 							}
 						}.start();
 
@@ -338,6 +349,8 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 			break;
 		case R.id.write_weibo_emotion:
 			// 插入表情
+			break;
+		case R.id.write_weibo_content_pic:
 			break;
 
 		}

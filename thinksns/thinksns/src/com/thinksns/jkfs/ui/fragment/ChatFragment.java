@@ -11,9 +11,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.ChannelBean;
 import com.thinksns.jkfs.bean.ChatBean;
 import com.thinksns.jkfs.constant.HttpConstant;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.adapter.ChatListAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.util.http.HttpMethod;
@@ -44,13 +47,18 @@ public class ChatFragment extends Fragment {
     public static final String TAG="ChatFragment";
 
     public static final int HANDLER_GET_JSON=2;
+
+    private static final String[] m={"全部分组","B型","O型","AB型","其他"};
     private String jsonData;
     private AccountBean accountBean;
     private PullToRefreshListView chat_listview;
     private ChatListAdapter chatListAdapter;
     private List<ChatBean> listChat=new ArrayList<ChatBean>();
     private LayoutInflater mInflater;
-    ThinkSNSApplication application;
+    private View mMenuSlide;
+    private ThinkSNSApplication application;
+    private ArrayAdapter<String> adapter;
+    private Spinner mSpinner;
     private Handler mHandler = new Handler(){
 
         @Override
@@ -84,7 +92,11 @@ public class ChatFragment extends Fragment {
         accountBean=application.getAccount(getActivity());
         setHasOptionsMenu(true);
         View view=inflater.inflate(R.layout.chat_fragment_layout,container,false);
-        chat_listview=(PullToRefreshListView)view.findViewById(R.id.chat_list);
+        initViews(view);
+        adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,m);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner=(Spinner)view.findViewById(R.id.group_spinner);
+        mSpinner.setAdapter(adapter);
         if(application.isNewWork(getActivity())){
             new Thread(new Runnable() {
                 @Override
@@ -98,7 +110,7 @@ public class ChatFragment extends Fragment {
                     map.put("format","json");
                     jsonData = HttpUtility.getInstance().executeNormalTask(
                             HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-                    mHandler.sendEmptyMessage(2);
+                    mHandler.sendEmptyMessage(HANDLER_GET_JSON);
 
                 }
             }).start();
@@ -123,7 +135,18 @@ public class ChatFragment extends Fragment {
         return view;
     }
 
+    private void initViews(View view){
 
+        chat_listview=(PullToRefreshListView)view.findViewById(R.id.chat_list);
+        mMenuSlide=(View)view.findViewById(R.id.menu_icon);
+        mMenuSlide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainFragmentActivity) getActivity()).getSlidingMenu()
+                        .toggle();
+            }
+        });
+    }
 
 
 }

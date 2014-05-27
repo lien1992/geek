@@ -307,7 +307,7 @@ public class HttpUtils {
 			out.write(BOUNDARY.getBytes());
 			StringBuilder filenamesb = new StringBuilder();
 			filenamesb
-					.append("Content-Disposition:form-data;Content-Type:application/octet-stream;name=\"pic");
+					.append("Content-Disposition:form-data;Content-Type:application/octet-stream;name=\"File");
 			filenamesb.append("\";filename=\"");
 			filenamesb.append(file.getName() + "\"\r\n\r\n");
 			out.write(filenamesb.toString().getBytes());

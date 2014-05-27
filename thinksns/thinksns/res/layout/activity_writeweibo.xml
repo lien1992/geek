@@ -3,6 +3,7 @@
     android:id="@+id/write_wb_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/white"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -23,11 +24,11 @@
             android:id="@+id/write_weibo_desc_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@+id/write_weibo_back"
             android:layout_centerVertical="true"
             android:text="写微博"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -53,9 +54,19 @@
                 android:layout_height="match_parent"
                 android:fadeScrollbars="true"
                 android:gravity="left|top"
-                android:hint="说点什么吧:)"
+                android:hint="开开心心写微博啦！:)"
                 android:scrollbarStyle="outsideOverlay"
                 android:scrollbars="vertical" />
+
+            <ImageView
+                android:id="@+id/write_weibo_content_pic"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="right|bottom"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_launcher"
+                android:visibility="gone" />
         </FrameLayout>
 
         <RelativeLayout
@@ -144,7 +155,7 @@
         <LinearLayout
             android:id="@+id/write_weibo_count"
             android:layout_width="100dip"
-            android:layout_height="30dip"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/write_weibo_bottom"
             android:layout_alignParentRight="true"
             android:gravity="right"

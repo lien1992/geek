@@ -9,13 +9,13 @@ import android.os.Parcelable;
  */
 public class CommentBean implements Parcelable {
 	private String comment_id;
+	private String uid;
 	private String content;
-	private String to_comment_id;
-	private String to_uid;
+	private String to_comment_id;// 被评论微博ID
+	private String to_uid;// 被评论用户ID
 	private String ctime;
 	private String client_type;
 	private UserInfoBean user_info;
-	// sourceInfo?
 
 	public String getId() {
 		return comment_id;
@@ -83,6 +83,7 @@ public class CommentBean implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
 		dest.writeString(comment_id);
+		dest.writeString(uid);
 		dest.writeString(content);
 		dest.writeString(to_comment_id);
 		dest.writeString(to_uid);
@@ -91,10 +92,19 @@ public class CommentBean implements Parcelable {
 		dest.writeParcelable(user_info, flags);
 	}
 
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
 	public static final Parcelable.Creator<CommentBean> CREATOR = new Parcelable.Creator<CommentBean>() {
 		public CommentBean createFromParcel(Parcel in) {
 			CommentBean cb = new CommentBean();
 			cb.comment_id = in.readString();
+			cb.uid = in.readString();
 			cb.content = in.readString();
 			cb.to_comment_id = in.readString();
 			cb.to_uid = in.readString();

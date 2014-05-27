@@ -21,8 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
@@ -72,7 +70,7 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 				break;
 			case 2:
 				sendDialogDismiss();
-				Toast.makeText(RepostActivity.this, "出现意外，转发失败了:(",
+				Toast.makeText(RepostActivity.this, "出现意外，转发失败:(",
 						Toast.LENGTH_SHORT).show();
 				break;
 			}
@@ -107,7 +105,7 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 		desc = (TextView) findViewById(R.id.write_weibo_desc_txt);
 		send = (ImageView) findViewById(R.id.write_weibo_send);
 		send.setOnClickListener(this);
-		count = (TextView) findViewById(R.id.write_weibo_count);
+		count = (TextView) findViewById(R.id.write_weibo_word_count);
 		add_pic = (ImageView) findViewById(R.id.write_weibo_add_pic);
 		add_pic.setVisibility(View.GONE);
 		at = (ImageView) findViewById(R.id.write_weibo_at);
@@ -139,7 +137,7 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 				selectionStart = content.getSelectionStart();
 				selectionEnd = count.getSelectionEnd();
 				if (temp.length() > 140) {
-					s.delete(selectionStart - 1, selectionEnd);
+					s.delete(selectionStart - 1, selectionEnd); //字数超过140，跳转到转发出bug
 					int tempSelection = selectionEnd;
 					content.setText(s);
 					content.setSelection(tempSelection);
@@ -211,20 +209,18 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 							map.put("act", "repost");
 							map.put("id", weibo.getFeed_id());
 							map.put("content", content.getText().toString());
+							map.put("from", "3");
 							map.put("comment", comment_origin + "");
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
-							String json = HttpUtility.getInstance()
+							String result = HttpUtility.getInstance()
 									.executeNormalTask(HttpMethod.Get,
 											HttpConstant.THINKSNS_URL, map);
-
-							JsonObject result = new JsonParser().parse(json)
-									.getAsJsonObject();
-							if (result.getAsInt() == 0) {
-								mHandler.sendEmptyMessage(3);
+							if (result.equals("1")) {
+								mHandler.sendEmptyMessage(1);
 							} else {
-								mHandler.sendEmptyMessage(0);
+								mHandler.sendEmptyMessage(2);
 							}
 						}
 					}.start();
@@ -241,8 +237,8 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 		case R.id.write_weibo_add_topic:
 			String origin = content.getText().toString();
 			String topicTag = "##";
-			content.setText(origin + topicTag);
-			content.setSelection(content.getText().toString().length() - 1);
+			content.setText(topicTag + origin);
+			content.setSelection(1);
 			break;
 		case R.id.write_weibo_emotion:
 			// 插入表情

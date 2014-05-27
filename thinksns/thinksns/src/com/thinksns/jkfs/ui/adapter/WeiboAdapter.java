@@ -41,6 +41,7 @@ public class WeiboAdapter extends BaseAdapter {
 			return;
 		}
 		wList.addAll(lists);
+		Log.d("adapter all weibos", wList.size() + "");
 		notifyDataSetChanged();
 	}
 
@@ -159,7 +160,7 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.from.setText("来自 手机版");
 			break;
 		case 2:
-			holder.from.setText("来自 iphone客户端");
+			holder.from.setText("来自 iPhone客户端");
 			break;
 		case 3:
 			holder.from.setText("来自 Android客户端");
