@@ -7,6 +7,7 @@
     <color name="white">#F7F7F7</color>
     <color name="pure_white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="choose_eara_item_press_color">#f4f4f4</color>
 
     <!-- 测试而用 -->
     <drawable name="transparent">#00000000</drawable>

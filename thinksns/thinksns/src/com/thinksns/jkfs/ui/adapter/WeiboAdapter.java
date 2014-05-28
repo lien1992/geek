@@ -56,6 +56,10 @@ public class WeiboAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
+	public void clear() {
+		wList.clear();
+	}
+
 	// 更新微博列表，不要原来的数据
 	public void update(List<WeiboBean> lists) {
 		if (lists == null) {
@@ -188,8 +192,7 @@ public class WeiboAdapter extends BaseAdapter {
 			}
 			holder.repost.setVisibility(View.VISIBLE);
 			holder.repost_pics.setVisibility(View.VISIBLE);
-		}
-		if (weibo.getType().equals("postimage")) {
+		} else if (weibo.getType().equals("postimage")) {
 			ImageUtils.setThumbnailView(weibo.getAttach().get(0)
 					.getAttach_middle(), holder.weibo_pic, ctx, callback);
 			holder.weibo_pics.setVisibility(View.VISIBLE);
@@ -198,7 +201,7 @@ public class WeiboAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	class ViewHolder {
+	static class ViewHolder {
 		public ImageView avatar;
 		public TextView userName;
 		public TextView content;

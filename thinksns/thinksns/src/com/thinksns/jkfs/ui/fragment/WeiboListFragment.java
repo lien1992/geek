@@ -36,6 +36,8 @@ import com.thinksns.jkfs.util.http.HttpUtility;
 /**
  * 微博列表，后期改为用户关注的微博，目前暂显示公共微博 待完成的部分（新微博提醒、微博图片及url的显示、微博分组显示）
  * 
+ * bug：图片加载混乱，完善中..
+ * 
  * @author wangjia
  * 
  */
@@ -47,7 +49,7 @@ public class WeiboListFragment extends BaseListFragment {
 	private WeiboAdapter adapter;
 	private AccountBean account;
 	private int currentPage;
-	private int totalCount = 0;
+	private int totalCount;
 	private String since_id = "";
 	private boolean firstLoad = true;
 
@@ -68,11 +70,12 @@ public class WeiboListFragment extends BaseListFragment {
 				break;
 			case 1:
 				listView.onRefreshComplete();
-				if (firstLoad) {
-					if (weibos == null || weibos.size() == 0)
+				if (firstLoad)
+					if (weibos == null || weibos.size() == 0) {
 						Toast.makeText(getActivity(), "出现意外，微博加载失败:(",
 								Toast.LENGTH_SHORT).show();
-				}
+						break;
+					}
 				if (weibos == null || weibos.size() == 0) {
 					Toast.makeText(getActivity(), "暂时没有新微博:)",
 							Toast.LENGTH_SHORT).show();
