@@ -50,6 +50,11 @@ public class CommentAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
+	public void clear() {
+		cList.clear();
+		notifyDataSetChanged();
+	}
+
 	// 图片加载回调
 	ImageCallback callback = new ImageCallback() {
 		@Override
@@ -123,7 +128,7 @@ public class CommentAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	class ViewHolder {
+	static class ViewHolder {
 		public ImageView avatar;
 		public TextView userName;
 		public TextView content;
