@@ -30,6 +30,7 @@ import com.thinksns.jkfs.constant.CacheConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.constant.SettingsUtil;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
+import com.thinksns.jkfs.ui.WeiboSearchActivity;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView.RefreshAndLoadMoreListener;
@@ -43,6 +44,7 @@ import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -129,13 +131,6 @@ public class ChannelFragment extends Fragment {
 	private PopupWindow popupWindow;
 	private View mPopupWindowView;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		Log.i(TAG, "onCreate");
-	}
-
 	/**
 	 * 保存选中的频道信息
 	 */
@@ -153,6 +148,16 @@ public class ChannelFragment extends Fragment {
 
 		final View view = inflater.inflate(R.layout.channel_fragment,
 				container, false);
+		// 测试搜索
+		view.findViewById(R.id.btn).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(mContext, WeiboSearchActivity.class);
+				startActivity(intent);
+			}
+		});
 
 		dropImage = (ImageView) view
 				.findViewById(R.id.channel_fragment_title_drop_img);
@@ -213,6 +218,7 @@ public class ChannelFragment extends Fragment {
 					weiboList = (ArrayList<WeiboBean>) msg.obj;
 					listViewAdapter.update(weiboList);
 					Log.i(TAG, weiboList.get(0).getUname());
+					mListView.setSelection(0);
 					// 保存标题，id
 					saveTitle();
 					// 标题
@@ -258,7 +264,16 @@ public class ChannelFragment extends Fragment {
 						weibo_max_id);
 			}
 		});
+		settingImg.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+
+				((MainFragmentActivity) getActivity()).getSlidingMenu()
+						.toggle();
+			}
+
+		});
 		return view;
 	}
 

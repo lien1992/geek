@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="测试搜索用" />
+    android:orientation="vertical"
+    tools:context=".WeiboSearchActivity" >
 
     <RelativeLayout
-        android:id="@+id/channel_fragment_title"
+        android:id="@+id/search_weibo_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#f6f5ec" >
 
         <ImageView
-            android:id="@+id/channel_fragment_title_setting_img"
+            android:id="@+id/search_weibo_title_setting_img"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
@@ -26,21 +22,34 @@
             android:src="@drawable/navigation" />
 
         <TextView
-            android:id="@+id/channel_fragment_title_name"
+            android:id="@+id/search_weibo_title_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/channel_fragment_title_setting_img"
-            android:paddingLeft="5dp"
-            android:text="官方发言"
+            android:layout_toRightOf="@id/search_weibo_title_setting_img"
+            android:paddingLeft="10dp"
+            android:text="搜索"
             android:textSize="15sp" />
 
         <ImageView
-            android:id="@+id/channel_fragment_title_drop_img"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:id="@+id/search_weibo_title_search_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
-            android:src="@drawable/droplist" />
+            android:layout_centerVertical="true"
+            android:paddingRight="20dp"
+            android:src="@drawable/send_2" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/search_weibo_title_search_img"
+            android:layout_toRightOf="@id/search_weibo_title_name"
+            android:hint="" >
+
+            <requestFocus />
+        </EditText>
     </RelativeLayout>
 
     <RelativeLayout
@@ -48,7 +57,7 @@
         android:layout_height="wrap_content" >
 
         <com.thinksns.jkfs.ui.view.PullToRefreshListView
-            android:id="@+id/channel_listview"
+            android:id="@+id/search_weibo_listview"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
         </com.thinksns.jkfs.ui.view.PullToRefreshListView>
