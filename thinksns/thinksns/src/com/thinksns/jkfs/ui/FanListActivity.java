@@ -26,23 +26,23 @@ public class FanListActivity extends Activity {
 		setContentView(R.layout.people_list);
 
 		// 测试布局例子
-		listView = (ListView) this.findViewById(R.id.listAllPeople);
+		//listView = (ListView) this.findViewById(R.);
 
-		ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
-		for (int i = 0; i < 10; i++) {
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("Image", R.drawable.mushishi);
-			map.put("Name", "Username");
-			map.put("LastWeibo", "LastWeibo");
-			listItem.add(map);
-		}
-
-		SimpleAdapter listItemAdapter = new SimpleAdapter(this, listItem,
-				R.layout.people_item, new String[] { "Image", "Name",
-						"LastWeibo" }, new int[] { R.id.item_head,
-						R.id.item_name, R.id.item_weibo });
-
-		listView.setAdapter(listItemAdapter);
+//		ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
+//		for (int i = 0; i < 10; i++) {
+//			HashMap<String, Object> map = new HashMap<String, Object>();
+//			map.put("Image", R.drawable.mushishi);
+//			map.put("Name", "Username");
+//			map.put("LastWeibo", "LastWeibo");
+//			listItem.add(map);
+//		}
+//
+//		SimpleAdapter listItemAdapter = new SimpleAdapter(this, listItem,
+//				R.layout.people_item, new String[] { "Image", "Name",
+//						"LastWeibo" }, new int[] { R.id.item_head,
+//						R.id.item_name, R.id.item_weibo });
+//
+//		listView.setAdapter(listItemAdapter);
 
 		// 最后布局 获取数据获得
 		// listView = (ListView) this.findViewById(R.id.listAllPeople);

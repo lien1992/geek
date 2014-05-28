@@ -6,6 +6,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.UserFollowBean;
 import android.content.Context;
@@ -23,11 +25,12 @@ public class ListViewAdapter extends BaseAdapter {
 
 	private LinkedList<UserFollowBean> uList;
 	private LayoutInflater inflater;
-
+    private Context context;
 	public ListViewAdapter() {
 	}
 	
 	public ListViewAdapter(Context context, LinkedList<UserFollowBean> ulist) {
+        this.context=context;
 		this.uList = ulist;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,9 +57,9 @@ public class ListViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		// if (convertView == null) {
-		// convertView = inflater.inflate(R.layout.people_item, null);
-		// }
+//		if (convertView == null) {
+//		convertView = inflater.inflate(R.layout.people_item, null);
+//		}
 
 
 		
@@ -67,6 +70,7 @@ public class ListViewAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.people_item, null);
 			holder.avatar = (ImageView) convertView
 					.findViewById(R.id.people_item_head);
+
 			holder.userName = (TextView) convertView
 					.findViewById(R.id.people_item_name);
 			holder.userText = (TextView) convertView
@@ -79,15 +83,9 @@ public class ListViewAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		new Thread() {
-			@Override
-			public void run() {
-
-				Bitmap headicon = loadBitmap(userfollow.getAvatar_small());
-				holder.avatar.setImageBitmap(headicon);
-
-			}
-		}.start();
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        imageLoader.displayImage(userfollow.getAvatar_small(),holder.avatar);
 
 		holder.userName.setText(userfollow.getUname());
 		holder.userText.setText("follower = "

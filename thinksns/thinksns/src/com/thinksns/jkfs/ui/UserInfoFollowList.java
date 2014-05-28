@@ -17,6 +17,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserFollowBean;
@@ -31,7 +32,7 @@ import com.thinksns.jkfs.util.http.HttpUtility;
  * @author 邓思宇 用于在用户界面显示关注对象的LIST
  */
 
-public class UserInfoFollowList extends ListActivity implements
+public class UserInfoFollowList extends BaseActivity implements
 		OnScrollListener {
 	private ListView listView;
 	private int visibleLastIndex = 0; // 最后的可视项索引
@@ -49,9 +50,13 @@ public class UserInfoFollowList extends ListActivity implements
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				adapter = new ListViewAdapter(UserInfoFollowList.this,
-						userfollows);	
-				
+
+                adapter = new ListViewAdapter(UserInfoFollowList.this,
+                        userfollows);
+                // 自动为id是list的ListView设置适配器
+                listView.setAdapter(adapter);
+
+                Log.d("xxx","case 0");
 				adapter.notifyDataSetChanged();
 
 				break;
@@ -74,15 +79,11 @@ public class UserInfoFollowList extends ListActivity implements
 		loadMoreButton = (Button) loadMoreView
 				.findViewById(R.id.loadMoreButton);
 
-		listView = getListView(); // 获取id是list的ListView
-
+		listView =(ListView)findViewById(R.id.userinfo_list); // 获取id是list的ListView
 		listView.addFooterView(loadMoreView); // 设置列表底部视图
 
 		initAdapter();
 
-		// 自动为id是list的ListView设置适配器
-
-		setListAdapter(adapter);
 		
 		listView.setOnScrollListener(this); // 添加滑动监听
 	}
