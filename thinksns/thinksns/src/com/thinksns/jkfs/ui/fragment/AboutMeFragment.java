@@ -13,7 +13,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +28,9 @@ import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.ChangeUserInfo;
+import com.thinksns.jkfs.ui.UserInfoFanList;
+import com.thinksns.jkfs.ui.UserInfoFollowList;
+import com.thinksns.jkfs.ui.UserInfoWeiboList;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -135,12 +137,13 @@ public class AboutMeFragment extends Fragment {
 				map.put("oauth_token_secret", account.getOauth_token_secret());
 				String json = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-//                if(json!=null&&!"".equals(json)){
-//
-//                    userinfo = gson.fromJson(json, UserInfoBean.class);
-//                    headicon = loadBitmap(userinfo.getAvatar());
-//                    mHandler.sendEmptyMessage(0);
-//                }
+				
+                if(json!=null&&!"".equals(json)){
+
+                    userinfo = gson.fromJson(json, UserInfoBean.class);
+                    headicon = loadBitmap(userinfo.getAvatar());
+                    mHandler.sendEmptyMessage(0);
+                }
 
 
 			}
@@ -152,6 +155,7 @@ public class AboutMeFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		//显示修改信息活动
 		Button button = (Button) getActivity().findViewById(R.id.changeinfo);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
@@ -162,6 +166,40 @@ public class AboutMeFragment extends Fragment {
 
 			}
 		});
+		
+		//显示微博LIST
+		Button button2 = (Button) getActivity().findViewById(R.id.m_weibo);
+		button2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// get the change info activity
+				Intent intent = new Intent(getActivity(), UserInfoWeiboList.class);
+				startActivity(intent);
+
+			}
+		});
+		
+		//显示关注LIST
+		Button button3 = (Button) getActivity().findViewById(R.id.m_follow);
+		button3.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// get the change info activity
+				Intent intent = new Intent(getActivity(), UserInfoFollowList.class);
+				startActivity(intent);				
+			}
+		});
+		
+		//显示粉丝LIST
+				Button button4 = (Button) getActivity().findViewById(R.id.m_followme);
+				button4.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// get the change info activity
+						Intent intent = new Intent(getActivity(), UserInfoFanList.class);
+						startActivity(intent);				
+					}
+				});
 	}
 
 	// 下载图片的函数

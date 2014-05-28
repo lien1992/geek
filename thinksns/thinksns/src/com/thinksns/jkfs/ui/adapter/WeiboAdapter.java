@@ -150,6 +150,7 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.comment_count = (TextView) convertView
 					.findViewById(R.id.wb_comment_count);
 			convertView.setTag(holder);
+
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}

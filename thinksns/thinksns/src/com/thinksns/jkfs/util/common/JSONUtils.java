@@ -24,59 +24,6 @@ public class JSONUtils {
 	public static boolean isPrintException = true;
 
 	/**
-	 * 根据json转换成weibo数组
-	 * 
-	 * @param JSONData
-	 *            需要转换的json格式的String
-	 * @return 数组size为0时，出错了
-	 * @throws JSONException 需要解决抛出的异常
-	 */
-	public static ArrayList<WeiboBean> JSONToWeibos(String jsonData) throws JSONException {
-		ArrayList<WeiboBean> weibolList = new ArrayList<WeiboBean>();
-			JSONArray weiboArray = new JSONArray(jsonData);
-			JSONObject weiboObj;
-			Iterator<String> it;
-			for (int i = 0; i < weiboArray.length(); i++) {
-				weiboObj = weiboArray.getJSONObject(i);
-
-				String feed_id = weiboObj.getString("feed_id");
-				String type = weiboObj.getString("type");
-				String content = weiboObj.getString("content");
-				String ctime = weiboObj.getString("ctime");
-				String from = weiboObj.getString("from");
-				String uid = weiboObj.getString("uid");
-				String uname = weiboObj.getString("uname");
-				String avatar_big = weiboObj.getString("avatar_big");
-				String avatar_middle = weiboObj.getString("avatar_middle");
-				String avatar_small = weiboObj.getString("avatar_small");
-				String has_attach = weiboObj.getString("has_attach");
-				int comment_count = weiboObj.getInt("comment_count");
-				int repost_count = weiboObj.getInt("repost_count");
-
-				ArrayList<WeiboAttachBean> attachList = new ArrayList<WeiboAttachBean>();
-				// attach==1时赋值
-				if ("1".equals(weiboObj.getString("has_attach"))) {
-					JSONArray attachArray = weiboObj.getJSONArray("attach");
-					for (int j = 0; j < attachArray.length(); j++) {
-						JSONObject attachObj = attachArray.getJSONObject(j);
-						WeiboAttachBean attach = new WeiboAttachBean();
-						attach.setFile_name(attachObj.getString("attach_id"));
-						attach.setId(attachObj.getString("attach_name"));
-						attach.setUrl(attachObj.getString("attach_url"));
-						attachList.add(attach);
-					}
-				}
-				weibolList.add(new WeiboBean(feed_id, type, content, ctime,
-						from, uid, uname, avatar_big, avatar_middle,
-						avatar_small, has_attach, comment_count, repost_count,
-						attachList));
-
-			}
-		// 返回size==0说明错误
-		return weibolList;
-	}
-
-	/**
 	 * get Long from jsonObject
 	 * 
 	 * @param jsonObject

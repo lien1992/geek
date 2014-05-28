@@ -28,6 +28,12 @@ import android.widget.ImageView;
 
 
 
+/**
+ * @author 邓思宇
+ *
+ *	修改个人信息
+ *
+ */
 public class ChangeUserInfo extends Activity {
 
 	private static final int TAKE_PICTURE = 0;

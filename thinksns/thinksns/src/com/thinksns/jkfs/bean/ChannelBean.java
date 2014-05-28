@@ -6,14 +6,14 @@ package com.thinksns.jkfs.bean;
  * @author zcc
  * @since 14-05-19
  */
-public class ChanelBean {
+public class ChannelBean {
 	private String channel_category_id;
 	private String title;
 	private String pid;
 	private String sort;
 	private String icon_url;
 
-	public ChanelBean(String channel_category_id, String title, String pid,
+	public ChannelBean(String channel_category_id, String title, String pid,
 			String sort, String icon_url) {
 		super();
 		this.channel_category_id = channel_category_id;
@@ -23,7 +23,7 @@ public class ChanelBean {
 		this.icon_url = icon_url;
 	}
 
-	public ChanelBean() {
+	public ChannelBean() {
 		super();
 	}
 

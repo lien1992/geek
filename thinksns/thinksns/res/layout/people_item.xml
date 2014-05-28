@@ -16,7 +16,7 @@
         <!-- 头像 -->
 
         <ImageView
-            android:id="@+id/item_head"
+            android:id="@+id/people_item_head"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
 
@@ -37,7 +37,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/people_item_name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -46,7 +46,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/item_weibo"
+            android:id="@+id/people_item_weibo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -58,7 +58,7 @@
 
 
         <Button
-            android:id="@+id/item_button"
+            android:id="@+id/people_item_button"
             android:layout_width="80dp"
             android:layout_height="40dp"
 			android:layout_marginLeft="90dip"

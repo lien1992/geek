@@ -62,7 +62,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
             }
 
             transaction.commit();
-
             FragmentTransaction menuTransation = getSupportFragmentManager()
                     .beginTransaction();
             menuTransation.replace(R.id.menu_frame, new MenuFragment(),
