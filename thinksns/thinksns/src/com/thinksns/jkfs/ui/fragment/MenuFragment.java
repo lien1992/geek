@@ -114,7 +114,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
             switchFragment(chatFragment);
 			break;
 		case R.id.sm_channel:
-            ChanelFragment chanelFragment=new ChanelFragment();
+            ChannelFragment chanelFragment=new ChannelFragment();
             if(chanelFragment!=null)
             switchFragment(chanelFragment);
 			changeBackground(R.id.sm_channel);

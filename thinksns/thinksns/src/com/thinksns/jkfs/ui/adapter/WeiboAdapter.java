@@ -122,15 +122,20 @@ public class WeiboAdapter extends BaseAdapter {
 					.findViewById(R.id.wb_u_name);
 			holder.content = (TextView) convertView.findViewById(R.id.wb_text);
 			holder.time = (TextView) convertView.findViewById(R.id.wb_time);
-			// 待定，如果微博含多张图片呢？
-			/*
-			 * holder.weibo_pic = (ImageView) convertView
-			 * .findViewById(R.id.wb_pic);
-			 */
+			// 待添加多张图
+			holder.weibo_pic = (ImageView) convertView
+					.findViewById(R.id.wb_pic1);
+			holder.weibo_pics = (LinearLayout) convertView
+					.findViewById(R.id.wb_pics);
 			holder.repost_userName = (TextView) convertView
 					.findViewById(R.id.re_user_name);
 			holder.repost_content = (TextView) convertView
 					.findViewById(R.id.re_wb_text);
+			// 待添加多张图
+			holder.repost_weibo_pic = (ImageView) convertView
+					.findViewById(R.id.re_wb_pic1);
+			holder.repost_pics = (LinearLayout) convertView
+					.findViewById(R.id.re_pics);
 			holder.repost = (LinearLayout) convertView
 					.findViewById(R.id.wb_repost);
 			holder.from = (TextView) convertView.findViewById(R.id.wb_from);
@@ -141,6 +146,7 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.comment_count = (TextView) convertView
 					.findViewById(R.id.wb_comment_count);
 			convertView.setTag(holder);
+
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
@@ -159,7 +165,7 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.from.setText("来自 手机版");
 			break;
 		case 2:
-			holder.from.setText("来自 iphone客户端");
+			holder.from.setText("来自 iPhone客户端");
 			break;
 		case 3:
 			holder.from.setText("来自 Android客户端");
@@ -168,18 +174,25 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.from.setText("来自 ipad客户端");
 			break;
 		}
-		holder.like_count.setText("0");// 待定，API中暂未找到赞的数目
+		holder.like_count.setText(weibo.getDigg_count() + "");
 		holder.repost_content.setText(weibo.getRepost_count() + "");
 		holder.comment_count.setText(weibo.getComment_count() + "");
 		if (weibo.getType().equals("repost")) {
 			WeiboBean weibo_repost = weibo.getTranspond_data();
-			// 这一行报错,在insert刷新之后只有两个，空指针
 			holder.repost_userName.setText(weibo_repost.getUname());
 			holder.repost_content.setText(weibo_repost.getContent() + "");
+			if (weibo_repost.getType().equals("postimage")) {
+				ImageUtils.setThumbnailView(weibo_repost.getAttach().get(0)
+						.getAttach_middle(), holder.repost_weibo_pic, ctx,
+						callback);
+			}
 			holder.repost.setVisibility(View.VISIBLE);
+			holder.repost_pics.setVisibility(View.VISIBLE);
 		}
 		if (weibo.getType().equals("postimage")) {
-			// 图片微博，待定..
+			ImageUtils.setThumbnailView(weibo.getAttach().get(0)
+					.getAttach_middle(), holder.weibo_pic, ctx, callback);
+			holder.weibo_pics.setVisibility(View.VISIBLE);
 		}
 
 		return convertView;
@@ -190,11 +203,13 @@ public class WeiboAdapter extends BaseAdapter {
 		public TextView userName;
 		public TextView content;
 		public TextView time;
-		// public ImageView weibo_pic;
+		public ImageView weibo_pic;
+		public LinearLayout weibo_pics;
 		public TextView repost_userName;
 		public TextView repost_content;
-		// public ImageView repost_weibo_pic;
+		public ImageView repost_weibo_pic;
 		public LinearLayout repost;
+		public LinearLayout repost_pics;
 		public TextView from;
 		public TextView like_count;
 		public TextView repost_count;

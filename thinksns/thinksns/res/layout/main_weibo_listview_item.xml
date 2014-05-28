@@ -63,23 +63,9 @@
 
             <ImageView
                 android:id="@+id/wb_pic1"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_width="80dp"
+                android:layout_height="80dp" />
 
-            <ImageView
-                android:id="@+id/wb_pic2"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
-
-            <ImageView
-                android:id="@+id/wb_pic3"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
-
-            <ImageView
-                android:id="@+id/wb_pic4"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
         </LinearLayout>
 
         <!-- 转发微博默认visibility="gone" -->
@@ -121,23 +107,8 @@
 
                 <ImageView
                     android:id="@+id/re_wb_pic1"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp" />
-
-                <ImageView
-                    android:id="@+id/re_wb_pic2"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp" />
-
-                <ImageView
-                    android:id="@+id/re_wb_pic3"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp" />
-
-                <ImageView
-                    android:id="@+id/re_wb_pic4"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp" />
+                    android:layout_width="80dp"
+                    android:layout_height="80dp" />
             </LinearLayout>
         </LinearLayout>
 
