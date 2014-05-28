@@ -82,10 +82,7 @@ public class ListViewAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        imageLoader.displayImage(userfollow.getAvatar_small(),holder.avatar);
+        ImageLoader.getInstance().displayImage(userfollow.getAvatar_small(),holder.avatar);
 
 		holder.userName.setText(userfollow.getUname());
 		holder.userText.setText("follower = "
