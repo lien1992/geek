@@ -26,7 +26,7 @@ public class FanListActivity extends Activity {
 		setContentView(R.layout.people_list);
 
 		// 测试布局例子
-		listView = (ListView) this.findViewById(R.id.listAllPeople);
+		//listView = (ListView) this.findViewById(R.id.listAllPeople);
 
 		ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
 		for (int i = 0; i < 10; i++) {
@@ -37,12 +37,12 @@ public class FanListActivity extends Activity {
 			listItem.add(map);
 		}
 
-		SimpleAdapter listItemAdapter = new SimpleAdapter(this, listItem,
+/*		SimpleAdapter listItemAdapter = new SimpleAdapter(this, listItem,
 				R.layout.people_item, new String[] { "Image", "Name",
 						"LastWeibo" }, new int[] { R.id.item_head,
-						R.id.item_name, R.id.item_weibo });
+						R.id.item_name, R.id.item_weibo });*/
 
-		listView.setAdapter(listItemAdapter);
+		//listView.setAdapter(listItemAdapter);
 
 		// 最后布局 获取数据获得
 		// listView = (ListView) this.findViewById(R.id.listAllPeople);
