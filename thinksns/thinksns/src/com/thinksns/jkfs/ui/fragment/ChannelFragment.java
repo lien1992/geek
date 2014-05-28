@@ -140,7 +140,9 @@ public class ChannelFragment extends Fragment {
 				channel_category_id);
 	}
 
-	@Override
+
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);

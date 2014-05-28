@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
@@ -17,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-public class WeiboSearchActivity extends SlidingFragmentActivity {
+public class WeiboSearchActivity extends BaseActivity {
 
 	public static final String TAG = "zcc";
 
@@ -39,6 +40,7 @@ public class WeiboSearchActivity extends SlidingFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+
 		super.onCreate(savedInstanceState);
 		
 
