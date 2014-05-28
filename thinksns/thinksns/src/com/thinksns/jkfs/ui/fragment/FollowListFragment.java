@@ -9,6 +9,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,12 +33,11 @@ import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
+
 /**
- * 微博列表，待完善.. 下拉刷新、加载更多仍存bug, fixing..
- * 
- * @author wangjia
- * 
- * 抄袭之的FANLISTFRAGMENT
+ * @author 邓思宇
+ *
+ *	关注人
  */
 public class FollowListFragment extends BaseListFragment {
 
@@ -50,14 +50,13 @@ public class FollowListFragment extends BaseListFragment {
 	private int totalCount = 0;
 	private String since_id = "";
 
-
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				
+
 				listView.onLoadMoreComplete();
-				if (userfollows==null||userfollows.size() == 0) {
+				if (userfollows == null || userfollows.size() == 0) {
 					Toast.makeText(getActivity(), "没有用户", Toast.LENGTH_SHORT)
 							.show();
 					break;
@@ -71,7 +70,7 @@ public class FollowListFragment extends BaseListFragment {
 				if (!listView.getLoadMoreStatus()) {
 					listView.setLoadMoreEnable(true);
 				}
-				if (userfollows==null||userfollows.size() == 0) {
+				if (userfollows == null || userfollows.size() == 0) {
 					Toast.makeText(getActivity(), "没有新用户", Toast.LENGTH_SHORT)
 							.show();
 					break;
@@ -81,8 +80,9 @@ public class FollowListFragment extends BaseListFragment {
 				}
 				adapter.insertToHead(userfollows);
 				insertToHead(userfollows);
-				Toast.makeText(getActivity(), "新增用户" + userfollows.size() + "个",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(),
+						"新增用户" + userfollows.size() + "个", Toast.LENGTH_SHORT)
+						.show();
 				break;
 			case 2:
 				listView.onRefreshComplete();
@@ -99,18 +99,13 @@ public class FollowListFragment extends BaseListFragment {
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		
-		
 		View view = mInflater.inflate(R.layout.people_list, null);
-		listView = (PullToRefreshListView) view
-				.findViewById(R.id.people_list_view);
-		
+//		listView = (PullToRefreshListView) view
+//				.findViewById(R.id.people_list_view);
 
 		return view;
 	}
 
-	
-	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -118,8 +113,7 @@ public class FollowListFragment extends BaseListFragment {
 		application = (ThinkSNSApplication) this.getActivity()
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
-		
-		
+
 		listView.setListener(this);
 		// listView.setLoadMoreEnable(false);
 		adapter = new PeopleAdapter(getActivity(), mInflater, listView);
@@ -130,10 +124,9 @@ public class FollowListFragment extends BaseListFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				
-				
-				//点击显示个人主页
-				
+
+				// 点击显示个人主页
+
 			}
 
 		});
@@ -146,7 +139,6 @@ public class FollowListFragment extends BaseListFragment {
 		if (Utility.isConnected(getActivity())) {
 			// 待添加超时判断
 
-
 			new Thread() {
 				@Override
 				public void run() {
@@ -155,21 +147,23 @@ public class FollowListFragment extends BaseListFragment {
 					HashMap<String, String> map = new HashMap<String, String>();
 					map.put("app", "api");
 					map.put("mod", "User");
-					map.put("act", "user_following"); //need to add a check to followers and following
+					map.put("act", "user_following"); // need to add a check to
+														// followers and
+														// following
 					map.put("page", currentPage + "");
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret", account
-							.getOauth_token_secret());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
 					}.getType();
 					userfollows = gson.fromJson(json, listType);
-					if (userfollows!=null&&userfollows.size() > 0) {
+					if (userfollows != null && userfollows.size() > 0) {
 						totalCount += userfollows.size();
 					}
 					mHandler.sendEmptyMessage(0);
-					
+
 				}
 			}.start();
 		} else {
@@ -180,7 +174,7 @@ public class FollowListFragment extends BaseListFragment {
 
 	@Override
 	public void onRefresh() {
-//		// TODO Auto-generated method stub
+		// // TODO Auto-generated method stub
 		if (Utility.isConnected(getActivity())) {
 
 			// 待添加超时判断+新微博判断
@@ -197,16 +191,16 @@ public class FollowListFragment extends BaseListFragment {
 					if (!since_id.equals(""))
 						map.put("max_id", since_id);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret", account
-							.getOauth_token_secret());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
 					}.getType();
 					userfollows = gson.fromJson(json, listType);
-					if (userfollows!=null&&userfollows.size() > 0) {
-//						since_id = userfollows.get(0).getFeed_id();
-						Log.d("WEIBO SINCE ID", since_id);						
+					if (userfollows != null && userfollows.size() > 0) {
+						// since_id = userfollows.get(0).getFeed_id();
+						Log.d("WEIBO SINCE ID", since_id);
 						totalCount += userfollows.size();
 					}
 					mHandler.sendEmptyMessage(1);
@@ -226,7 +220,5 @@ public class FollowListFragment extends BaseListFragment {
 			userfollow_all.addFirst(lists.get(i));
 		}
 	}
-
-
 
 }

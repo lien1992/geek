@@ -102,8 +102,8 @@ public class FanListFragment extends BaseListFragment {
 		
 		
 		View view = mInflater.inflate(R.layout.people_list, null);
-		listView = (PullToRefreshListView) view
-				.findViewById(R.id.people_list_view);
+//		listView = (PullToRefreshListView) view
+//				.findViewById(R.id.people_list_view);
 		
 
 		return view;

@@ -16,7 +16,8 @@ public class UserInfoWeiboList extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.userinfo_fanlist);
+		setContentView(R.layout.userinfo_weibolist);
 
 	}
+	
 }
