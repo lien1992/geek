@@ -14,6 +14,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 public final class ThinkSNSApplication extends Application {
 	private static ThinkSNSApplication globalContext = null;
@@ -24,6 +25,8 @@ public final class ThinkSNSApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+        Log.d("XXX", "application is create");
 		globalContext = this;
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
