@@ -120,8 +120,10 @@ public class WeiboDetailActivity extends BaseActivity implements
 				break;
 			case 3:
 				sendDialogDismiss();
+				comment_content.setText("");
 				Toast.makeText(WeiboDetailActivity.this, "评论成功",
 						Toast.LENGTH_SHORT).show();
+				getComments();
 				break;
 			case 4:
 				sendDialogDismiss();

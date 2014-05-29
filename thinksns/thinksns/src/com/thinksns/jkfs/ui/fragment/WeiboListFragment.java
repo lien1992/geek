@@ -34,7 +34,7 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 微博列表，后期改为用户关注的微博，目前暂显示公共微博 待完成的部分（新微博提醒、微博图片及url的显示、微博分组显示）
+ * 微博列表，后期改为用户关注的微博，目前暂显示公共微博 待完成的部分（新微博提醒、url等的显示、微博分组显示）
  * 
  * bug：图片加载混乱，完善中..
  * 
@@ -225,7 +225,7 @@ public class WeiboListFragment extends BaseListFragment {
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 					}.getType();
-					weibos = gson.fromJson(json, listType);
+					weibos = gson.fromJson(json, listType); //bug待修复，可能返回string非array
 					if (weibos != null && weibos.size() > 0) {
 						since_id = weibos.get(0).getFeed_id();
 						Log.d("WEIBO SINCE ID", since_id);

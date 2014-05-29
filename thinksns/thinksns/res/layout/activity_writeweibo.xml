@@ -56,7 +56,8 @@
                 android:gravity="left|top"
                 android:hint="开开心心写微博啦！:)"
                 android:scrollbarStyle="outsideOverlay"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"
+                android:background="@drawable/edit_bg" />
 
             <ImageView
                 android:id="@+id/write_weibo_content_pic"

@@ -7,14 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.ActionBar.LayoutParams;
-import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -523,8 +521,6 @@ public class AtAndCommentFragment extends BaseListFragment {
 		popupWindow.setOutsideTouchable(true);
 
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
-		WindowManager windowManager = (WindowManager) getActivity()
-				.getSystemService(Context.WINDOW_SERVICE);
 		// 显示位置
 		popupWindow.showAsDropDown(parent, 10, 0);
 		lv_group.setOnItemClickListener(new OnItemClickListener() {
