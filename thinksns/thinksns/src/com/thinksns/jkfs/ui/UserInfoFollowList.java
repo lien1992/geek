@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import android.app.ListActivity;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -22,9 +22,7 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserFollowBean;
 import com.thinksns.jkfs.constant.HttpConstant;
-import com.thinksns.jkfs.ui.adapter.ListViewAdapter;
-import com.thinksns.jkfs.ui.adapter.PeopleAdapter;
-import com.thinksns.jkfs.util.Utility;
+import com.thinksns.jkfs.ui.adapter.PeopleListAdapter;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -37,7 +35,7 @@ public class UserInfoFollowList extends BaseActivity implements
 	private ListView listView;
 	private int visibleLastIndex = 0; // 最后的可视项索引
 	private int visibleItemCount; // 当前窗口可见项总数
-	private ListViewAdapter adapter;
+	private PeopleListAdapter adapter;
 	private View loadMoreView;
 	private Button loadMoreButton;
 	private Handler handler = new Handler();
@@ -46,17 +44,17 @@ public class UserInfoFollowList extends BaseActivity implements
 	private LinkedList<UserFollowBean> userfollows = new LinkedList<UserFollowBean>();
 	private AccountBean account;
 
+	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
 
-                adapter = new ListViewAdapter(UserInfoFollowList.this,
+                adapter = new PeopleListAdapter(UserInfoFollowList.this,
                         userfollows);
                 // 自动为id是list的ListView设置适配器
                 listView.setAdapter(adapter);
-
-                Log.d("xxx","case 0");
+              
 				adapter.notifyDataSetChanged();
 
 				break;
@@ -92,13 +90,6 @@ public class UserInfoFollowList extends BaseActivity implements
 	 * 初始化适配器
 	 */
 	private void initAdapter() {
-		// ArrayList<String> items = new ArrayList<String>();
-		// for (int i = 0; i < 10; i++) {
-		// items.add(String.valueOf(i + 1));
-		// }
-		// adapter = new ListViewAdapter(this, items);
-
-		// // TODO Auto-generated method stub
 
 		new Thread() {
 			@Override
@@ -108,7 +99,7 @@ public class UserInfoFollowList extends BaseActivity implements
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("app", "api");
 				map.put("mod", "User");
-				map.put("act", "user_followers");
+				map.put("act", "user_follow");
 				map.put("oauth_token", account.getOauth_token());
 				map.put("oauth_token_secret", account.getOauth_token_secret());
 				String json = HttpUtility.getInstance().executeNormalTask(
@@ -173,9 +164,9 @@ public class UserInfoFollowList extends BaseActivity implements
 	 * 模拟加载数据
 	 */
 	private void loadData() {
-		// int count = adapter.getCount();
-		// for (int i = count; i < count + 10; i++) {
-		// adapter.addItem(String.valueOf(i + 1));
-		// }
+//		 int count = adapter.getCount();
+//		 for (int i = count; i < count + 10; i++) {
+//		 adapter.addItem();
+//		 }
 	}
 }
