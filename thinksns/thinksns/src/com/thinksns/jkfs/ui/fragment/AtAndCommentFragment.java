@@ -591,7 +591,7 @@ public class AtAndCommentFragment extends BaseListFragment {
 			ViewHolder holder;
 			if (convertView == null) {
 				convertView = mInflater.inflate(
-						R.layout.at_comment_listview_item, null);
+						R.layout.at_comment_popup_listview_item, null);
 				holder = new ViewHolder();
 				holder.groupItem = (TextView) convertView
 						.findViewById(R.id.comment_popup_listview_item);

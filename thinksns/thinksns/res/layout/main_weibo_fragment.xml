@@ -24,7 +24,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dip"
             android:layout_toRightOf="@+id/app_navi"
-            android:background="@color/white"
+            android:background="@color/grey"
             android:visibility="gone" />
 
         <LinearLayout
@@ -32,8 +32,6 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:orientation="vertical" >
-
-            <!-- android:id="@+id/two_tabs" -->
 
             <LinearLayout
                 android:layout_width="wrap_content"

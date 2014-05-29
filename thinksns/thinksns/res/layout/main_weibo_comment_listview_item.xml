@@ -9,8 +9,7 @@
         android:id="@+id/wb_cmt_user_img"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_margin="8dp"
-        android:src="@drawable/ic_launcher" />
+        android:layout_margin="8dp" />
 
     <RelativeLayout
         android:layout_width="wrap_content"

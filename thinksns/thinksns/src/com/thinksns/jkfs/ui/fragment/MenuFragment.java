@@ -152,38 +152,38 @@ public class MenuFragment extends Fragment implements OnClickListener {
 
 	private void changeBackground(int id) {
 
-		home.setBackgroundResource(R.color.white);
-		at.setBackgroundResource(R.color.white);
-		favorite.setBackgroundResource(R.color.white);
-		chat.setBackgroundResource(R.color.white);
-		channel.setBackgroundResource(R.color.white);
-		weiba.setBackgroundResource(R.color.white);
-		setting.setBackgroundResource(R.color.white);
-		logout.setBackgroundResource(R.color.white);
+		home.setBackgroundResource(R.color.green_1);
+		at.setBackgroundResource(R.color.green_1);
+		favorite.setBackgroundResource(R.color.green_1);
+		chat.setBackgroundResource(R.color.green_1);
+		channel.setBackgroundResource(R.color.green_1);
+		weiba.setBackgroundResource(R.color.green_1);
+		setting.setBackgroundResource(R.color.green_1);
+		logout.setBackgroundResource(R.color.green_1);
 		switch (id) {
 		case R.id.sm_home:
-			home.setBackgroundResource(R.color.grey);
+			home.setBackgroundResource(R.color.green_2);
 			break;
 		case R.id.sm_at:
-			at.setBackgroundResource(R.color.grey);
+			at.setBackgroundResource(R.color.green_2);
 			break;
 		case R.id.sm_favorite:
-			favorite.setBackgroundResource(R.color.grey);
+			favorite.setBackgroundResource(R.color.green_2);
 			break;
 		case R.id.sm_chat:
-			chat.setBackgroundResource(R.color.grey);
+			chat.setBackgroundResource(R.color.green_2);
 			break;
 		case R.id.sm_channel:
-			channel.setBackgroundResource(R.color.grey);
+			channel.setBackgroundResource(R.color.green_2);
 			break;
 		case R.id.sm_weiba:
-			weiba.setBackgroundResource(R.color.grey);
+			weiba.setBackgroundResource(R.color.green_2);
 			break;
 		case R.id.sm_setting:
-			setting.setBackgroundResource(R.color.grey);
+			setting.setBackgroundResource(R.color.green_2);
 			break;
 		case R.id.sm_logout:
-			logout.setBackgroundResource(R.color.grey);
+			logout.setBackgroundResource(R.color.green_2);
 			break;
 		}
 
