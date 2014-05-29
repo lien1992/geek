@@ -9,7 +9,6 @@ import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,13 +19,14 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
@@ -38,8 +38,6 @@ import com.thinksns.jkfs.ui.adapter.CommentAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView.RefreshAndLoadMoreListener;
 import com.thinksns.jkfs.util.Utility;
-import com.thinksns.jkfs.util.common.ImageUtils;
-import com.thinksns.jkfs.util.common.ImageUtils.ImageCallback;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -51,7 +49,6 @@ import com.thinksns.jkfs.util.http.HttpUtility;
  */
 public class WeiboDetailActivity extends BaseActivity implements
 		OnClickListener {
-	private RelativeLayout root;
 	private ImageView back;
 	private EditText comment_content;
 	private ImageView repost;
@@ -85,6 +82,8 @@ public class WeiboDetailActivity extends BaseActivity implements
 	private boolean isLike;
 	private boolean firstLoad = true;
 	private ProgressDialog sendProgress;
+
+	private DisplayImageOptions options;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -121,8 +120,10 @@ public class WeiboDetailActivity extends BaseActivity implements
 				break;
 			case 3:
 				sendDialogDismiss();
+				comment_content.setText("");
 				Toast.makeText(WeiboDetailActivity.this, "评论成功",
 						Toast.LENGTH_SHORT).show();
+				getComments();
 				break;
 			case 4:
 				sendDialogDismiss();
@@ -226,6 +227,9 @@ public class WeiboDetailActivity extends BaseActivity implements
 		Intent intent = getIntent();
 		weibo = intent.getParcelableExtra("weibo_detail");
 
+		options = new DisplayImageOptions.Builder().showStubImage(
+				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
+
 		setContentView(R.layout.activity_weibodetail);
 		initViews();
 		initContents();
@@ -233,7 +237,6 @@ public class WeiboDetailActivity extends BaseActivity implements
 
 	private void initViews() {
 		// TODO Auto-generated method stub
-		root = (RelativeLayout) findViewById(R.id.wb_detail_root);
 		back = (ImageView) findViewById(R.id.wb_detail_back);
 		back.setOnClickListener(this);
 		repost = (ImageView) findViewById(R.id.wb_detail_repost);
@@ -279,8 +282,8 @@ public class WeiboDetailActivity extends BaseActivity implements
 	private void initContents() {
 		// TODO Auto-generated method stub
 		user_name.setText(weibo.getUname());
-		ImageUtils.setThumbnailView(weibo.getAvatar_small(), avatar, this,
-				callback);
+		ImageLoader.getInstance().displayImage(weibo.getAvatar_small(), avatar,
+				options);
 		int where = Integer.parseInt(weibo.getFrom());
 		switch (where) {
 		case 0:
@@ -306,8 +309,9 @@ public class WeiboDetailActivity extends BaseActivity implements
 			re_user_name.setText(weibo_repost.getUname());
 			re_content.setText(weibo_repost.getContent());
 			if (weibo_repost.getType().equals("postimage")) {
-				ImageUtils.setThumbnailView(weibo_repost.getAttach().get(0)
-						.getAttach_middle(), repost_pic, this, callback);
+				ImageLoader.getInstance().displayImage(
+						weibo_repost.getAttach().get(0).getAttach_middle(),
+						repost_pic, options);
 			}
 			repost_layout.setVisibility(View.VISIBLE);
 			repost_pic.setVisibility(View.VISIBLE);
@@ -316,10 +320,8 @@ public class WeiboDetailActivity extends BaseActivity implements
 		if (weibo.getType().equals("postimage")) {
 			Log.d("weibo detail attach is null?", (weibo.getAttach() == null)
 					+ "");
-			/*
-			 * ImageUtils.setThumbnailView(weibo.getAttach().get(0)
-			 * .getAttach_middle(), pic, this, callback);
-			 */
+			ImageLoader.getInstance().displayImage(
+					weibo.getAttach().get(0).getAttach_middle(), pic, options);
 			pic.setVisibility(View.VISIBLE);
 		}
 		like_count.setText(weibo.getDigg_count() + "");
@@ -591,18 +593,5 @@ public class WeiboDetailActivity extends BaseActivity implements
 			sendProgress.dismiss();
 		}
 	}
-
-	ImageCallback callback = new ImageCallback() {
-		@Override
-		public void loadImage(Bitmap bitmap, String imagePath) {
-			// TODO Auto-generated method stub
-			try {
-				ImageView img = (ImageView) root.findViewWithTag(imagePath);
-				img.setImageBitmap(bitmap);
-			} catch (NullPointerException ex) {
-				Log.e("error", "ImageView = null");
-			}
-		}
-	};
 
 }

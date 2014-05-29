@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +13,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
-import com.thinksns.jkfs.util.common.ImageUtils;
-import com.thinksns.jkfs.util.common.ImageUtils.ImageCallback;
 
 /**
  * 微博适配器，适用于需要显示微博列表的所有位置。
@@ -34,6 +33,8 @@ public class WeiboAdapter extends BaseAdapter {
 	Activity ctx;
 	PullToRefreshListView lv;
 	LayoutInflater in;
+
+	private DisplayImageOptions options;
 
 	// 追加微博到表尾
 	public void append(List<WeiboBean> lists) {
@@ -72,25 +73,13 @@ public class WeiboAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
-	// 图片加载回调
-	ImageCallback callback = new ImageCallback() {
-		@Override
-		public void loadImage(Bitmap bitmap, String imagePath) {
-			// TODO Auto-generated method stub
-			try {
-				ImageView img = (ImageView) lv.findViewWithTag(imagePath);
-				img.setImageBitmap(bitmap);
-			} catch (NullPointerException ex) {
-				Log.e("error", "ImageView = null");
-			}
-		}
-	};
-
 	public WeiboAdapter(Activity context, LayoutInflater inflater,
 			PullToRefreshListView listView) {
 		ctx = context;
 		in = inflater;
 		lv = listView;
+		options = new DisplayImageOptions.Builder().showStubImage(
+				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
 
 	}
 
@@ -155,8 +144,8 @@ public class WeiboAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		ImageUtils.setThumbnailView(weibo.getAvatar_small(), holder.avatar,
-				ctx, callback);
+		ImageLoader.getInstance().displayImage(weibo.getAvatar_small(),
+				holder.avatar, options);
 		holder.userName.setText(weibo.getUname());
 		holder.content.setText(weibo.getContent());
 		holder.time.setText(weibo.getCtime());
@@ -186,15 +175,16 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.repost_userName.setText(weibo_repost.getUname());
 			holder.repost_content.setText(weibo_repost.getContent() + "");
 			if (weibo_repost.getType().equals("postimage")) {
-				ImageUtils.setThumbnailView(weibo_repost.getAttach().get(0)
-						.getAttach_middle(), holder.repost_weibo_pic, ctx,
-						callback);
+				ImageLoader.getInstance().displayImage(
+						weibo_repost.getAttach().get(0).getAttach_middle(),
+						holder.repost_weibo_pic, options);
 			}
 			holder.repost.setVisibility(View.VISIBLE);
 			holder.repost_pics.setVisibility(View.VISIBLE);
 		} else if (weibo.getType().equals("postimage")) {
-			ImageUtils.setThumbnailView(weibo.getAttach().get(0)
-					.getAttach_middle(), holder.weibo_pic, ctx, callback);
+			ImageLoader.getInstance().displayImage(
+					weibo.getAttach().get(0).getAttach_middle(),
+					holder.weibo_pic, options);
 			holder.weibo_pics.setVisibility(View.VISIBLE);
 		}
 
