@@ -20,9 +20,6 @@ public class PeopleListAdapter extends BaseAdapter {
 	private LinkedList<UserFollowBean> uList;
 	private LayoutInflater inflater;
 
-	public PeopleListAdapter() {
-	}
-	
 	public PeopleListAdapter(Context context, LinkedList<UserFollowBean> ulist) {
 		this.uList = ulist;
 		inflater = (LayoutInflater) context
@@ -70,6 +67,7 @@ public class PeopleListAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+		
         ImageLoader.getInstance().displayImage(userfollow.getAvatar_small(),holder.avatar);
 
 		holder.userName.setText(userfollow.getUname());
@@ -95,9 +93,10 @@ public class PeopleListAdapter extends BaseAdapter {
 	 *
 	 * @param item
 	 */
-//	 public void addItem(UserFollowBean item) {
-//		 uList.add(item);
-//	 }
+	 public void addItem(UserFollowBean item) {
+		 uList.add(item);
+	 }
+
 
 
 }

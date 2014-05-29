@@ -13,6 +13,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -39,23 +40,49 @@ public class UserInfoFollowList extends BaseActivity implements
 	private View loadMoreView;
 	private Button loadMoreButton;
 	private Handler handler = new Handler();
+	private int currentPage;
 
 	private ThinkSNSApplication application;
-	private LinkedList<UserFollowBean> userfollows = new LinkedList<UserFollowBean>();
+	private LinkedList<UserFollowBean> userfollows = new LinkedList<UserFollowBean>();// 提取全部的userfollowbean信息
+	private LinkedList<UserFollowBean> userfollows2 = new LinkedList<UserFollowBean>();// 分页查看时候提取信息
 	private AccountBean account;
 
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case 0:
+			case 1:
 
-                adapter = new PeopleListAdapter(UserInfoFollowList.this,
-                        userfollows);
-                // 自动为id是list的ListView设置适配器
-                listView.setAdapter(adapter);
-              
-				adapter.notifyDataSetChanged();
+//				if (userfollows.size() == 20) {
+//					adapter = new PeopleListAdapter(UserInfoFollowList.this,
+//							userfollows);
+//
+//					// loadMoreView.destroyDrawingCache();
+//
+//				} else {
+//					for (int i = 0; i < 20; i++)// 设置初始化的页面数量
+//					{
+//						userfollows2.add(userfollows.get(i));
+//					}
+//					adapter = new PeopleListAdapter(UserInfoFollowList.this,
+//							userfollows2);
+//
+//				}
+
+				adapter = new PeopleListAdapter(UserInfoFollowList.this,
+						userfollows);
+				
+				// 自动为id是list的ListView设置适配器
+				listView.setAdapter(adapter);
+				currentPage = currentPage + 1;
+
+				break;
+
+			case 2:
+
+				loadNew();
+				currentPage = currentPage + 1;
+				adapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
 
 				break;
 
@@ -68,6 +95,7 @@ public class UserInfoFollowList extends BaseActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.people_list);
+		currentPage = 1;
 
 		application = (ThinkSNSApplication) this.getApplicationContext();
 		account = application.getAccount(this);
@@ -77,12 +105,11 @@ public class UserInfoFollowList extends BaseActivity implements
 		loadMoreButton = (Button) loadMoreView
 				.findViewById(R.id.loadMoreButton);
 
-		listView =(ListView)findViewById(R.id.userinfo_list); // 获取id是list的ListView
+		listView = (ListView) findViewById(R.id.userinfo_list); // 获取id是list的ListView
 		listView.addFooterView(loadMoreView); // 设置列表底部视图
 
 		initAdapter();
 
-		
 		listView.setOnScrollListener(this); // 添加滑动监听
 	}
 
@@ -99,7 +126,7 @@ public class UserInfoFollowList extends BaseActivity implements
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("app", "api");
 				map.put("mod", "User");
-				map.put("act", "user_follow");
+				map.put("act", "user_following");
 				map.put("oauth_token", account.getOauth_token());
 				map.put("oauth_token_secret", account.getOauth_token_secret());
 				String json = HttpUtility.getInstance().executeNormalTask(
@@ -107,9 +134,7 @@ public class UserInfoFollowList extends BaseActivity implements
 				Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
 				}.getType();
 				userfollows = gson.fromJson(json, listType);
-				mHandler.sendEmptyMessage(0);
-				// adapter = new ListViewAdapter(UserInfoFollowList.this,
-				// userfollows);
+				mHandler.sendEmptyMessage(1);
 
 			}
 		}.start();
@@ -153,7 +178,7 @@ public class UserInfoFollowList extends BaseActivity implements
 
 				loadData();
 
-				adapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
+//				adapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
 				listView.setSelection(visibleLastIndex - visibleItemCount + 1); // 设置选中项
 				loadMoreButton.setText("load more"); // 恢复按钮文字
 			}
@@ -164,9 +189,70 @@ public class UserInfoFollowList extends BaseActivity implements
 	 * 模拟加载数据
 	 */
 	private void loadData() {
-//		 int count = adapter.getCount();
-//		 for (int i = count; i < count + 10; i++) {
-//		 adapter.addItem();
-//		 }
+
+		addMoreUserfollow();
+		// 加载新的一页的userfollow
+
+	}
+
+	private void addMoreUserfollow() {
+
+		new Thread() {
+			@Override
+			public void run() {
+
+				userfollows2.clear();
+				// TODO Auto-generated method stub
+				Gson gson = new Gson();
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("app", "api");
+				map.put("mod", "User");
+				map.put("page", currentPage + "");
+				map.put("act", "user_following");
+				map.put("oauth_token", account.getOauth_token());
+				map.put("oauth_token_secret", account.getOauth_token_secret());
+				String json = HttpUtility.getInstance().executeNormalTask(
+						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+				Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
+				}.getType();
+
+				userfollows2 = gson.fromJson(json, listType);
+				mHandler.sendEmptyMessage(2);
+
+			}
+		}.start();
+
+	}
+
+	private void loadNew() {
+		int count = adapter.getCount();
+		int nicount = userfollows2.size();// 测试判断剩下的数量
+		if (nicount == 20) {
+
+			for (int i = 0; i < 20; i++) {
+				adapter.addItem(userfollows2.get(i));
+			}
+
+			Toast toast = Toast.makeText(this, "1已加载" + nicount + "个人"
+					+ currentPage, Toast.LENGTH_SHORT);
+			toast.show();
+
+		} else if (nicount < 20 && nicount > 0) {
+
+			for (int i = 0; i < nicount; i++) {
+				adapter.addItem(userfollows2.get(i));
+			}
+
+			Toast toast = Toast.makeText(this, "2已加载" + nicount + "个人"
+					+ currentPage, Toast.LENGTH_SHORT);
+			toast.show();
+
+
+		} else {
+			Toast toast = Toast.makeText(this, "3已没有" + nicount + "个人",
+					Toast.LENGTH_SHORT);
+			toast.show();
+		}
+
 	}
 }
