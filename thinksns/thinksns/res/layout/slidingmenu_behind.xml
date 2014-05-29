@@ -24,13 +24,14 @@
             android:layout_marginTop="0dp"
             android:orientation="vertical" >
 
-            <ImageView
+            <com.thinksns.jkfs.ui.view.RoundAngleImageView
                 android:id="@+id/sm_behind_avatar"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:padding="6dp"
+
                 android:src="@drawable/ic_launcher" />
 
             <TextView
