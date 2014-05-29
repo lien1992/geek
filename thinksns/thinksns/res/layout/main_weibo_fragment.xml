@@ -17,16 +17,6 @@
             android:paddingBottom="1dip"
             android:src="@drawable/navigation" />
 
-        <Spinner
-            android:id="@+id/group_spinner"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dip"
-            android:layout_toRightOf="@+id/app_navi"
-            android:background="@color/grey"
-            android:visibility="gone" />
-
         <LinearLayout
             android:layout_width="180dp"
             android:layout_height="match_parent"
@@ -78,6 +68,19 @@
             android:layout_height="1dip"
             android:layout_alignParentBottom="true"
             android:src="@color/grey" />
+
+        <TextView
+            android:id="@+id/weibo_main_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/app_navi"
+            android:background="@drawable/popup_mark"
+            android:text="全部分组"
+            android:textColor="@color/green"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
     </RelativeLayout>
 
     <LinearLayout
