@@ -11,7 +11,6 @@ import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
-import com.thinksns.jkfs.ui.adapter.ListViewAdapter;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
