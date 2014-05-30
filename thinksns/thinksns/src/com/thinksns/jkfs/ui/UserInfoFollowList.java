@@ -34,7 +34,7 @@ import com.thinksns.jkfs.util.http.HttpUtility;
 /**
  * @author 邓思宇 用于在用户界面显示关注对象的LIST
  * 
- * 	还未添加TAG
+ *         还未添加TAG
  * 
  */
 
@@ -54,31 +54,43 @@ public class UserInfoFollowList extends BaseActivity implements
 	private LinkedList<UserFollowBean> userfollows2 = new LinkedList<UserFollowBean>();// 分页查看时候提取信息
 	private AccountBean account;
 
+	private int FLAG = 0;// 判断是打开自己的主页还是别人的主页 0为自己的
+	private int FLAGG = 0;// 判断是打开关注人列表还是粉丝列表 0为关注人的
+	private String uuid;
+	private String USER_FOLLOWING = "user_following";
+	private String USER_FOLLOWERS = "user_followers";
+
+	public UserInfoFollowList() {
+		super();
+	}
+
+	
+
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 1:
 
-//				if (userfollows.size() == 20) {
-//					adapter = new PeopleListAdapter(UserInfoFollowList.this,
-//							userfollows);
-//
-//					// loadMoreView.destroyDrawingCache();
-//
-//				} else {
-//					for (int i = 0; i < 20; i++)// 设置初始化的页面数量
-//					{
-//						userfollows2.add(userfollows.get(i));
-//					}
-//					adapter = new PeopleListAdapter(UserInfoFollowList.this,
-//							userfollows2);
-//
-//				}
+				// if (userfollows.size() == 20) {
+				// adapter = new PeopleListAdapter(UserInfoFollowList.this,
+				// userfollows);
+				//
+				// // loadMoreView.destroyDrawingCache();
+				//
+				// } else {
+				// for (int i = 0; i < 20; i++)// 设置初始化的页面数量
+				// {
+				// userfollows2.add(userfollows.get(i));
+				// }
+				// adapter = new PeopleListAdapter(UserInfoFollowList.this,
+				// userfollows2);
+				//
+				// }
 
 				adapter = new PeopleListAdapter(UserInfoFollowList.this,
-						userfollows,account);
-				
+						userfollows, account);
+
 				// 自动为id是list的ListView设置适配器
 				listView.setAdapter(adapter);
 				currentPage = currentPage + 1;
@@ -103,7 +115,14 @@ public class UserInfoFollowList extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.people_list);
 		currentPage = 1;
-		UserFollowBean userfollow;
+		
+		Bundle extras = getIntent().getExtras();
+		String flag = extras.getString("FLAG");
+		String flagg = extras.getString("FLAGG");
+		String uuuid = extras.getString("uuid");
+		FLAG = Integer.parseInt(flag);
+		FLAGG = Integer.parseInt(flagg);
+		uuid = uuuid;
 
 		application = (ThinkSNSApplication) this.getApplicationContext();
 		account = application.getAccount(this);
@@ -119,33 +138,31 @@ public class UserInfoFollowList extends BaseActivity implements
 		initAdapter();
 
 		listView.setOnScrollListener(this); // 添加滑动监听
-		
+
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				TextView tx = (TextView) arg1.findViewById(R.id.people_item_weibo);//传送数据
+				TextView tx = (TextView) arg1
+						.findViewById(R.id.people_item_weibo);// 传送数据
 				String uuid = tx.getText().toString();
-				
-//				Bundle bundle = new Bundle();
-//				bundle.putString("uuid", uuid);
-//				AboutMeFragment fragobj = new AboutMeFragment();
-//				fragobj.setArguments(bundle);
-				
 
-				Intent i = new Intent(UserInfoFollowList.this, UserInfoActivity.class);
+				// Bundle bundle = new Bundle();
+				// bundle.putString("uuid", uuid);
+				// AboutMeFragment fragobj = new AboutMeFragment(1);
+				// fragobj.setArguments(bundle);
+
+				Intent i = new Intent(UserInfoFollowList.this,
+						OtherInfoActivity.class);
 				i.putExtra("uuid", uuid);
 				startActivity(i);
-				
-				
+
 			}
-			
-			
+
 		});
-		
-		
+
 	}
 
 	/**
@@ -153,26 +170,119 @@ public class UserInfoFollowList extends BaseActivity implements
 	 */
 	private void initAdapter() {
 
-		new Thread() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				Gson gson = new Gson();
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("app", "api");
-				map.put("mod", "User");
-				map.put("act", "user_following");
-				map.put("oauth_token", account.getOauth_token());
-				map.put("oauth_token_secret", account.getOauth_token_secret());
-				String json = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
-				}.getType();
-				userfollows = gson.fromJson(json, listType);
-				mHandler.sendEmptyMessage(1);
+		switch (FLAG) {
+		case 0:
+
+			if (FLAGG == 0) {
+
+				new Thread() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("act", "user_following");
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
+						}.getType();
+						userfollows = gson.fromJson(json, listType);
+						mHandler.sendEmptyMessage(1);
+
+					}
+				}.start();
+
+			} else if (FLAGG == 1) {
+
+				new Thread() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("act", "user_followers");
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
+						}.getType();
+						userfollows = gson.fromJson(json, listType);
+						mHandler.sendEmptyMessage(1);
+
+					}
+				}.start();
 
 			}
-		}.start();
+			break;
+		case 1:
+
+			if (FLAGG == 0) {
+
+				new Thread() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("user_id", uuid);
+						map.put("act", "user_following");
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
+						}.getType();
+						userfollows = gson.fromJson(json, listType);
+						mHandler.sendEmptyMessage(1);
+
+					}
+				}.start();
+
+			} else if (FLAGG == 1) {
+
+				new Thread() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("user_id", uuid);
+						map.put("act", "user_followers");
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
+						}.getType();
+						userfollows = gson.fromJson(json, listType);
+						mHandler.sendEmptyMessage(1);
+
+					}
+				}.start();
+
+			}
+			break;
+
+		}
 
 	}
 
@@ -182,8 +292,8 @@ public class UserInfoFollowList extends BaseActivity implements
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
-//		this.visibleItemCount = visibleItemCount;
-//		visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
+		// this.visibleItemCount = visibleItemCount;
+		// visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
 	}
 
 	/**
@@ -191,13 +301,13 @@ public class UserInfoFollowList extends BaseActivity implements
 	 */
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-//		int itemsLastIndex = adapter.getCount() - 1; // 数据集最后一项的索引
-//		int lastIndex = itemsLastIndex + 1; // 加上底部的loadMoreView项
-//		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
-//				&& visibleLastIndex == lastIndex) {
-//			// 如果是自动加载,可以在这里放置异步加载数据的代码
-//			Log.i("LOADMORE", "loading...");
-//		}
+		// int itemsLastIndex = adapter.getCount() - 1; // 数据集最后一项的索引
+		// int lastIndex = itemsLastIndex + 1; // 加上底部的loadMoreView项
+		// if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
+		// && visibleLastIndex == lastIndex) {
+		// // 如果是自动加载,可以在这里放置异步加载数据的代码
+		// Log.i("LOADMORE", "loading...");
+		// }
 	}
 
 	/**
@@ -213,7 +323,7 @@ public class UserInfoFollowList extends BaseActivity implements
 
 				loadData();
 
-//				adapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
+				// adapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
 				listView.setSelection(visibleLastIndex - visibleItemCount + 1); // 设置选中项
 				loadMoreButton.setText("load more"); // 恢复按钮文字
 			}
@@ -231,35 +341,140 @@ public class UserInfoFollowList extends BaseActivity implements
 
 	private void addMoreUserfollow() {
 
-		new Thread() {
-			@Override
-			public void run() {
+		switch (FLAG) {
+		case 0:
 
-				userfollows2.clear();
-				// TODO Auto-generated method stub
-				Gson gson = new Gson();
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("app", "api");
-				map.put("mod", "User");
-				map.put("page", currentPage + "");
-				map.put("act", "user_following");
-				map.put("oauth_token", account.getOauth_token());
-				map.put("oauth_token_secret", account.getOauth_token_secret());
-				String json = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
-				}.getType();
+			if (FLAGG == 0) {
 
-				userfollows2 = gson.fromJson(json, listType);
-				mHandler.sendEmptyMessage(2);
+				new Thread() {
+					@Override
+					public void run() {
+
+						userfollows2.clear();
+						// TODO Auto-generated method stub
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("page", currentPage + "");
+						map.put("act", "user_following");
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
+						}.getType();
+
+						userfollows2 = gson.fromJson(json, listType);
+						mHandler.sendEmptyMessage(2);
+
+					}
+				}.start();
+
+			} else if (FLAGG == 1) {
+
+				new Thread() {
+					@Override
+					public void run() {
+
+						userfollows2.clear();
+						// TODO Auto-generated method stub
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("page", currentPage + "");
+						map.put("act", "user_followers");
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
+						}.getType();
+
+						userfollows2 = gson.fromJson(json, listType);
+						mHandler.sendEmptyMessage(2);
+
+					}
+				}.start();
 
 			}
-		}.start();
+			break;
+		case 1:
+
+			if (FLAGG == 0) {
+
+				new Thread() {
+					@Override
+					public void run() {
+
+						userfollows2.clear();
+						// TODO Auto-generated method stub
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("page", currentPage + "");
+						map.put("user_id", uuid);
+						map.put("act", "user_following");
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
+						}.getType();
+
+						userfollows2 = gson.fromJson(json, listType);
+						mHandler.sendEmptyMessage(2);
+
+					}
+				}.start();
+
+			} else if (FLAGG == 1) {
+
+				new Thread() {
+					@Override
+					public void run() {
+
+						userfollows2.clear();
+						// TODO Auto-generated method stub
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("page", currentPage + "");
+						map.put("user_id", uuid);
+						map.put("act", "user_followers");
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
+						}.getType();
+
+						userfollows2 = gson.fromJson(json, listType);
+						mHandler.sendEmptyMessage(2);
+
+					}
+				}.start();
+
+			}
+			break;
+
+		}
 
 	}
 
 	private void loadNew() {
-//		int count = adapter.getCount();
+		// int count = adapter.getCount();
 		int nicount = userfollows2.size();// 测试判断剩下的数量
 		if (nicount == 20) {
 
@@ -281,7 +496,6 @@ public class UserInfoFollowList extends BaseActivity implements
 					+ currentPage, Toast.LENGTH_SHORT);
 			toast.show();
 
-
 		} else {
 			Toast toast = Toast.makeText(this, "3已没有" + nicount + "个人",
 					Toast.LENGTH_SHORT);
@@ -289,4 +503,5 @@ public class UserInfoFollowList extends BaseActivity implements
 		}
 
 	}
+
 }

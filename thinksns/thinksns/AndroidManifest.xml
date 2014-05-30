@@ -70,7 +70,7 @@
                 <data android:scheme="tencent101073421" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.DetailInfoActivity" >
+        <activity android:name=".ui.OtherInfoActivity" >
         </activity>
         <activity android:name=".ui.UserInfoActivity" >
         </activity>

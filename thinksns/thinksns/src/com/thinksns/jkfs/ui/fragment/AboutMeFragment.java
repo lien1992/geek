@@ -41,7 +41,7 @@ import com.thinksns.jkfs.util.http.HttpUtility;
  * @author 邓思宇 我的主页列表显示信息 还未完成
  * 
  */
-@SuppressLint("HandlerLeak")
+@SuppressLint({ "HandlerLeak", "ValidFragment" })
 public class AboutMeFragment extends Fragment {
 
 	public static final String TAG = "AboutMeFragment";
@@ -49,7 +49,18 @@ public class AboutMeFragment extends Fragment {
 	private ThinkSNSApplication application;
 	private AccountBean account;
 	private UserInfoBean userinfo;
+	private int FLAG = 0;// 判断是打开的主页还是其他人的页面 其他人页面设为1
+	private String uuid;// 如果FLAG为1 会收到其他人的UID 存入此
 
+	public AboutMeFragment() {
+		super();
+	}
+
+	@SuppressLint("ValidFragment")
+	public AboutMeFragment(int i, String uid) {
+		this.FLAG = i;
+		this.uuid = uid;
+	}
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -90,7 +101,7 @@ public class AboutMeFragment extends Fragment {
 				muname.setText(userinfo.getUname());
 				memail.setText(userinfo.getEmail());
 
-				String us = userinfo.getSex();// 测试用
+				String us = userinfo.getLocation();
 				maddress.setText(us);
 
 				ImageLoader.getInstance().displayImage(userinfo.getAvatar(),
@@ -126,29 +137,7 @@ public class AboutMeFragment extends Fragment {
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
 
-		new Thread() {
-			@Override
-			public void run() {
-				Gson gson = new Gson();
-				HashMap<String, String> map = new HashMap<String, String>();
-				map = new HashMap<String, String>();
-				map.put("app", "api");
-				map.put("mod", "User");
-				map.put("act", "show");
-				map.put("user_id", account.getUid());
-				map.put("oauth_token", account.getOauth_token());
-				map.put("oauth_token_secret", account.getOauth_token_secret());
-				String json = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-
-				if (json != null && !"".equals(json)) {
-
-					userinfo = gson.fromJson(json, UserInfoBean.class);
-					mHandler.sendEmptyMessage(0);
-				}
-
-			}
-		}.start();
+		openPage();
 
 	}
 
@@ -187,9 +176,30 @@ public class AboutMeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// get the change info activity
-				Intent intent = new Intent(getActivity(),
-						UserInfoFollowList.class);
-				startActivity(intent);
+				switch (FLAG) {
+				case 0:
+
+					Intent intent = new Intent(getActivity(),
+							UserInfoFollowList.class);
+					intent.putExtra("FLAG", "0");
+					intent.putExtra("FLAGG", "0");
+					intent.putExtra("uuid", "");
+					startActivity(intent);
+
+					break;
+				case 1:
+
+					// 前面的1表示打开的是其他人的页面 后面的0表示的是打开的是关注人页面
+
+					Intent intent2 = new Intent(getActivity(),
+							UserInfoFollowList.class);
+					intent2.putExtra("FLAG", "1");
+					intent2.putExtra("FLAGG", "0");
+					intent2.putExtra("uuid", "");
+					startActivity(intent2);
+					break;
+				}
+
 			}
 		});
 
@@ -198,11 +208,92 @@ public class AboutMeFragment extends Fragment {
 		button4.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// get the change info activity
-				Intent intent = new Intent(getActivity(), UserInfoFanList.class);
-				startActivity(intent);
+				switch (FLAG) {
+				case 0:
+
+					Intent intent = new Intent(getActivity(),
+							UserInfoFollowList.class);
+					intent.putExtra("FLAG", "0");
+					intent.putExtra("FLAGG", "1");
+					intent.putExtra("uuid", "");
+					startActivity(intent);
+
+					break;
+				case 1:
+
+					// 前面的1表示打开的是其他人的页面 后面的1表示的是打开的是粉丝人页面
+
+					Intent intent2 = new Intent(getActivity(),
+							UserInfoFollowList.class);
+					intent2.putExtra("FLAG", "1");
+					intent2.putExtra("FLAGG", "1");
+					intent2.putExtra("uuid", "");
+					startActivity(intent2);
+					break;
+				}
 			}
 		});
+	}
+
+	private void openPage() {
+		switch (FLAG) {
+		case 0:
+
+			new Thread() {
+				@Override
+				public void run() {
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "User");
+					map.put("act", "show");
+					map.put("user_id", account.getUid());
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+
+					if (json != null && !"".equals(json)) {
+
+						userinfo = gson.fromJson(json, UserInfoBean.class);
+						mHandler.sendEmptyMessage(0);
+					}
+
+				}
+			}.start();
+
+			break;
+		case 1:
+
+			new Thread() {
+				@Override
+				public void run() {
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "User");
+					map.put("act", "show");
+					map.put("user_id", uuid);
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+
+					if (json != null && !"".equals(json)) {
+
+						userinfo = gson.fromJson(json, UserInfoBean.class);
+						mHandler.sendEmptyMessage(0);
+					}
+
+				}
+			}.start();
+
+			break;
+		}
 	}
 
 }
