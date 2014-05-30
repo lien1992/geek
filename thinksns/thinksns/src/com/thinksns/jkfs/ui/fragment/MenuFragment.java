@@ -3,12 +3,21 @@ package com.thinksns.jkfs.ui.fragment;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.base.ThinkSNSApplication;
+import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.UserInfoBean;
+import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
+import com.thinksns.jkfs.util.http.HttpMethod;
+import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -29,7 +38,9 @@ import android.widget.TextView;
  */
 public class MenuFragment extends Fragment implements OnClickListener {
 
-    private String TAG="MenuFragment";
+    public static final String TAG="MenuFragment";
+
+    private final int  HTTP_GET_OK=9;
 	private ImageView avatar;
 	private TextView nick;
 	private LinearLayout home;
@@ -41,10 +52,39 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private LinearLayout setting;
 	private LinearLayout logout;
 	private Map<Integer, Fragment> fragments = new HashMap<Integer, Fragment>();
+    private ThinkSNSApplication application;
+    private AccountBean account;
+    private UserInfoBean userinfo;
+    private String json;
 
-	@Override
+    private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case HTTP_GET_OK:
+                    Log.d(TAG,"handler is 9");
+                    if(json!=null&&!"".equals(json)){
+                        Gson gson = new Gson();
+                        userinfo = gson.fromJson(json, UserInfoBean.class);
+                        ImageLoader.getInstance().displayImage(userinfo.getAvatar(),avatar);
+                        nick.setText(userinfo.getUname());
+                        mHandler.sendEmptyMessage(0);
+                    }
+                    break;
+
+            }
+
+        };
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		Log.d(TAG,"menuFramgnet onActivityCreated");
+
 		super.onActivityCreated(savedInstanceState);
 
 	}
@@ -65,6 +105,31 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		weiba = (LinearLayout) view.findViewById(R.id.sm_weiba);
 		setting = (LinearLayout) view.findViewById(R.id.sm_setting);
 		logout = (LinearLayout) view.findViewById(R.id.sm_logout);
+
+
+        application = (ThinkSNSApplication) this.getActivity()
+                .getApplicationContext();
+        account = application.getAccount(this.getActivity());
+
+        new Thread() {
+            @Override
+            public void run() {
+                Log.d(TAG,"run");
+                HashMap<String, String> map = new HashMap<String, String>();
+                map = new HashMap<String, String>();
+                map.put("app", "api");
+                map.put("mod", "User");
+                map.put("act", "show");
+                map.put("user_id", account.getUid());
+                map.put("oauth_token", account.getOauth_token());
+                map.put("oauth_token_secret", account.getOauth_token_secret());
+                json = HttpUtility.getInstance().executeNormalTask(
+                        HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+                mHandler.sendEmptyMessage(HTTP_GET_OK);
+
+            }
+        }.start();
+
 		return view;
 	}
 
@@ -82,12 +147,12 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		logout.setOnClickListener(this);
 		changeBackground(R.id.sm_home);
 
-		// 替换头像、微博用户名..
+
 	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+
 		switch (v.getId()) {
 		case R.id.sm_home:
 			changeBackground(R.id.sm_home);
@@ -138,6 +203,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
                     .setMessage(R.string.quit_account_explanation).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    application.quitAccount(getActivity());
                     getActivity().finish();
                 }
             }).setNegativeButton("取消",new DialogInterface.OnClickListener() {

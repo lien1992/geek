@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.thinksns.jkfs.R;
-import com.thinksns.jkfs.ui.fragment.FanListFragment;
 
 
 
