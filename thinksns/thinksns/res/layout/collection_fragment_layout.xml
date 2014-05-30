@@ -35,12 +35,23 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
-    <com.thinksns.jkfs.ui.view.PullToRefreshListView
-        android:id="@+id/fav_main_list_view"
+    <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/white"
-        android:cacheColorHint="#0000"
-        android:divider="@drawable/lv_divider" />
+        android:layout_height="fill_parent" >
+
+        <com.thinksns.jkfs.ui.view.PullToRefreshListView
+            android:id="@+id/fav_main_list_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white"
+            android:cacheColorHint="#0000"
+            android:divider="@drawable/lv_divider" />
+
+        <ProgressBar
+            android:id="@+id/fav_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 </LinearLayout>

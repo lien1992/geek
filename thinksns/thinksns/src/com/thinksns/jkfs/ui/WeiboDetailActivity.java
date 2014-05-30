@@ -310,7 +310,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 			re_content.setText(weibo_repost.getContent());
 			if (weibo_repost.getType().equals("postimage")) {
 				ImageLoader.getInstance().displayImage(
-						weibo_repost.getAttach().get(0).getAttach_middle(),
+						weibo_repost.getAttach().get(0).getAttach_middle(), //nullpointerexception
 						repost_pic, options);
 			}
 			repost_layout.setVisibility(View.VISIBLE);
@@ -321,7 +321,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 			Log.d("weibo detail attach is null?", (weibo.getAttach() == null)
 					+ "");
 			ImageLoader.getInstance().displayImage(
-					weibo.getAttach().get(0).getAttach_middle(), pic, options);
+					weibo.getAttach().get(0).getAttach_middle(), pic, options);//待修复bug：空指针
 			pic.setVisibility(View.VISIBLE);
 		}
 		like_count.setText(weibo.getDigg_count() + "");

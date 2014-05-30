@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -48,6 +49,7 @@ public class WeiboListFragment extends BaseListFragment {
 	private LinkedList<WeiboBean> weibo_all = new LinkedList<WeiboBean>();
 	private WeiboAdapter adapter;
 	private AccountBean account;
+	private ProgressBar progressBar;
 	private int currentPage;
 	private int totalCount;
 	private String since_id = "";
@@ -70,12 +72,14 @@ public class WeiboListFragment extends BaseListFragment {
 				break;
 			case 1:
 				listView.onRefreshComplete();
-				if (firstLoad)
+				if (firstLoad) {
+					progressBar.setVisibility(View.INVISIBLE);
 					if (weibos == null || weibos.size() == 0) {
 						Toast.makeText(getActivity(), "出现意外，微博加载失败:(",
 								Toast.LENGTH_SHORT).show();
 						break;
 					}
+				}
 				if (weibos == null || weibos.size() == 0) {
 					Toast.makeText(getActivity(), "暂时没有新微博:)",
 							Toast.LENGTH_SHORT).show();
@@ -93,6 +97,9 @@ public class WeiboListFragment extends BaseListFragment {
 				currentPage = totalCount / 20 + 1;
 				break;
 			case 2:
+				if (firstLoad) {
+					progressBar.setVisibility(View.INVISIBLE);
+				}
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
 						.show();
@@ -110,6 +117,8 @@ public class WeiboListFragment extends BaseListFragment {
 		View view = mInflater.inflate(R.layout.main_weibo_list_fragment, null);
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.main_weibo_list_view);
+		progressBar = (ProgressBar) view
+				.findViewById(R.id.main_weibo_progressbar);
 
 		return view;
 	}
@@ -163,7 +172,6 @@ public class WeiboListFragment extends BaseListFragment {
 		if (Utility.isConnected(getActivity())) {
 			// 待添加超时判断
 
-
 			new Thread() {
 				@Override
 				public void run() {
@@ -198,8 +206,8 @@ public class WeiboListFragment extends BaseListFragment {
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		getWeibos();
 		firstLoad = false;
+		getWeibos();
 
 	}
 
@@ -225,7 +233,7 @@ public class WeiboListFragment extends BaseListFragment {
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 					}.getType();
-					weibos = gson.fromJson(json, listType); //bug待修复，可能返回string非array
+					weibos = gson.fromJson(json, listType); // bug待修复，可能返回string非array
 					if (weibos != null && weibos.size() > 0) {
 						since_id = weibos.get(0).getFeed_id();
 						Log.d("WEIBO SINCE ID", since_id);

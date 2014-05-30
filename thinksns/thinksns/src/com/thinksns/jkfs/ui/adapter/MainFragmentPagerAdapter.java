@@ -10,10 +10,6 @@ import com.thinksns.jkfs.ui.fragment.WeiboListFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboListOfMineFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboMainFragment;
 
-/**
- * 待观察：在pager的第一页进行fragment替换 replace fragment inside a viewpager
- * 
- */
 public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	private Fragment fragmentAtP0;
@@ -56,16 +52,17 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 			return new WeiboListFragment();
 		}
 	}
-	
-	@Override
-    public int getItemPosition(Object object) {
-        if (object instanceof WeiboListFragment && fragmentAtP0 instanceof WeiboListOfMineFragment)
-            return POSITION_NONE;
-        if (object instanceof WeiboListOfMineFragment && fragmentAtP0 instanceof WeiboListFragment)
-            return POSITION_NONE;
-        return POSITION_UNCHANGED;
-    }
 
+	@Override
+	public int getItemPosition(Object object) {
+		if (object instanceof WeiboListFragment
+				&& fragmentAtP0 instanceof WeiboListOfMineFragment)
+			return POSITION_NONE;
+		if (object instanceof WeiboListOfMineFragment
+				&& fragmentAtP0 instanceof WeiboListFragment)
+			return POSITION_NONE;
+		return POSITION_UNCHANGED;
+	}
 
 	@Override
 	public int getCount() {

@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/write_weibo_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="0dip"
             android:paddingBottom="1dip"

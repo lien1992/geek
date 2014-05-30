@@ -17,7 +17,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="155dp"
+            android:layout_height="145dp"
             android:layout_marginBottom="13dp"
             android:layout_marginLeft="13dp"
             android:layout_marginRight="13dp"
@@ -26,8 +26,8 @@
 
             <ImageView
                 android:id="@+id/sm_behind_avatar"
-                android:layout_width="110dp"
-                android:layout_height="110dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:padding="6dp"
@@ -42,8 +42,7 @@
                 android:singleLine="true"
                 android:text="微博用户名"
                 android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -65,8 +64,7 @@
                 android:paddingRight="8.0dip"
                 android:text="首页"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <View
@@ -93,8 +91,7 @@
                 android:paddingRight="8.0dip"
                 android:text="与我有关"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <View
@@ -121,8 +118,7 @@
                 android:paddingRight="8.0dip"
                 android:text="收藏"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <View
@@ -149,8 +145,7 @@
                 android:paddingRight="8.0dip"
                 android:text="聊天"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <View
@@ -177,8 +172,7 @@
                 android:paddingRight="8.0dip"
                 android:text="频道"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <View
@@ -205,8 +199,7 @@
                 android:paddingRight="8.0dip"
                 android:text="微吧"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <View
@@ -233,8 +226,7 @@
                 android:paddingRight="8.0dip"
                 android:text="设置"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <View
@@ -261,8 +253,7 @@
                 android:paddingRight="8.0dip"
                 android:text="退出当前帐户"
                 android:textColor="#FF6666"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 

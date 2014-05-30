@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/back_login"
-            android:layout_width="40px"
-            android:layout_height="40px"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dip"
