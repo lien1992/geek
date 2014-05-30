@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="#00000000"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants" >
 
     <!-- 头像区域 -->
 
@@ -16,6 +17,7 @@
         <!-- 头像 -->
 
         <ImageView
+            android:focusable="false"
             android:id="@+id/people_item_head"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
@@ -23,6 +25,7 @@
         <!-- 圆形覆盖 -->
 
         <ImageView
+            android:focusable="false"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/cover" />
@@ -37,6 +40,7 @@
         android:orientation="vertical" >
 
         <TextView
+            android:focusable="false"
             android:id="@+id/people_item_name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -46,6 +50,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:focusable="false"
             android:id="@+id/people_item_weibo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -58,6 +63,7 @@
 
 
         <Button
+            android:focusable="false"
             android:id="@+id/people_item_button"
             android:layout_width="80dp"
             android:layout_height="40dp"

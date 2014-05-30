@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,8 +21,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
@@ -35,19 +38,18 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * @author 邓思宇
- * 我的主页列表显示信息 还未完成
+ * @author 邓思宇 我的主页列表显示信息 还未完成
  * 
  */
 @SuppressLint("HandlerLeak")
 public class AboutMeFragment extends Fragment {
 
-    public static final String TAG="AboutMeFragment";
+	public static final String TAG = "AboutMeFragment";
 	// get the account
 	private ThinkSNSApplication application;
 	private AccountBean account;
 	private UserInfoBean userinfo;
-	private Bitmap headicon;
+
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -88,10 +90,11 @@ public class AboutMeFragment extends Fragment {
 				muname.setText(userinfo.getUname());
 				memail.setText(userinfo.getEmail());
 
-				String us = userinfo.getSex();//测试用
+				String us = userinfo.getSex();// 测试用
 				maddress.setText(us);
-				
-				head.setImageBitmap(headicon);
+
+				ImageLoader.getInstance().displayImage(userinfo.getAvatar(),
+						head);
 
 				if (userinfo.getSex() == "男") {
 					sex.setBackgroundResource(R.drawable.male);
@@ -137,14 +140,12 @@ public class AboutMeFragment extends Fragment {
 				map.put("oauth_token_secret", account.getOauth_token_secret());
 				String json = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				
-                if(json!=null&&!"".equals(json)){
 
-                    userinfo = gson.fromJson(json, UserInfoBean.class);
-                    headicon = loadBitmap(userinfo.getAvatar());
-                    mHandler.sendEmptyMessage(0);
-                }
+				if (json != null && !"".equals(json)) {
 
+					userinfo = gson.fromJson(json, UserInfoBean.class);
+					mHandler.sendEmptyMessage(0);
+				}
 
 			}
 		}.start();
@@ -155,7 +156,7 @@ public class AboutMeFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		//显示修改信息活动
+		// 显示修改信息活动
 		Button button = (Button) getActivity().findViewById(R.id.changeinfo);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
@@ -166,60 +167,42 @@ public class AboutMeFragment extends Fragment {
 
 			}
 		});
-		
-		//显示微博LIST
+
+		// 显示微博LIST
 		Button button2 = (Button) getActivity().findViewById(R.id.m_weibo);
 		button2.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// get the change info activity
-				Intent intent = new Intent(getActivity(), UserInfoWeiboList.class);
+				Intent intent = new Intent(getActivity(),
+						UserInfoWeiboList.class);
 				startActivity(intent);
 
 			}
 		});
-		
-		//显示关注LIST
+
+		// 显示关注LIST
 		Button button3 = (Button) getActivity().findViewById(R.id.m_follow);
 		button3.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// get the change info activity
-				Intent intent = new Intent(getActivity(), UserInfoFollowList.class);
-				startActivity(intent);				
+				Intent intent = new Intent(getActivity(),
+						UserInfoFollowList.class);
+				startActivity(intent);
 			}
 		});
-		
-		//显示粉丝LIST
-				Button button4 = (Button) getActivity().findViewById(R.id.m_followme);
-				button4.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// get the change info activity
-						Intent intent = new Intent(getActivity(), UserInfoFanList.class);
-						startActivity(intent);				
-					}
-				});
-	}
 
-	// 下载图片的函数
-	// 不能在主线程中运行
-	public static Bitmap loadBitmap(String src) {
-
-		try {
-			URL url = new URL(src);
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
-			connection.setDoInput(true);
-			connection.connect();
-			InputStream input = connection.getInputStream();
-			Bitmap myBitmap = BitmapFactory.decodeStream(input);
-			return myBitmap;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-
+		// 显示粉丝LIST
+		Button button4 = (Button) getActivity().findViewById(R.id.m_followme);
+		button4.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// get the change info activity
+				Intent intent = new Intent(getActivity(), UserInfoFanList.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 }

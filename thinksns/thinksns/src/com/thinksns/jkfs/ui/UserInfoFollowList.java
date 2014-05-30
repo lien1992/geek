@@ -5,14 +5,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -24,11 +27,15 @@ import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserFollowBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.adapter.PeopleListAdapter;
+import com.thinksns.jkfs.ui.fragment.AboutMeFragment;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
  * @author 邓思宇 用于在用户界面显示关注对象的LIST
+ * 
+ * 	还未添加TAG
+ * 
  */
 
 public class UserInfoFollowList extends BaseActivity implements
@@ -70,7 +77,7 @@ public class UserInfoFollowList extends BaseActivity implements
 //				}
 
 				adapter = new PeopleListAdapter(UserInfoFollowList.this,
-						userfollows);
+						userfollows,account);
 				
 				// 自动为id是list的ListView设置适配器
 				listView.setAdapter(adapter);
@@ -96,6 +103,7 @@ public class UserInfoFollowList extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.people_list);
 		currentPage = 1;
+		UserFollowBean userfollow;
 
 		application = (ThinkSNSApplication) this.getApplicationContext();
 		account = application.getAccount(this);
@@ -111,6 +119,33 @@ public class UserInfoFollowList extends BaseActivity implements
 		initAdapter();
 
 		listView.setOnScrollListener(this); // 添加滑动监听
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				TextView tx = (TextView) arg1.findViewById(R.id.people_item_weibo);//传送数据
+				String uuid = tx.getText().toString();
+				
+//				Bundle bundle = new Bundle();
+//				bundle.putString("uuid", uuid);
+//				AboutMeFragment fragobj = new AboutMeFragment();
+//				fragobj.setArguments(bundle);
+				
+
+				Intent i = new Intent(UserInfoFollowList.this, UserInfoActivity.class);
+				i.putExtra("uuid", uuid);
+				startActivity(i);
+				
+				
+			}
+			
+			
+		});
+		
+		
 	}
 
 	/**
@@ -147,8 +182,8 @@ public class UserInfoFollowList extends BaseActivity implements
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
-		this.visibleItemCount = visibleItemCount;
-		visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
+//		this.visibleItemCount = visibleItemCount;
+//		visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
 	}
 
 	/**
@@ -156,13 +191,13 @@ public class UserInfoFollowList extends BaseActivity implements
 	 */
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		int itemsLastIndex = adapter.getCount() - 1; // 数据集最后一项的索引
-		int lastIndex = itemsLastIndex + 1; // 加上底部的loadMoreView项
-		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
-				&& visibleLastIndex == lastIndex) {
-			// 如果是自动加载,可以在这里放置异步加载数据的代码
-			Log.i("LOADMORE", "loading...");
-		}
+//		int itemsLastIndex = adapter.getCount() - 1; // 数据集最后一项的索引
+//		int lastIndex = itemsLastIndex + 1; // 加上底部的loadMoreView项
+//		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
+//				&& visibleLastIndex == lastIndex) {
+//			// 如果是自动加载,可以在这里放置异步加载数据的代码
+//			Log.i("LOADMORE", "loading...");
+//		}
 	}
 
 	/**
@@ -190,8 +225,7 @@ public class UserInfoFollowList extends BaseActivity implements
 	 */
 	private void loadData() {
 
-		addMoreUserfollow();
-		// 加载新的一页的userfollow
+		addMoreUserfollow();// 加载新的一页的userfollow
 
 	}
 
@@ -225,7 +259,7 @@ public class UserInfoFollowList extends BaseActivity implements
 	}
 
 	private void loadNew() {
-		int count = adapter.getCount();
+//		int count = adapter.getCount();
 		int nicount = userfollows2.size();// 测试判断剩下的数量
 		if (nicount == 20) {
 
