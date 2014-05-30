@@ -72,22 +72,6 @@ public class UserInfoFollowList extends BaseActivity implements
 			switch (msg.what) {
 			case 1:
 
-				// if (userfollows.size() == 20) {
-				// adapter = new PeopleListAdapter(UserInfoFollowList.this,
-				// userfollows);
-				//
-				// // loadMoreView.destroyDrawingCache();
-				//
-				// } else {
-				// for (int i = 0; i < 20; i++)// 设置初始化的页面数量
-				// {
-				// userfollows2.add(userfollows.get(i));
-				// }
-				// adapter = new PeopleListAdapter(UserInfoFollowList.this,
-				// userfollows2);
-				//
-				// }
-
 				adapter = new PeopleListAdapter(UserInfoFollowList.this,
 						userfollows, account);
 

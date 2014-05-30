@@ -56,10 +56,9 @@ public class AboutMeFragment extends Fragment {
 		super();
 	}
 
-	@SuppressLint("ValidFragment")
-	public AboutMeFragment(int i, String uid) {
-		this.FLAG = i;
-		this.uuid = uid;
+	public AboutMeFragment(String i, String uid){
+		this.FLAG = Integer.parseInt(i);
+		this.uuid =uid;
 	}
 
 	private Handler mHandler = new Handler() {
@@ -145,6 +144,15 @@ public class AboutMeFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		
+
+//		String flag = getArguments().getString("FLAG"); 
+//		String uuuid = getArguments().getString("uuid"); 
+//	
+//		FLAG = Integer.parseInt(flag);
+//		uuid = uuuid;
+		
+		
 		// 显示修改信息活动
 		Button button = (Button) getActivity().findViewById(R.id.changeinfo);
 		button.setOnClickListener(new OnClickListener() {

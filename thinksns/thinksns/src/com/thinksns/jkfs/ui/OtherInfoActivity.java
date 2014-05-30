@@ -22,7 +22,7 @@ public class OtherInfoActivity extends FragmentActivity {
 		
 		android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 	    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-	    AboutMeFragment fragment = new AboutMeFragment(1,uuid);
+	    AboutMeFragment fragment = new AboutMeFragment("1",uuid);
 	    fragmentTransaction.replace(R.id.other_page_layout, fragment);
 	    fragmentTransaction.commit();
 	    
