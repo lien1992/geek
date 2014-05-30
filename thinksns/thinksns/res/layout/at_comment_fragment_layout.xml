@@ -80,12 +80,10 @@
         android:layout_height="1dip"
         android:background="@color/grey" />
 
-    <com.thinksns.jkfs.ui.view.PullToRefreshListView
-        android:id="@+id/at_comment_main_list_view"
+    <FrameLayout
+        android:id="@+id/at_comment_frame"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/white"
-        android:cacheColorHint="#0000"
-        android:divider="@drawable/lv_divider" />
+        android:orientation="vertical" />
 
 </LinearLayout>

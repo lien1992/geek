@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <com.thinksns.jkfs.ui.view.PullToRefreshListView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_weibo_list_view"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white"
-    android:cacheColorHint="#0000"
-    android:divider="@drawable/lv_divider"/>
+    android:layout_height="fill_parent" >
 
-</LinearLayout>
+    <com.thinksns.jkfs.ui.view.PullToRefreshListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main_weibo_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white"
+        android:cacheColorHint="#0000"
+        android:divider="@drawable/lv_divider" />
+
+    <ProgressBar
+        android:id="@+id/main_weibo_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+</FrameLayout>

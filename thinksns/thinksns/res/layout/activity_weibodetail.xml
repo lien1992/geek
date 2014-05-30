@@ -19,8 +19,8 @@
 
             <ImageView
                 android:id="@+id/wb_detail_back"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="0dip"
                 android:paddingBottom="1dip"
@@ -331,8 +331,10 @@
     <RelativeLayout
         android:id="@+id/wb_detail_bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@color/white" >
 
         <ImageView
@@ -358,13 +360,20 @@
             android:id="@+id/wb_detail_edit_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/wb_detail_comment_send"
-            android:layout_toRightOf="@id/wb_detail_emotions"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:layout_toLeftOf="@+id/wb_detail_comment_send"
+            android:layout_toRightOf="@+id/wb_detail_emotions"
+            android:background="@drawable/edit_bg"
+            android:ems="10"
             android:hint="发表评论:)"
             android:maxLength="140"
             android:maxLines="3"
-            android:paddingLeft="5dip"
-            android:background="@drawable/edit_bg" />
+            android:paddingLeft="5dip" >
+
+            <requestFocus />
+        </EditText>
+
     </RelativeLayout>
 
 </RelativeLayout>

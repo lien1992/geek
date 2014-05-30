@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -41,6 +42,7 @@ public class CollectionFragment extends BaseListFragment {
 	private ImageView back;
 	private LinkedList<WeiboBean> weibos = new LinkedList<WeiboBean>();
 	private LinkedList<WeiboBean> weibo_all = new LinkedList<WeiboBean>();
+	private ProgressBar progressBar;
 	private WeiboAdapter adapter;
 	private AccountBean account;
 	private int currentPage;
@@ -52,18 +54,23 @@ public class CollectionFragment extends BaseListFragment {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
+				if (firstLoad) {
+					progressBar.setVisibility(View.INVISIBLE);
+				}
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
 						.show();
 				break;
 			case 1:
 				listView.onRefreshComplete();
-				if (firstLoad)
+				if (firstLoad) {
+					progressBar.setVisibility(View.INVISIBLE);
 					if (weibos == null || weibos.size() == 0) {
 						Toast.makeText(getActivity(), "亲还未收藏过微博:(",
 								Toast.LENGTH_SHORT).show();
 						break;
 					}
+				}
 				if (weibos == null || weibos.size() == 0) {
 					Toast.makeText(getActivity(), "暂时没有新收藏:)",
 							Toast.LENGTH_SHORT).show();
@@ -101,6 +108,7 @@ public class CollectionFragment extends BaseListFragment {
 		back = (ImageView) view.findViewById(R.id.wb_fav_back);
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.fav_main_list_view);
+		progressBar = (ProgressBar) view.findViewById(R.id.fav_progressbar);
 
 		return view;
 	}
@@ -112,7 +120,7 @@ public class CollectionFragment extends BaseListFragment {
 		application = (ThinkSNSApplication) this.getActivity()
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
-		
+
 		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -217,8 +225,8 @@ public class CollectionFragment extends BaseListFragment {
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		getWeibos();
 		firstLoad = false;
+		getWeibos();
 	}
 
 	public void insertToHead(List<WeiboBean> lists) {
