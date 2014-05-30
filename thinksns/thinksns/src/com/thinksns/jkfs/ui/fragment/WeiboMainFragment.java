@@ -7,10 +7,10 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.adapter.MainFragmentPagerAdapter;
+import com.thinksns.jkfs.ui.adapter.MainFragmentPagerAdapter.SwitchGroupListener;
 import com.thinksns.jkfs.ui.view.UnderlinePageIndicator;
 
 import android.app.ActionBar.LayoutParams;
-import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
@@ -18,11 +18,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -54,6 +52,12 @@ public class WeiboMainFragment extends Fragment {
 	private TextView weiboList, aboutMe;
 	private ImageView navi;
 
+	private SwitchGroupListener switchListener;
+
+	public void setSwitchGroupListener(SwitchGroupListener switchListener) {
+		this.switchListener = switchListener;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -77,7 +81,7 @@ public class WeiboMainFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		aboutMe.setTextColor(getResources().getColor(R.color.grey));
-		adapter = new MainFragmentPagerAdapter(getActivity());
+		adapter = new MainFragmentPagerAdapter(getActivity(), this);
 		pager.setOffscreenPageLimit(0);
 		pager.setAdapter(adapter);
 		indicator.setViewPager(pager);
@@ -146,10 +150,8 @@ public class WeiboMainFragment extends Fragment {
 					null);
 			lv_group = (ListView) view.findViewById(R.id.main_popup_listview);
 			groups = new ArrayList<String>();
-			groups.add("全部分组");
-			groups.add("分组1");
-			groups.add("分组2");
-			groups.add("分组3");
+			groups.add("公共微博");
+			groups.add("我的关注");
 
 			GroupAdapter groupAdapter = new GroupAdapter(groups);
 			lv_group.setAdapter(groupAdapter);
@@ -169,6 +171,9 @@ public class WeiboMainFragment extends Fragment {
 			public void onItemClick(AdapterView<?> adapterView, View view,
 					int position, long id) {
 				group.setText(groups.get(position));
+				if (switchListener != null)
+					switchListener.onSwitch();
+
 				if (popupWindow != null) {
 					popupWindow.dismiss();
 				}
