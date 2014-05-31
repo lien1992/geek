@@ -108,8 +108,8 @@ public class UserInfoActivity extends TabActivity {
 		TabHost.TabSpec spec;
 		Intent intent;
 		Intent intent2;
-		intent = new Intent().setClass(this, DetailInfoActivity.class);
-		intent2 = new Intent().setClass(this, DetailInfoActivity.class);
+		intent = new Intent().setClass(this, OtherInfoActivity.class);
+		intent2 = new Intent().setClass(this, OtherInfoActivity.class);
 
 		spec = tabHost.newTabSpec("1").setIndicator("微博" // add one tab
 		) // ***need to change to a list xml
