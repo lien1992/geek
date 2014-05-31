@@ -9,9 +9,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -24,9 +30,13 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.thinksns.jkfs.BuildConfig;
+import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
+import com.thinksns.jkfs.bean.WeiboBean;
 
 public class Utility {
 
@@ -234,8 +244,7 @@ public class Utility {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * 检测sdcard是否可用
 	 * 
@@ -246,6 +255,108 @@ public class Utility {
 		if (!status.equals(Environment.MEDIA_MOUNTED))
 			return false;
 		return true;
+	}
+
+	/**
+	 * 隐藏软键盘
+	 */
+	public static void hideSoftInput(Context context) {
+		if (context == null)
+			return;
+		InputMethodManager manager = ((InputMethodManager) context
+				.getSystemService(Activity.INPUT_METHOD_SERVICE));
+		View view = ((Activity) context).getCurrentFocus();
+		if (view == null)
+			return;
+		manager.hideSoftInputFromWindow(view.getWindowToken(),
+				InputMethodManager.HIDE_NOT_ALWAYS);
+
+	}
+
+	public static void addHighLightLinks(WeiboBean bean) {
+
+		bean
+				.setListViewSpannableString(getJustHighLightLinks(bean
+						.getContent()));
+		if (bean.getTranspond_data() != null) {
+			String name = "";
+			name = bean.getTranspond_data().getUname();
+			SpannableString value;
+
+			if (!TextUtils.isEmpty(name)) {
+				value = getJustHighLightLinks("@" + name);
+			} else {
+				value = getJustHighLightLinks(bean.getTranspond_data()
+						.getContent());
+			}
+
+			bean.getTranspond_data().setListViewSpannableString(value);
+		}
+	}
+
+	public static SpannableString getJustHighLightLinks(String txt) {
+		String hackTxt;
+		if (txt.startsWith("[") && txt.endsWith("]")) {
+			hackTxt = txt + " ";
+		} else {
+			hackTxt = txt;
+		}
+		SpannableString value;
+		MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
+			public final String transformUrl(final Matcher match, String url) {
+				return match.group(1);
+			}
+		};
+		// Match @mentions and capture just the username portion of the text.
+		Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
+		String scheme = "com.thinksns.jkfs://";
+		value = MyLinkify.getJustHighLightLinks(hackTxt, pattern, scheme, null,
+				mentionFilter);
+
+		value = MyLinkify.addJUstHighLightLinks(value, MyLinkify.WEB_URLS);
+
+		Pattern dd = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
+		value = MyLinkify.getJustHighLightLinks(value, dd, scheme, null,
+				mentionFilter);
+
+		addEmotions(value);
+
+		return value;
+	}
+
+	public static void addEmotions(SpannableString value) {
+		Matcher localMatcher = Pattern.compile("\\[(\\S+?)\\]").matcher(value);
+		while (localMatcher.find()) {
+			String str2 = localMatcher.group(0);
+			int end = str2.length();
+			String string = str2.substring(1, end - 2);
+			Log.v("emotion image name", string);
+			int k = localMatcher.start();
+			int m = localMatcher.end();
+			Bitmap bitmap;
+			try {
+				bitmap = BitmapFactory.decodeResource(ThinkSNSApplication
+						.getInstance().getResources(), R.drawable.class
+						.getField(string).getInt(R.drawable.class));
+				if (bitmap != null) {
+					ImageSpan localImageSpan = new ImageSpan(
+							ThinkSNSApplication.getInstance(), bitmap,
+							ImageSpan.ALIGN_BASELINE);
+					value.setSpan(localImageSpan, k, m,
+							Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 }

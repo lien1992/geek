@@ -6,6 +6,7 @@
     android:background="@color/white" >
 
     <LinearLayout
+        android:id="@+id/wb_detail_sub_root"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
@@ -373,7 +374,6 @@
 
             <requestFocus />
         </EditText>
-
     </RelativeLayout>
 
 </RelativeLayout>

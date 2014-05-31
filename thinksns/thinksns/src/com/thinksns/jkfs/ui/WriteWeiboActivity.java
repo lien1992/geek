@@ -8,7 +8,9 @@ import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.constant.HttpConstant;
+import com.thinksns.jkfs.util.FaceDialog;
 import com.thinksns.jkfs.util.Utility;
+import com.thinksns.jkfs.util.FaceDialog.FaceSelect;
 import com.thinksns.jkfs.util.common.ImageUtils;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
@@ -28,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,6 +39,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +49,8 @@ import android.widget.Toast;
  * @author wangjia
  * 
  */
-public class WriteWeiboActivity extends BaseActivity implements OnClickListener {
+public class WriteWeiboActivity extends BaseActivity implements
+		OnClickListener, FaceSelect {
 	private ImageView back;
 	private EditText content;
 	private TextView count;
@@ -55,6 +60,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 	private ImageView topic;
 	private ImageView emotion;
 	private ImageView pic;
+	private RelativeLayout bottom;
 	private AccountBean account;
 	private ThinkSNSApplication application;
 	private boolean hasImage;
@@ -110,6 +116,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 		emotion.setOnClickListener(this);
 		pic = (ImageView) findViewById(R.id.write_weibo_content_pic);
 		pic.setOnClickListener(this);
+		bottom = (RelativeLayout) findViewById(R.id.write_weibo_bottom);
 		content = (EditText) findViewById(R.id.write_weibo_content);
 		content.addTextChangedListener(new TextWatcher() {
 			private CharSequence temp;
@@ -348,12 +355,19 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 			content.setSelection(content.getText().toString().length() - 1);
 			break;
 		case R.id.write_weibo_emotion:
-			// 插入表情
+			Utility.hideSoftInput(this);
+			FaceDialog.showFaceDialog(this, bottom, bottom.getHeight(), this);
 			break;
 		case R.id.write_weibo_content_pic:
 			break;
 
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		FaceDialog.release();
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -415,6 +429,12 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 		if (sendProgress != null && sendProgress.isShowing()) {
 			sendProgress.dismiss();
 		}
+	}
+
+	@Override
+	public void onFaceSelect(SpannableString spannableString) {
+		// TODO Auto-generated method stub
+		content.append(spannableString);
 	}
 
 }

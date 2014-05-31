@@ -18,6 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
+import com.thinksns.jkfs.util.Utility;
 
 /**
  * 微博适配器，适用于需要显示微博列表的所有位置。
@@ -147,7 +148,8 @@ public class WeiboAdapter extends BaseAdapter {
 		ImageLoader.getInstance().displayImage(weibo.getAvatar_small(),
 				holder.avatar, options);
 		holder.userName.setText(weibo.getUname());
-		holder.content.setText(weibo.getContent());
+		Utility.addHighLightLinks(weibo);
+		holder.content.setText(weibo.getListViewSpannableString());
 		holder.time.setText(weibo.getCtime());
 		int where = Integer.parseInt(weibo.getFrom());
 		switch (where) {
@@ -173,7 +175,7 @@ public class WeiboAdapter extends BaseAdapter {
 		if (weibo.getType().equals("repost")) {
 			WeiboBean weibo_repost = weibo.getTranspond_data();
 			holder.repost_userName.setText(weibo_repost.getUname());
-			holder.repost_content.setText(weibo_repost.getContent() + "");
+			holder.repost_content.setText(weibo_repost.getListViewSpannableString());
 			if (weibo_repost.getType().equals("postimage")) {
 				ImageLoader.getInstance().displayImage(
 						weibo_repost.getAttach().get(0).getAttach_middle(),

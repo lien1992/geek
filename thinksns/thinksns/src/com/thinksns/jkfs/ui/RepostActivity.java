@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,17 +29,20 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.HttpConstant;
+import com.thinksns.jkfs.util.FaceDialog;
 import com.thinksns.jkfs.util.Utility;
+import com.thinksns.jkfs.util.FaceDialog.FaceSelect;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 转发微博，尚未完成（at用户、添加表情）
+ * 转发微博，尚未完成（at用户）
  * 
  * @author wangjia
  * 
  */
-public class RepostActivity extends BaseActivity implements OnClickListener {
+public class RepostActivity extends BaseActivity implements OnClickListener,
+		FaceSelect {
 	private ImageView back;
 	private TextView desc;
 	private EditText content;
@@ -48,6 +53,7 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 	private ImageView topic;
 	private ImageView emotion;
 	private CheckBox check;
+	private RelativeLayout bottom;
 	private AccountBean account;
 	private WeiboBean weibo;
 	private ThinkSNSApplication application;
@@ -116,6 +122,7 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 		emotion.setOnClickListener(this);
 		check = (CheckBox) findViewById(R.id.comment_to_origin_check);
 		check.setVisibility(View.VISIBLE);
+		bottom = (RelativeLayout) findViewById(R.id.write_weibo_bottom);
 		content = (EditText) findViewById(R.id.write_weibo_content);
 		content.addTextChangedListener(new TextWatcher() {
 			private CharSequence temp;
@@ -137,7 +144,7 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 				selectionStart = content.getSelectionStart();
 				selectionEnd = count.getSelectionEnd();
 				if (temp.length() > 140) {
-					s.delete(selectionStart - 1, selectionEnd); //字数超过140，跳转到转发出bug
+					s.delete(selectionStart - 1, selectionEnd); // 字数超过140，跳转到转发出bug
 					int tempSelection = selectionEnd;
 					content.setText(s);
 					content.setSelection(tempSelection);
@@ -241,9 +248,16 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 			content.setSelection(1);
 			break;
 		case R.id.write_weibo_emotion:
-			// 插入表情
+			Utility.hideSoftInput(this);
+			FaceDialog.showFaceDialog(this, bottom, bottom.getHeight(), this);
 			break;
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		FaceDialog.release();
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -290,6 +304,12 @@ public class RepostActivity extends BaseActivity implements OnClickListener {
 		if (sendProgress != null && sendProgress.isShowing()) {
 			sendProgress.dismiss();
 		}
+	}
+
+	@Override
+	public void onFaceSelect(SpannableString spannableString) {
+		// TODO Auto-generated method stub
+		content.append(spannableString);
 	}
 
 }

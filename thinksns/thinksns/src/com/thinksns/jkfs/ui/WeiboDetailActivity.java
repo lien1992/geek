@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,18 +39,20 @@ import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.adapter.CommentAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView.RefreshAndLoadMoreListener;
+import com.thinksns.jkfs.util.FaceDialog;
 import com.thinksns.jkfs.util.Utility;
+import com.thinksns.jkfs.util.FaceDialog.FaceSelect;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 微博详细内容及评论、转发、收藏，待完成的部分（添加评论表情、图片微博的显示、评论转发赞数目的更新）
+ * 微博详细内容及评论、转发、收藏，待完成的部分（图片微博的显示、评论转发赞数目的更新）
  * 
  * @author wangjia
  * 
  */
 public class WeiboDetailActivity extends BaseActivity implements
-		OnClickListener {
+		OnClickListener, FaceSelect {
 	private ImageView back;
 	private EditText comment_content;
 	private ImageView repost;
@@ -70,6 +74,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 	private TextView re_user_name;
 	private TextView re_content;
 	private PullToRefreshListView listView;
+	private RelativeLayout bottom;
 	private AccountBean account;
 	private ThinkSNSApplication application;
 	private WeiboBean weibo;
@@ -90,7 +95,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 			switch (msg.what) {
 			case 0:
 				listView.onRefreshComplete();
-				Toast.makeText(WeiboDetailActivity.this, "网络未连接，评论列表加载失败:(",
+				Toast.makeText(WeiboDetailActivity.this, "网络未连接",
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 1:
@@ -263,6 +268,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 		like = (ImageView) findViewById(R.id.wb_detail_like);
 		like.setOnClickListener(this);
 		comment_content = (EditText) findViewById(R.id.wb_detail_edit_comment);
+		bottom = (RelativeLayout) findViewById(R.id.wb_detail_bottom_layout);
 		listView = (PullToRefreshListView) findViewById(R.id.wb_detail_comment_list_view);
 		adapter = new CommentAdapter(this, LayoutInflater.from(this), listView);
 		listView.setAdapter(adapter);
@@ -310,7 +316,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 			re_content.setText(weibo_repost.getContent());
 			if (weibo_repost.getType().equals("postimage")) {
 				ImageLoader.getInstance().displayImage(
-						weibo_repost.getAttach().get(0).getAttach_middle(), //nullpointerexception
+						weibo_repost.getAttach().get(0).getAttach_middle(), // nullpointerexception
 						repost_pic, options);
 			}
 			repost_layout.setVisibility(View.VISIBLE);
@@ -321,7 +327,7 @@ public class WeiboDetailActivity extends BaseActivity implements
 			Log.d("weibo detail attach is null?", (weibo.getAttach() == null)
 					+ "");
 			ImageLoader.getInstance().displayImage(
-					weibo.getAttach().get(0).getAttach_middle(), pic, options);//待修复bug：空指针
+					weibo.getAttach().get(0).getAttach_middle(), pic, options);// 待修复bug：空指针
 			pic.setVisibility(View.VISIBLE);
 		}
 		like_count.setText(weibo.getDigg_count() + "");
@@ -474,6 +480,8 @@ public class WeiboDetailActivity extends BaseActivity implements
 			}
 			break;
 		case R.id.wb_detail_emotions:
+			Utility.hideSoftInput(this);
+			FaceDialog.showFaceDialog(this, bottom, bottom.getHeight(), this);
 
 			break;
 		case R.id.wb_detail_comment_send:
@@ -578,6 +586,12 @@ public class WeiboDetailActivity extends BaseActivity implements
 			break;
 		}
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		FaceDialog.release();
+	}
 
 	private void sendDialogShow() {
 		if (sendProgress == null) {
@@ -592,6 +606,13 @@ public class WeiboDetailActivity extends BaseActivity implements
 		if (sendProgress != null && sendProgress.isShowing()) {
 			sendProgress.dismiss();
 		}
+	}
+
+	@Override
+	public void onFaceSelect(SpannableString spannableString) {
+		// TODO Auto-generated method stub
+		comment_content.append(spannableString);
+
 	}
 
 }

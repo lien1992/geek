@@ -2,8 +2,13 @@ package com.thinksns.jkfs.bean;
 
 import java.util.ArrayList;
 
+import com.thinksns.jkfs.util.Utility;
+
+
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.SpannableString;
+import android.text.TextUtils;
 
 /**
  * 微博
@@ -28,6 +33,8 @@ public class WeiboBean implements Parcelable {
 
 	private ArrayList<WeiboAttachBean> attach;
 	private WeiboBean transpond_data; // 被转发微博
+
+	private transient SpannableString listViewSpannableString;
 
 	public WeiboBean(String feed_id, String type, String content, String ctime,
 			String from, String uid, String uname, String avatar_big,
@@ -181,6 +188,20 @@ public class WeiboBean implements Parcelable {
 
 	public void setRepost_count(int repostCount) {
 		repost_count = repostCount;
+	}
+
+	public SpannableString getListViewSpannableString() {
+		if (!TextUtils.isEmpty(listViewSpannableString)) {
+			return listViewSpannableString;
+		} else {
+			Utility.addHighLightLinks(this);
+			return listViewSpannableString;
+		}
+	}
+
+	public void setListViewSpannableString(
+			SpannableString listViewSpannableString) {
+		this.listViewSpannableString = listViewSpannableString;
 	}
 
 	/*
