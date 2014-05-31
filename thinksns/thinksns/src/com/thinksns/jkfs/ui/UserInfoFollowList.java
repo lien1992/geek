@@ -43,7 +43,10 @@ public class UserInfoFollowList extends BaseActivity implements
 	private ListView listView;
 	private int visibleLastIndex = 0; // 最后的可视项索引
 	private int visibleItemCount; // 当前窗口可见项总数
-	private PeopleListAdapter adapter;
+	// private PeopleListAdapter adapter[];
+
+	private LinkedList<PeopleListAdapter> adapter = new LinkedList<PeopleListAdapter>();
+	private int ac = -1;// 判断当前打开的是那个ADAPTER
 	private View loadMoreView;
 	private Button loadMoreButton;
 	private Handler handler = new Handler();
@@ -57,26 +60,27 @@ public class UserInfoFollowList extends BaseActivity implements
 	private int FLAG = 0;// 判断是打开自己的主页还是别人的主页 0为自己的
 	private int FLAGG = 0;// 判断是打开关注人列表还是粉丝列表 0为关注人的
 	private String uuid;
-	private String USER_FOLLOWING = "user_following";
-	private String USER_FOLLOWERS = "user_followers";
 
 	public UserInfoFollowList() {
 		super();
 	}
-
-	
 
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 1:
+				
+				int ffff = userfollows.size();
 
-				adapter = new PeopleListAdapter(UserInfoFollowList.this,
-						userfollows, account);
+				ffff = ffff +1;
+				
+				
+				adapter.add(new PeopleListAdapter(UserInfoFollowList.this,
+						userfollows, account));
 
 				// 自动为id是list的ListView设置适配器
-				listView.setAdapter(adapter);
+				listView.setAdapter(adapter.get(ac));
 				currentPage = currentPage + 1;
 
 				break;
@@ -85,7 +89,7 @@ public class UserInfoFollowList extends BaseActivity implements
 
 				loadNew();
 				currentPage = currentPage + 1;
-				adapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
+				adapter.get(ac).notifyDataSetChanged(); // 数据集变化后,通知adapter
 
 				break;
 
@@ -99,7 +103,7 @@ public class UserInfoFollowList extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.people_list);
 		currentPage = 1;
-		
+
 		Bundle extras = getIntent().getExtras();
 		String flag = extras.getString("FLAG");
 		String flagg = extras.getString("FLAGG");
@@ -130,8 +134,11 @@ public class UserInfoFollowList extends BaseActivity implements
 					long arg3) {
 				// TODO Auto-generated method stub
 				TextView tx = (TextView) arg1
-						.findViewById(R.id.people_item_weibo);// 传送数据
+						.findViewById(R.id.people_item_weibo);// 传送数据 USER ID
+				TextView ts = (TextView) arg1
+						.findViewById(R.id.people_item_fo);//传送数据 FOLLOWING
 				String uuid = tx.getText().toString();
+				String fo = ts.getText().toString();
 
 				// Bundle bundle = new Bundle();
 				// bundle.putString("uuid", uuid);
@@ -141,6 +148,7 @@ public class UserInfoFollowList extends BaseActivity implements
 				Intent i = new Intent(UserInfoFollowList.this,
 						OtherInfoActivity.class);
 				i.putExtra("uuid", uuid);
+				i.putExtra("following", fo);
 				startActivity(i);
 
 			}
@@ -177,6 +185,7 @@ public class UserInfoFollowList extends BaseActivity implements
 						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
 						}.getType();
 						userfollows = gson.fromJson(json, listType);
+						ac = ac + 1;
 						mHandler.sendEmptyMessage(1);
 
 					}
@@ -202,6 +211,7 @@ public class UserInfoFollowList extends BaseActivity implements
 						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
 						}.getType();
 						userfollows = gson.fromJson(json, listType);
+						ac = ac + 1;
 						mHandler.sendEmptyMessage(1);
 
 					}
@@ -221,8 +231,8 @@ public class UserInfoFollowList extends BaseActivity implements
 						HashMap<String, String> map = new HashMap<String, String>();
 						map.put("app", "api");
 						map.put("mod", "User");
-						map.put("user_id", uuid);
 						map.put("act", "user_following");
+						map.put("user_id", uuid);
 						map.put("oauth_token", account.getOauth_token());
 						map.put("oauth_token_secret",
 								account.getOauth_token_secret());
@@ -232,6 +242,7 @@ public class UserInfoFollowList extends BaseActivity implements
 						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
 						}.getType();
 						userfollows = gson.fromJson(json, listType);
+						ac = ac + 1;
 						mHandler.sendEmptyMessage(1);
 
 					}
@@ -247,8 +258,8 @@ public class UserInfoFollowList extends BaseActivity implements
 						HashMap<String, String> map = new HashMap<String, String>();
 						map.put("app", "api");
 						map.put("mod", "User");
-						map.put("user_id", uuid);
 						map.put("act", "user_followers");
+						map.put("user_id", uuid);
 						map.put("oauth_token", account.getOauth_token());
 						map.put("oauth_token_secret",
 								account.getOauth_token_secret());
@@ -258,6 +269,7 @@ public class UserInfoFollowList extends BaseActivity implements
 						Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
 						}.getType();
 						userfollows = gson.fromJson(json, listType);
+						ac = ac + 1;
 						mHandler.sendEmptyMessage(1);
 
 					}
@@ -276,8 +288,6 @@ public class UserInfoFollowList extends BaseActivity implements
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
-		// this.visibleItemCount = visibleItemCount;
-		// visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
 	}
 
 	/**
@@ -285,13 +295,6 @@ public class UserInfoFollowList extends BaseActivity implements
 	 */
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// int itemsLastIndex = adapter.getCount() - 1; // 数据集最后一项的索引
-		// int lastIndex = itemsLastIndex + 1; // 加上底部的loadMoreView项
-		// if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
-		// && visibleLastIndex == lastIndex) {
-		// // 如果是自动加载,可以在这里放置异步加载数据的代码
-		// Log.i("LOADMORE", "loading...");
-		// }
 	}
 
 	/**
@@ -352,6 +355,7 @@ public class UserInfoFollowList extends BaseActivity implements
 						}.getType();
 
 						userfollows2 = gson.fromJson(json, listType);
+
 						mHandler.sendEmptyMessage(2);
 
 					}
@@ -403,8 +407,8 @@ public class UserInfoFollowList extends BaseActivity implements
 						map.put("app", "api");
 						map.put("mod", "User");
 						map.put("page", currentPage + "");
-						map.put("user_id", uuid);
 						map.put("act", "user_following");
+						map.put("user_id", uuid);
 						map.put("oauth_token", account.getOauth_token());
 						map.put("oauth_token_secret",
 								account.getOauth_token_secret());
@@ -433,8 +437,8 @@ public class UserInfoFollowList extends BaseActivity implements
 						map.put("app", "api");
 						map.put("mod", "User");
 						map.put("page", currentPage + "");
-						map.put("user_id", uuid);
 						map.put("act", "user_followers");
+						map.put("user_id", uuid);
 						map.put("oauth_token", account.getOauth_token());
 						map.put("oauth_token_secret",
 								account.getOauth_token_secret());
@@ -463,7 +467,7 @@ public class UserInfoFollowList extends BaseActivity implements
 		if (nicount == 20) {
 
 			for (int i = 0; i < 20; i++) {
-				adapter.addItem(userfollows2.get(i));
+				adapter.get(ac).addItem(userfollows2.get(i));
 			}
 
 			Toast toast = Toast.makeText(this, "1已加载" + nicount + "个人"
@@ -473,7 +477,7 @@ public class UserInfoFollowList extends BaseActivity implements
 		} else if (nicount < 20 && nicount > 0) {
 
 			for (int i = 0; i < nicount; i++) {
-				adapter.addItem(userfollows2.get(i));
+				adapter.get(ac).addItem(userfollows2.get(i));
 			}
 
 			Toast toast = Toast.makeText(this, "2已加载" + nicount + "个人"

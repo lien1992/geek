@@ -38,9 +38,11 @@ public class PeopleListAdapter extends BaseAdapter {
 	private String FOLLOW_DESTROY = "follow_destroy";
 	private String FOLLOW_CREATE = "follow_create";
 
-	
 	public PeopleListAdapter(Context context, LinkedList<UserFollowBean> ulist,
 			AccountBean account) {
+		if (this.uList != null) {
+			this.uList.clear();
+		}
 		this.uList = ulist;
 		this.account = account;
 		inflater = (LayoutInflater) context
@@ -80,6 +82,8 @@ public class PeopleListAdapter extends BaseAdapter {
 					.findViewById(R.id.people_item_name);
 			holder.userText = (TextView) convertView
 					.findViewById(R.id.people_item_weibo);
+			holder.userFo = (TextView) convertView
+					.findViewById(R.id.people_item_fo);
 			holder.button = (Button) convertView
 					.findViewById(R.id.people_item_button);
 
@@ -92,15 +96,14 @@ public class PeopleListAdapter extends BaseAdapter {
 				holder.avatar);
 
 		holder.userName.setText(userfollow.getUname());
-//		holder.userText.setText("follower = "
-//				+ userfollow.follow_state.getFollower() + " following = "
-//				+ userfollow.follow_state.getFollowing());
-		
-		holder.userText.setText(userfollow.getUid());
 
+		holder.userText.setText(userfollow.getUid());
+		holder.userFo.setText("" + userfollow.follow_state.getFollowing());
+		
+		
 		if (userfollow.follow_state.getFollowing() == 1) {
 			holder.button.setText("取消关注");
-		}else{
+		} else {
 			holder.button.setText("关注");
 		}
 
@@ -112,18 +115,18 @@ public class PeopleListAdapter extends BaseAdapter {
 
 				if (userfollow.follow_state.getFollowing() == 1) {
 
-					followif(userfollow.getUid().toString(),FOLLOW_DESTROY); //点击取消关注
+					followif(userfollow.getUid().toString(), FOLLOW_DESTROY); // 点击取消关注
 
 					userfollow.follow_state.setFollowing(0);
-					
+
 					holder.button.setText("关注");
 
 				} else {
 
-					followif(userfollow.getUid().toString(),FOLLOW_CREATE); //点击再次关注
+					followif(userfollow.getUid().toString(), FOLLOW_CREATE); // 点击再次关注
 
 					userfollow.follow_state.setFollowing(1);
-					
+
 					holder.button.setText("取消关注");
 
 				}
@@ -138,6 +141,7 @@ public class PeopleListAdapter extends BaseAdapter {
 		public ImageView avatar;
 		public TextView userName;
 		public TextView userText;
+		public TextView userFo;
 		public Button button;
 
 	}
@@ -151,7 +155,6 @@ public class PeopleListAdapter extends BaseAdapter {
 		uList.add(item);
 	}
 
-	
 	// 点击按钮 取消关注或再次关注
 	private void followif(final String uid, final String act) {
 
@@ -171,13 +174,9 @@ public class PeopleListAdapter extends BaseAdapter {
 				String json = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
 
-
 			}
 		}.start();
 
 	}
-	
-	
-	
 
 }

@@ -51,20 +51,25 @@ public class AboutMeFragment extends Fragment {
 	private UserInfoBean userinfo;
 	private int FLAG = 0;// 判断是打开的主页还是其他人的页面 其他人页面设为1
 	private String uuid;// 如果FLAG为1 会收到其他人的UID 存入此
+	private int follow;// 如果FLAG为1 会收到其他人的FOLLOWING值存入此
+
+	private String FOLLOW_DESTROY = "follow_destroy";
+	private String FOLLOW_CREATE = "follow_create";
 
 	public AboutMeFragment() {
 		super();
 	}
 
-	public AboutMeFragment(String i, String uid){
+	public AboutMeFragment(String i, String uid, String following) {
 		this.FLAG = Integer.parseInt(i);
-		this.uuid =uid;
+		this.uuid = uid;
+		this.follow = Integer.parseInt(following);
 	}
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case 0:
+			case 1:
 
 				ImageView head = (ImageView) getActivity().findViewById(
 						R.id.m_head);
@@ -106,10 +111,50 @@ public class AboutMeFragment extends Fragment {
 				ImageLoader.getInstance().displayImage(userinfo.getAvatar(),
 						head);
 
+				Button button = (Button) getActivity().findViewById(
+						R.id.changeinfo);
+				if (FLAG == 0) {
+					button.setText("修改头像");
+
+				} else if (FLAG == 1) {
+					switch (follow) {
+					case 0:
+						button.setText("关注");
+
+						break;
+					case 1:
+						button.setText("取消关注");
+
+						break;
+					}
+				}
+
 				if (userinfo.getSex() == "男") {
 					sex.setBackgroundResource(R.drawable.male);
 				} else {
 					sex.setBackgroundResource(R.drawable.female);
+				}
+
+				break;
+
+			case 2:
+				
+				Button button2 = (Button) getActivity().findViewById(
+						R.id.changeinfo);
+				if (FLAG == 0) {
+					button2.setText("修改头像");
+
+				} else if (FLAG == 1) {
+					switch (follow) {
+					case 0:
+						button2.setText("关注");
+
+						break;
+					case 1:
+						button2.setText("取消关注");
+
+						break;
+					}
 				}
 
 				break;
@@ -144,23 +189,34 @@ public class AboutMeFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		
-
-//		String flag = getArguments().getString("FLAG"); 
-//		String uuuid = getArguments().getString("uuid"); 
-//	
-//		FLAG = Integer.parseInt(flag);
-//		uuid = uuuid;
-		
-		
 		// 显示修改信息活动
 		Button button = (Button) getActivity().findViewById(R.id.changeinfo);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// get the change info activity
-				Intent intent = new Intent(getActivity(), ChangeUserInfo.class);
-				startActivity(intent);
+
+				if (FLAG == 0) {
+
+					// fangfa
+				} else if (FLAG == 1) {
+					switch (follow) {
+					case 0:
+
+						followif(uuid, FOLLOW_CREATE); // 点击关注
+						follow = 1;
+						
+						// fangfa
+						break;
+					case 1:
+
+						followif(uuid, FOLLOW_DESTROY); // 点击取消关注
+						follow = 0;
+
+						// fangfa
+						break;
+					}
+				}
 
 			}
 		});
@@ -203,7 +259,7 @@ public class AboutMeFragment extends Fragment {
 							UserInfoFollowList.class);
 					intent2.putExtra("FLAG", "1");
 					intent2.putExtra("FLAGG", "0");
-					intent2.putExtra("uuid", "");
+					intent2.putExtra("uuid", uuid);
 					startActivity(intent2);
 					break;
 				}
@@ -235,7 +291,7 @@ public class AboutMeFragment extends Fragment {
 							UserInfoFollowList.class);
 					intent2.putExtra("FLAG", "1");
 					intent2.putExtra("FLAGG", "1");
-					intent2.putExtra("uuid", "");
+					intent2.putExtra("uuid", uuid);
 					startActivity(intent2);
 					break;
 				}
@@ -266,7 +322,7 @@ public class AboutMeFragment extends Fragment {
 					if (json != null && !"".equals(json)) {
 
 						userinfo = gson.fromJson(json, UserInfoBean.class);
-						mHandler.sendEmptyMessage(0);
+						mHandler.sendEmptyMessage(1);
 					}
 
 				}
@@ -294,7 +350,7 @@ public class AboutMeFragment extends Fragment {
 					if (json != null && !"".equals(json)) {
 
 						userinfo = gson.fromJson(json, UserInfoBean.class);
-						mHandler.sendEmptyMessage(0);
+						mHandler.sendEmptyMessage(1);
 					}
 
 				}
@@ -302,6 +358,32 @@ public class AboutMeFragment extends Fragment {
 
 			break;
 		}
+	}
+
+	// 点击按钮 取消关注或再次关注
+	private void followif(final String uid, final String act) {
+
+		new Thread() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+
+				Gson gson = new Gson();
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("app", "api");
+				map.put("mod", "User");
+				map.put("act", act);
+				map.put("oauth_token", account.getOauth_token());
+				map.put("oauth_token_secret", account.getOauth_token_secret());
+				map.put("user_id", uid);
+				String json = HttpUtility.getInstance().executeNormalTask(
+						HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
+
+				mHandler.sendEmptyMessage(2);
+
+			}
+		}.start();
+
 	}
 
 }

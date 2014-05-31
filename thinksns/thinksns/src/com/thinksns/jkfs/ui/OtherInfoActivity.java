@@ -18,11 +18,12 @@ public class OtherInfoActivity extends FragmentActivity {
 		
 		Bundle extras = getIntent().getExtras();
 		String uuid = extras.getString("uuid");
+		String fo = extras.getString("following");
 		
 		
 		android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 	    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-	    AboutMeFragment fragment = new AboutMeFragment("1",uuid);
+	    AboutMeFragment fragment = new AboutMeFragment("1",uuid,fo);
 	    fragmentTransaction.replace(R.id.other_page_layout, fragment);
 	    fragmentTransaction.commit();
 	    
