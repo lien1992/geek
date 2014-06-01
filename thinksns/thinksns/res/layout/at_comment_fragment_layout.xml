@@ -60,9 +60,9 @@
         </LinearLayout>
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@color/grey" />
+            android:background="@color/green" />
 
         <TextView
             android:id="@+id/wb_at_tab"
@@ -77,8 +77,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:background="@color/grey" />
+        android:layout_height="2dp"
+        android:background="@color/green" />
 
     <FrameLayout
         android:id="@+id/at_comment_frame"
