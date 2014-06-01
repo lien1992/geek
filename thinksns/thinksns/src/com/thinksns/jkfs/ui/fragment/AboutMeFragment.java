@@ -1,25 +1,28 @@
 package com.thinksns.jkfs.ui.fragment;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.File;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +33,6 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.HttpConstant;
-import com.thinksns.jkfs.ui.ChangeUserInfo;
-import com.thinksns.jkfs.ui.UserInfoFanList;
 import com.thinksns.jkfs.ui.UserInfoFollowList;
 import com.thinksns.jkfs.ui.UserInfoWeiboList;
 import com.thinksns.jkfs.util.http.HttpMethod;
@@ -56,6 +57,19 @@ public class AboutMeFragment extends Fragment {
 	private String FOLLOW_DESTROY = "follow_destroy";
 	private String FOLLOW_CREATE = "follow_create";
 
+	
+	private ImageView faceImage;
+
+	private String[] items = new String[] { "选择本地图片", "拍照" };
+	/* 头像名称 */
+	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
+
+	/* 请求码 */
+	private static final int IMAGE_REQUEST_CODE = 0;
+	private static final int CAMERA_REQUEST_CODE = 1;
+	private static final int RESULT_REQUEST_CODE = 2;
+
+	
 	public AboutMeFragment() {
 		super();
 	}
@@ -158,6 +172,8 @@ public class AboutMeFragment extends Fragment {
 				}
 
 				break;
+				
+				
 
 			}
 
@@ -198,23 +214,29 @@ public class AboutMeFragment extends Fragment {
 
 				if (FLAG == 0) {
 
-					// fangfa
+					
+//					Intent intent = new Intent(getActivity(),
+//							ChangeUserInfo.class);
+//					startActivity(intent);
+					
+					showDialog();
+					
+					
+					
 				} else if (FLAG == 1) {
 					switch (follow) {
 					case 0:
 
 						followif(uuid, FOLLOW_CREATE); // 点击关注
-						follow = 1;
-						
-						// fangfa
+						follow = 1;						
 						break;
+						
 					case 1:
 
 						followif(uuid, FOLLOW_DESTROY); // 点击取消关注
 						follow = 0;
-
-						// fangfa
 						break;
+						
 					}
 				}
 
@@ -299,6 +321,8 @@ public class AboutMeFragment extends Fragment {
 		});
 	}
 
+	
+	
 	private void openPage() {
 		switch (FLAG) {
 		case 0:
@@ -360,13 +384,14 @@ public class AboutMeFragment extends Fragment {
 		}
 	}
 
+	
+	
 	// 点击按钮 取消关注或再次关注
 	private void followif(final String uid, final String act) {
 
 		new Thread() {
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 
 				Gson gson = new Gson();
 				HashMap<String, String> map = new HashMap<String, String>();
@@ -385,5 +410,175 @@ public class AboutMeFragment extends Fragment {
 		}.start();
 
 	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 显示选择对话框
+	 */
+	private void showDialog() {
+
+		new AlertDialog.Builder(getActivity())
+				.setTitle("设置头像")
+				.setItems(items, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case 0:
+							Intent intentFromGallery = new Intent();
+							intentFromGallery.setType("image/*"); // 设置文件类型
+							intentFromGallery
+									.setAction(Intent.ACTION_GET_CONTENT);
+							startActivityForResult(intentFromGallery,
+									IMAGE_REQUEST_CODE);
+							break;
+						case 1:
+
+							Intent intentFromCapture = new Intent(
+									MediaStore.ACTION_IMAGE_CAPTURE);
+							// 判断存储卡是否可以用，可用进行存储
+							if (hasSdcard()) {
+
+								intentFromCapture.putExtra(
+										MediaStore.EXTRA_OUTPUT,
+										Uri.fromFile(new File(Environment
+												.getExternalStorageDirectory(),
+												IMAGE_FILE_NAME)));
+							}
+
+							startActivityForResult(intentFromCapture,
+									CAMERA_REQUEST_CODE);
+							break;
+						}
+					}
+				})
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				}).show();
+
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// 结果码不等于取消时候
+		if (resultCode != 0) {
+
+			switch (requestCode) {
+			case IMAGE_REQUEST_CODE:
+				startPhotoZoom(data.getData());
+				break;
+			case CAMERA_REQUEST_CODE:
+				if (hasSdcard()) {
+					File tempFile = new File(
+							Environment.getExternalStorageDirectory()
+									+ IMAGE_FILE_NAME);
+					startPhotoZoom(Uri.fromFile(tempFile));
+				} else {
+					Toast.makeText(getActivity(), "未找到存储卡，无法存储照片！",
+							Toast.LENGTH_LONG).show();
+				}
+
+				break;
+			case RESULT_REQUEST_CODE:
+				if (data != null) {
+					getImageToView(data);
+				}
+				break;
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	/**
+	 * 裁剪图片方法实现
+	 * 
+	 * @param uri
+	 */
+	public void startPhotoZoom(Uri uri) {
+
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		// 设置裁剪
+		intent.putExtra("crop", "true");
+		// aspectX aspectY 是宽高的比例
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		// outputX outputY 是裁剪图片宽高
+		intent.putExtra("outputX", 320);
+		intent.putExtra("outputY", 320);
+		intent.putExtra("return-data", true);
+		startActivityForResult(intent, 2);
+	}
+
+	/**
+	 * 保存裁剪之后的图片数据
+	 * 
+	 * @param picdata
+	 */
+	private void getImageToView(Intent data) {
+		Bundle extras = data.getExtras();
+		if (extras != null) {
+			Bitmap photo = extras.getParcelable("data");
+			Drawable drawable = new BitmapDrawable(photo);
+			
+			
+			faceImage = (ImageView) getActivity().findViewById(R.id.m_head);
+			faceImage.setImageDrawable(drawable);
+		}
+	}
+
+	/**
+	 * 检查是否存在SDCard
+	 * 
+	 * @return
+	 */
+	public boolean hasSdcard() {
+		String state = Environment.getExternalStorageState();
+		if (state.equals(Environment.MEDIA_MOUNTED)) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+	
+	
+	
+	// 上传头像
+		private void changeHead(final File head) {
+
+			new Thread() {
+				@Override
+				public void run() {
+
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "User");
+					map.put("act", "upload_face");
+					map.put("user_id", account.getUid());
+//					map.put("Filedata", head);
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret", account.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
+
+//					mHandler.sendEmptyMessage(2);
+
+				}
+			}.start();
+
+		}
+	
+	
 
 }
