@@ -125,7 +125,8 @@
                             </LinearLayout>
                         </LinearLayout>
 
-                        <ImageView
+                        <com.thinksns.jkfs.ui.view.RoundAngleImageView
+                            xmlns:app="http://schemas.android.com/apk/res/com.thinksns.jkfs"
                             android:id="@+id/wb_detail_user_img"
                             android:layout_width="42dp"
                             android:layout_height="42dp"
@@ -133,7 +134,9 @@
                             android:layout_centerVertical="true"
                             android:layout_margin="8dp"
                             android:layout_marginLeft="14dp"
-                            android:src="@drawable/ic_launcher" />
+                            android:src="@drawable/ic_launcher"
+                            app:roundHeight="5dp"
+                            app:roundWidth="5dp" />
                     </RelativeLayout>
 
                     <View
