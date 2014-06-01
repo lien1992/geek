@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.thinksns.jkfs.util.Utility;
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.SpannableString;
@@ -237,7 +236,8 @@ public class WeiboBean implements Parcelable {
 		dest.writeString(has_attach);
 		dest.writeInt(comment_count);
 		dest.writeInt(repost_count);
-		// dest.writeList(attachList);
+		dest.writeInt(digg_count);
+		dest.writeTypedList(attach);
 		dest.writeParcelable(transpond_data, flags);
 
 	}
@@ -274,10 +274,9 @@ public class WeiboBean implements Parcelable {
 			wb.has_attach = in.readString();
 			wb.comment_count = in.readInt();
 			wb.repost_count = in.readInt();
-			/*
-			 * wb.attachList = in.readParcelable(WeiboAttachBean.class
-			 * .getClassLoader());
-			 */
+			wb.digg_count = in.readInt();
+			wb.attach=new ArrayList<WeiboAttachBean>();
+			in.readTypedList(wb.attach,WeiboAttachBean.CREATOR);
 			wb.transpond_data = in.readParcelable(WeiboBean.class
 					.getClassLoader());
 

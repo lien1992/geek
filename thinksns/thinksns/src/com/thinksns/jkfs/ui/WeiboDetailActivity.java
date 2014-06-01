@@ -1,6 +1,8 @@
 package com.thinksns.jkfs.ui;
 
 import java.util.HashMap;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
@@ -8,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.util.Log;
@@ -26,9 +27,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.WeiboAttachBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.fragment.CommentListFragment;
+import com.thinksns.jkfs.ui.view.RoundAngleImageView;
 import com.thinksns.jkfs.util.FaceDialog;
 import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.FaceDialog.FaceSelect;
@@ -36,7 +39,7 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 微博详细内容及评论、转发、收藏，待完成的部分（图片微博的显示、评论转发赞数目的更新）
+ * 微博详细内容及评论、转发、收藏，待完成的部分（评论转发赞数目的更新）
  * 
  * @author wangjia
  * 
@@ -56,7 +59,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 	private TextView comment_count;
 	private TextView repost_count;
 	private TextView user_name;
-	private ImageView avatar;
+	private RoundAngleImageView avatar;
 	private TextView from;
 	private TextView time;
 	private TextView content;
@@ -66,6 +69,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 	private TextView re_user_name;
 	private TextView re_content;
 	private RelativeLayout bottom;
+	private List<WeiboAttachBean> attaches;
 	private AccountBean account;
 	private ThinkSNSApplication application;
 	private WeiboBean weibo;
@@ -156,7 +160,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		repost.setOnClickListener(this);
 		favorite = (ImageView) findViewById(R.id.wb_detail_favorite);
 		favorite.setOnClickListener(this);
-		avatar = (ImageView) findViewById(R.id.wb_detail_user_img);
+		avatar = (RoundAngleImageView) findViewById(R.id.wb_detail_user_img);
 		user_name = (TextView) findViewById(R.id.wb_detail_u_name);
 		from = (TextView) findViewById(R.id.wb_detail_from);
 		time = (TextView) findViewById(R.id.wb_detail_time);
@@ -208,13 +212,14 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		}
 		time.setText(weibo.getCtime());
 		content.setText(weibo.getListViewSpannableString());
+		attaches = weibo.getAttach();
 		if (weibo.getType().equals("repost")) {
 			WeiboBean weibo_repost = weibo.getTranspond_data();
 			re_user_name.setText(weibo_repost.getUname());
 			re_content.setText(weibo_repost.getListViewSpannableString());
 			if (weibo_repost.getType().equals("postimage")) {
 				ImageLoader.getInstance().displayImage(
-						weibo_repost.getAttach().get(0).getAttach_middle(), // nullpointerexception
+						weibo_repost.getAttach().get(0).getAttach_middle(),
 						repost_pic, options);
 			}
 			repost_layout.setVisibility(View.VISIBLE);
@@ -224,8 +229,9 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		if (weibo.getType().equals("postimage")) {
 			Log.d("weibo detail attach is null?", (weibo.getAttach() == null)
 					+ "");
+			Log.d("weibo attaches size", attaches.size() + "");
 			ImageLoader.getInstance().displayImage(
-					weibo.getAttach().get(0).getAttach_middle(), pic, options);// 待修复bug：空指针
+					weibo.getAttach().get(0).getAttach_middle(), pic, options);
 			pic.setVisibility(View.VISIBLE);
 		}
 		like_count.setText(weibo.getDigg_count() + "");
