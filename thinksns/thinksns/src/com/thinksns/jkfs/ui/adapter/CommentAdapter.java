@@ -111,7 +111,7 @@ public class CommentAdapter extends BaseAdapter {
 		ImageLoader.getInstance().displayImage(comment.getUser().getAvatar_small(),
 				holder.avatar, options);
 		holder.userName.setText(comment.getUser().getUname());
-		holder.content.setText(comment.getContent());
+		holder.content.setText(comment.getListViewSpannableString());
 		holder.time.setText(comment.getTime());
 
 		return convertView;

@@ -34,7 +34,7 @@ public class WeiboBean implements Parcelable {
 	private ArrayList<WeiboAttachBean> attach;
 	private WeiboBean transpond_data; // 被转发微博
 
-	private transient SpannableString listViewSpannableString;
+	private SpannableString listViewSpannableString;
 
 	public WeiboBean(String feed_id, String type, String content, String ctime,
 			String from, String uid, String uname, String avatar_big,

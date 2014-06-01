@@ -34,7 +34,7 @@ import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 
 /**
- * 表情选择,bug待修复：在评论中添加完表情后转发无法添加表情
+ * 表情选择
  */
 
 public class FaceDialog {
