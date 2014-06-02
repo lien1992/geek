@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseFragment;
@@ -148,16 +149,6 @@ public class ChannelFragment extends Fragment {
 
 		final View view = inflater.inflate(R.layout.channel_fragment,
 				container, false);
-		// 测试搜索
-		view.findViewById(R.id.btn).setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(mContext, WeiboSearchActivity.class);
-				startActivity(intent);
-			}
-		});
 
 		dropImage = (ImageView) view
 				.findViewById(R.id.channel_fragment_title_drop_img);
@@ -168,6 +159,18 @@ public class ChannelFragment extends Fragment {
 		mListView = (PullToRefreshListView) view
 				.findViewById(R.id.channel_listview);
 		mInflater = LayoutInflater.from(view.getContext());
+
+		// 测试搜索++++++++++++++++++++++++++
+		titleName.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(mContext, WeiboSearchActivity.class);
+				startActivity(intent);
+			}
+		});
+		// 测试搜索++++++++++++++++++++++++++
 
 		handler = new Handler() {
 			@Override
@@ -216,25 +219,34 @@ public class ChannelFragment extends Fragment {
 				case GETTED_DIF_channel_WEIBO_LIST:
 					Log.i(TAG, "GETTED_DIF_channel_WEIBO_LIST");
 					weiboList = (ArrayList<WeiboBean>) msg.obj;
-					listViewAdapter.update(weiboList);
-					Log.i(TAG, weiboList.get(0).getUname());
-					mListView.setSelection(0);
-					// 保存标题，id
-					saveTitle();
-					// 标题
-					Log.i(TAG, "即将更改的标题ahi" + channelTitle);
-					titleName.setText(channelTitle);
+					// 防止gson出问题，出问题时size=0
+					if (weiboList.size() != 0) {
+						listViewAdapter.update(weiboList);
+						Log.i(TAG, weiboList.get(0).getUname());
+						mListView.setSelection(0);
+						// 保存标题，id
+						saveTitle();
+						// 标题
+						Log.i(TAG, "即将更改的标题ahi" + channelTitle);
+						titleName.setText(channelTitle);
+					}
 					break;
 				case GETTED_REFRESH_channel_WEIBO_LIST:
-					weiboList = (ArrayList<WeiboBean>) msg.obj;
-					listViewAdapter.insertToHead(weiboList);
-					mListView.setSelection(0);
-					mListView.onRefreshComplete();
+					// 防止gson出问题，出问题时size=0
+					if (weiboList.size() != 0) {
+						weiboList = (ArrayList<WeiboBean>) msg.obj;
+						listViewAdapter.insertToHead(weiboList);
+						mListView.setSelection(0);
+						mListView.onRefreshComplete();
+					}
 					break;
 				case GETTED_ON_LOAD_MORE_channel_WEIBO_LIST:
 					weiboList = (ArrayList<WeiboBean>) msg.obj;
-					listViewAdapter.append(weiboList);
-					mListView.onLoadMoreComplete();
+					// 防止gson出问题，出问题时size=0
+					if (weiboList.size() != 0) {
+						listViewAdapter.append(weiboList);
+						mListView.onLoadMoreComplete();
+					}
 					break;
 				}
 			}
@@ -659,16 +671,20 @@ public class ChannelFragment extends Fragment {
 	private ArrayList<WeiboBean> JSONToWeibos(String jsonData) {
 
 		ArrayList<WeiboBean> list = new ArrayList<WeiboBean>();
+		try {
+			Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+			}.getType();
+			list = new Gson().fromJson(jsonData, listType);
 
-		Type listType = new TypeToken<ArrayList<WeiboBean>>() {
-		}.getType();
-		list = new Gson().fromJson(jsonData, listType);
-
-		Log.i(TAG, "微博个数" + list.size());
-		if (list.size() != 0) {
-			Log.i(TAG, list.get(0).getUname());
-			weibo_max_id = list.get(list.size() - 1).getId();
-			weibo_since_id = list.get(0).getId();
+			Log.i(TAG, "微博个数" + list.size());
+			if (list.size() != 0) {
+				Log.i(TAG, list.get(0).getUname());
+				weibo_max_id = list.get(list.size() - 1).getId();
+				weibo_since_id = list.get(0).getId();
+			}
+		} catch (JsonSyntaxException e) {
+			Log.i(TAG, "json微博出问题");
+			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
 		}
 		return list;
 	}

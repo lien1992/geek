@@ -32,8 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.WeiboSearchActivity" >
-        </activity>
         <activity
             android:name="com.thinksns.jkfs.ui.MainFragmentActivity"
             android:label="@string/title_activity_main"
@@ -84,6 +82,8 @@
             android:theme="@style/Theme.Sherlock.Light"
             android:uiOptions="splitActionBarWhenNarrow" />
         <activity android:name=".ui.ChatActivity" />
+        <activity android:name=".ui.WeiboSearchActivity" >
+        </activity>
     </application>
 
 </manifest>
