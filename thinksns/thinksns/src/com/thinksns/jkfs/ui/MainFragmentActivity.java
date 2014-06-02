@@ -3,31 +3,35 @@ package com.thinksns.jkfs.ui;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.bean.NotificationBean;
+import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.ui.fragment.MenuFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboMainFragment;
+import com.thinksns.jkfs.util.GetMsgService;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
-/**
- * MainFragmentActivity,待完善..
- * 
- * 调试时，只把MainFragmentActivity和MenuFragment里面
- * 自己的Fragment部分的注释取消，把其他人的Fragments都注释掉。
- * 
- * @author wangjia
- * 
- */
 public class MainFragmentActivity extends SlidingFragmentActivity {
 
 	private SlidingMenu sm;
-    private String TAG="MainFragmentActivity";
+	private AlarmManager alarm;
+	private NewMsgReceiver receiver;
+	private MenuFragment menu;
+	private String TAG = "MainFragmentActivity";
 
-    private Fragment  mContent;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,42 +55,59 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		}
 
 		if (savedInstanceState == null) {
+			Fragment weiboMain = new WeiboMainFragment();
+			FragmentTransaction transaction = getSupportFragmentManager()
+					.beginTransaction();
+			transaction.replace(R.id.content_frame, weiboMain,
+					WeiboMainFragment.class.getName());
+			transaction.commit();
 
+			menu = new MenuFragment();
+			FragmentTransaction menuTransation = getSupportFragmentManager()
+					.beginTransaction();
+			menuTransation.replace(R.id.menu_frame, menu, MenuFragment.class
+					.getName());
+			sm.showContent();
+			menuTransation.commit();
 
-            Fragment weiboMain = getWeiboMainFragment();
-            FragmentTransaction transaction = getSupportFragmentManager()
-                    .beginTransaction();
-            if (!weiboMain.isAdded()) {
-                transaction.add(R.id.content_frame, weiboMain,
-                        WeiboMainFragment.class.getName());
-            }
-
-            transaction.commit();
-            FragmentTransaction menuTransation = getSupportFragmentManager()
-                    .beginTransaction();
-            menuTransation.replace(R.id.menu_frame, new MenuFragment(),
-                    MenuFragment.class.getName());
-            sm.showContent();
-            menuTransation.commit();
-
-            // customize the SlidingMenu
-            sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-            sm.setShadowWidthRes(R.dimen.shadow_width);
-            sm.setShadowDrawable(R.drawable.slidingmenu_shadow);
-            sm.setBehindScrollScale(0.25f);
-            sm.setFadeDegree(0.25f);
-        }
+			// customize the SlidingMenu
+			sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+			sm.setShadowWidthRes(R.dimen.shadow_width);
+			sm.setShadowDrawable(R.drawable.slidingmenu_shadow);
+			sm.setBehindScrollScale(0.25f);
+			sm.setFadeDegree(0.25f);
+		}
 
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		receiver = new NewMsgReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(BaseConstant.UNREAD_MSG_BROADCAST);
+		registerReceiver(receiver, filter);
+
+		alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(this, GetMsgService.class);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		long triggerAtTime = SystemClock.elapsedRealtime();
+		// 每30s请求一次服务器获取未读消息数目
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, triggerAtTime,
+				30 * 1000, pendingIntent);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		unregisterReceiver(receiver);
+
+		alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(this, GetMsgService.class);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		alarm.cancel(pendingIntent);
 	}
 
 	@Override
@@ -98,29 +119,32 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		}
 	}
 
-	/* 获得侧滑菜单中的各个Fragment */
-
-	public WeiboMainFragment getWeiboMainFragment() {
-		WeiboMainFragment fragment = ((WeiboMainFragment) getSupportFragmentManager()
-				.findFragmentByTag(WeiboMainFragment.class.getName()));
-		if (fragment == null) {
-			fragment = new WeiboMainFragment();
-		}
-		return fragment;
-	}
-
 	public void switchContent(Fragment fragment) {
 		FragmentManager f = getSupportFragmentManager();
 		FragmentTransaction ft = f.beginTransaction();
-        mContent = fragment;
-        ft.replace(R.id.content_frame, fragment)
-                .commit();
-        Handler h = new Handler();
-        h.postDelayed(new Runnable() {
-            public void run() {
-                getSlidingMenu().showContent();
-            }
-        }, 50);
+		ft.replace(R.id.content_frame, fragment).commit();
+		Handler h = new Handler();
+		h.postDelayed(new Runnable() {
+			public void run() {
+				getSlidingMenu().showContent();
+			}
+		}, 50);
+	}
+
+	private class NewMsgReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			NotificationBean comment_unread = intent
+					.getParcelableExtra("comment");
+			NotificationBean at_unread = intent.getParcelableExtra("atme");
+			Log.d("NotificationBean", "comment count:"
+					+ comment_unread.getCount());
+			Log.d("NotificationBean", "at count" + comment_unread.getCount());
+			menu.setUnread(comment_unread, at_unread);
+		}
+
 	}
 
 }

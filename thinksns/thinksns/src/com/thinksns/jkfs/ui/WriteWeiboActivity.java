@@ -8,7 +8,9 @@ import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.constant.HttpConstant;
+import com.thinksns.jkfs.util.FaceDialog;
 import com.thinksns.jkfs.util.Utility;
+import com.thinksns.jkfs.util.FaceDialog.FaceSelect;
 import com.thinksns.jkfs.util.common.ImageUtils;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
@@ -28,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,6 +39,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +49,8 @@ import android.widget.Toast;
  * @author wangjia
  * 
  */
-public class WriteWeiboActivity extends BaseActivity implements OnClickListener {
+public class WriteWeiboActivity extends BaseActivity implements
+		OnClickListener, FaceSelect {
 	private ImageView back;
 	private EditText content;
 	private TextView count;
@@ -55,6 +60,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 	private ImageView topic;
 	private ImageView emotion;
 	private ImageView pic;
+	private RelativeLayout bottom;
 	private AccountBean account;
 	private ThinkSNSApplication application;
 	private boolean hasImage;
@@ -110,6 +116,7 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 		emotion.setOnClickListener(this);
 		pic = (ImageView) findViewById(R.id.write_weibo_content_pic);
 		pic.setOnClickListener(this);
+		bottom = (RelativeLayout) findViewById(R.id.write_weibo_bottom);
 		content = (EditText) findViewById(R.id.write_weibo_content);
 		content.addTextChangedListener(new TextWatcher() {
 			private CharSequence temp;
@@ -233,16 +240,12 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 								map.put("app", "api");
 								map.put("mod", "WeiboStatuses");
 								map.put("act", "update");
-								map
-										.put("content", content.getText()
-												.toString());
+								map.put("content", content.getText().toString());
 								map.put("from", "3");
 
-								map
-										.put("oauth_token", account
-												.getOauth_token());
-								map.put("oauth_token_secret", account
-										.getOauth_token_secret());
+								map.put("oauth_token", account.getOauth_token());
+								map.put("oauth_token_secret",
+										account.getOauth_token_secret());
 								String result = HttpUtility.getInstance()
 										.executeNormalTask(HttpMethod.Get,
 												HttpConstant.THINKSNS_URL, map);
@@ -267,16 +270,11 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 								map.put("app", "api");
 								map.put("mod", "WeiboStatuses");
 								map.put("act", "upload");
-								map
-										.put("content", content.getText()
-												.toString());
+								map.put("content", content.getText().toString());
 								map.put("from", "3");
-
-								map
-										.put("oauth_token", account
-												.getOauth_token());
-								map.put("oauth_token_secret", account
-										.getOauth_token_secret());
+								map.put("oauth_token", account.getOauth_token());
+								map.put("oauth_token_secret",
+										account.getOauth_token_secret());
 								boolean result = HttpUtils.doUploadFile(
 										HttpConstant.THINKSNS_URL, map,
 										uploadPicPath);
@@ -297,45 +295,46 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 			}
 			break;
 		case R.id.write_weibo_add_pic:
-			new AlertDialog.Builder(this).setTitle("选择").setItems(
-					new String[] { "拍照", "本地图片" },
-					new DialogInterface.OnClickListener() {
+			new AlertDialog.Builder(this)
+					.setTitle("选择")
+					.setItems(new String[] { "拍照", "本地图片" },
+							new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							switch (which) {
-							case 0:
-								imageFileUri = getContentResolver()
-										.insert(
-												MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-												new ContentValues());
-								if (imageFileUri != null) {
-									Intent i = new Intent(
-											android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-									i
-											.putExtra(
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+									switch (which) {
+									case 0:
+										imageFileUri = getContentResolver()
+												.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+														new ContentValues());
+										if (imageFileUri != null) {
+											Intent i = new Intent(
+													android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+											i.putExtra(
 													android.provider.MediaStore.EXTRA_OUTPUT,
 													imageFileUri);
-									startActivityForResult(i, 1001);
-								} else {
-									Toast.makeText(WriteWeiboActivity.this,
-											"出现了点小意外", Toast.LENGTH_SHORT)
-											.show();
+											startActivityForResult(i, 1001);
+										} else {
+											Toast.makeText(
+													WriteWeiboActivity.this,
+													"出现了点小意外",
+													Toast.LENGTH_SHORT).show();
+										}
+										break;
+									case 1:
+										Intent choosePictureIntent = new Intent(
+												Intent.ACTION_PICK,
+												android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+										startActivityForResult(
+												choosePictureIntent, 1002);
+										break;
+									}
+
 								}
-								break;
-							case 1:
-								Intent choosePictureIntent = new Intent(
-										Intent.ACTION_PICK,
-										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-								startActivityForResult(choosePictureIntent,
-										1002);
-								break;
-							}
 
-						}
-
-					}).setNegativeButton("确定", null).show();
+							}).setNegativeButton("确定", null).show();
 			break;
 		case R.id.write_weibo_at:
 			// startActivityForResult(new Intent(WriteWeiboActivity.this,
@@ -348,12 +347,19 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 			content.setSelection(content.getText().toString().length() - 1);
 			break;
 		case R.id.write_weibo_emotion:
-			// 插入表情
+			Utility.hideSoftInput(this);
+			FaceDialog.showFaceDialog(this, bottom, bottom.getHeight(), this);
 			break;
 		case R.id.write_weibo_content_pic:
 			break;
 
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		FaceDialog.release();
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -415,6 +421,12 @@ public class WriteWeiboActivity extends BaseActivity implements OnClickListener 
 		if (sendProgress != null && sendProgress.isShowing()) {
 			sendProgress.dismiss();
 		}
+	}
+
+	@Override
+	public void onFaceSelect(SpannableString spannableString) {
+		// TODO Auto-generated method stub
+		content.append(spannableString);
 	}
 
 }

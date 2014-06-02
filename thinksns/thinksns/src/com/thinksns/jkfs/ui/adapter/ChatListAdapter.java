@@ -41,10 +41,10 @@ public class ChatListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    @Override
-    public void  notifyDataSetChanged(){
-
+    public void clearList(){
+        mList.clear();
     }
+
     @Override
     public int getCount() {
         return mList.size();

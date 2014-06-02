@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thinksns.jkfs.bean.WeiboBean;
-import com.thinksns.jkfs.bean.WeiboListBean;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -47,24 +46,24 @@ public class WeiboOperator {
 	 * 
 	 * @param weiboList
 	 */
-	public static void addWeiboList(WeiboListBean weiboList) {
+/*	public static void addWeiboList(WeiboListBean weiboList) {
 		if (weiboList == null || weiboList.getSize() == 0)
 			return;
 		List<WeiboBean> weibos = weiboList.getWeibos();
 		for (int i = weibos.size(); i >= 0; --i) {
 			ContentValues cv = new ContentValues();
-/*			cv.put(ID, weibos.get(i).getId());
+			cv.put(ID, weibos.get(i).getId());
 			cv.put(CONTENT, weibos.get(i).getContent());
 			cv.put(TIME, weibos.get(i).getTime());
 			cv.put(FROM, weibos.get(i).getFrom());
 			cv.put(UID, weibos.get(i).getUid());
 			cv.put(UNAME, weibos.get(i).getUname());
 			cv.put(COMMENT_COUNT, weibos.get(i).getComment_count());
-			cv.put(REPOST_COUNT, weibos.get(i).getRepost_count());*/
+			cv.put(REPOST_COUNT, weibos.get(i).getRepost_count());
 			getWdb().insert(TABLE_NAME, CONTENT, cv);
 		}
 
-	}
+	}*/
 
 	/**
 	 * 获取缓存的微博列表
@@ -73,7 +72,7 @@ public class WeiboOperator {
 	 *            显示的微博数目上限
 	 * @return
 	 */
-	public static WeiboListBean getWeiboList(int limitCount) {
+/*	public static WeiboListBean getWeiboList(int limitCount) {
 		WeiboListBean wlb = new WeiboListBean();
 		List<WeiboBean> weibos = new ArrayList<WeiboBean>();
 		String sql = "select * from " + TABLE_NAME + " order by " + ID
@@ -82,19 +81,19 @@ public class WeiboOperator {
 		Cursor c = getWdb().rawQuery(sql, null);
 		while (c.moveToNext()) {
 			WeiboBean weibo = new WeiboBean();
-/*			weibo.setId(c.getString(c.getColumnIndex(ID)));
+			weibo.setId(c.getString(c.getColumnIndex(ID)));
 			weibo.setContent(c.getString(c.getColumnIndex(CONTENT)));
 			weibo.setTime(c.getString(c.getColumnIndex(TIME)));
 			weibo.setFrom(c.getString(c.getColumnIndex(FROM)));
 			weibo.setUid(c.getString(c.getColumnIndex(UID)));
 			weibo.setUname(c.getString(c.getColumnIndex(UNAME)));
 			weibo.setComment_count(c.getInt(c.getColumnIndex(COMMENT_COUNT)));
-			weibo.setRepost_count(c.getInt(c.getColumnIndex(REPOST_COUNT)));*/
+			weibo.setRepost_count(c.getInt(c.getColumnIndex(REPOST_COUNT)));
 			weibos.add(weibo);
 		}
 		wlb.setWeibos(weibos);
 		return wlb;
-	}
+	}*/
 
 	/**
 	 * 删除所有缓存微博

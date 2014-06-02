@@ -6,7 +6,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="10"
+        android:minSdkVersion="9"
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -68,13 +68,17 @@
                 <data android:scheme="tencent101073421" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.DetailInfoActivity" >
-        </activity>
-        <activity android:name=".ui.FanListActivity" >
+        <activity android:name=".ui.OtherInfoActivity" >
         </activity>
         <activity android:name=".ui.UserInfoActivity" >
         </activity>
         <activity android:name=".ui.ChangeUserInfo" >
+        </activity>
+        <activity android:name=".ui.UserInfoWeiboList" >
+        </activity>
+        <activity android:name=".ui.UserInfoFanList" >
+        </activity>
+           <activity android:name=".ui.UserInfoFollowList" >
         </activity>
         <activity
             android:name=".test.TestActivity"

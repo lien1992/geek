@@ -2,8 +2,12 @@ package com.thinksns.jkfs.bean;
 
 import java.util.ArrayList;
 
+import com.thinksns.jkfs.util.Utility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.SpannableString;
+import android.text.TextUtils;
 
 /**
  * 微博
@@ -28,6 +32,8 @@ public class WeiboBean implements Parcelable {
 
 	private ArrayList<WeiboAttachBean> attach;
 	private WeiboBean transpond_data; // 被转发微博
+
+	private SpannableString listViewSpannableString;
 
 	public WeiboBean(String feed_id, String type, String content, String ctime,
 			String from, String uid, String uname, String avatar_big,
@@ -183,6 +189,20 @@ public class WeiboBean implements Parcelable {
 		repost_count = repostCount;
 	}
 
+	public SpannableString getListViewSpannableString() {
+		if (!TextUtils.isEmpty(listViewSpannableString)) {
+			return listViewSpannableString;
+		} else {
+			Utility.addHighLightLinks(this);
+			return listViewSpannableString;
+		}
+	}
+
+	public void setListViewSpannableString(
+			SpannableString listViewSpannableString) {
+		this.listViewSpannableString = listViewSpannableString;
+	}
+
 	/*
 	 * public ArrayList<WeiboAttachBean> getAttachList() { return attachList; }
 	 * 
@@ -216,7 +236,8 @@ public class WeiboBean implements Parcelable {
 		dest.writeString(has_attach);
 		dest.writeInt(comment_count);
 		dest.writeInt(repost_count);
-		// dest.writeList(attachList);
+		dest.writeInt(digg_count);
+		dest.writeTypedList(attach);
 		dest.writeParcelable(transpond_data, flags);
 
 	}
@@ -253,10 +274,9 @@ public class WeiboBean implements Parcelable {
 			wb.has_attach = in.readString();
 			wb.comment_count = in.readInt();
 			wb.repost_count = in.readInt();
-			/*
-			 * wb.attachList = in.readParcelable(WeiboAttachBean.class
-			 * .getClassLoader());
-			 */
+			wb.digg_count = in.readInt();
+			wb.attach=new ArrayList<WeiboAttachBean>();
+			in.readTypedList(wb.attach,WeiboAttachBean.CREATOR);
 			wb.transpond_data = in.readParcelable(WeiboBean.class
 					.getClassLoader());
 

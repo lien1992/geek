@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -34,7 +35,9 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 微博列表，后期改为用户关注的微博，目前暂显示公共微博 待完成的部分（新微博提醒、微博图片及url的显示、微博分组显示）
+ * 微博列表，后期改为用户关注的微博，目前暂显示公共微博 待完成的部分（新微博提醒、url等的显示、微博分组显示）
+ * 
+ * bug：图片加载混乱，完善中..
  * 
  * @author wangjia
  * 
@@ -46,8 +49,9 @@ public class WeiboListFragment extends BaseListFragment {
 	private LinkedList<WeiboBean> weibo_all = new LinkedList<WeiboBean>();
 	private WeiboAdapter adapter;
 	private AccountBean account;
+	private ProgressBar progressBar;
 	private int currentPage;
-	private int totalCount = 0;
+	private int totalCount;
 	private String since_id = "";
 	private boolean firstLoad = true;
 
@@ -69,9 +73,12 @@ public class WeiboListFragment extends BaseListFragment {
 			case 1:
 				listView.onRefreshComplete();
 				if (firstLoad) {
-					if (weibos == null || weibos.size() == 0)
+					progressBar.setVisibility(View.INVISIBLE);
+					if (weibos == null || weibos.size() == 0) {
 						Toast.makeText(getActivity(), "出现意外，微博加载失败:(",
 								Toast.LENGTH_SHORT).show();
+						break;
+					}
 				}
 				if (weibos == null || weibos.size() == 0) {
 					Toast.makeText(getActivity(), "暂时没有新微博:)",
@@ -90,6 +97,9 @@ public class WeiboListFragment extends BaseListFragment {
 				currentPage = totalCount / 20 + 1;
 				break;
 			case 2:
+				if (firstLoad) {
+					progressBar.setVisibility(View.INVISIBLE);
+				}
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
 						.show();
@@ -107,6 +117,8 @@ public class WeiboListFragment extends BaseListFragment {
 		View view = mInflater.inflate(R.layout.main_weibo_list_fragment, null);
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.main_weibo_list_view);
+		progressBar = (ProgressBar) view
+				.findViewById(R.id.main_weibo_progressbar);
 
 		return view;
 	}
@@ -194,8 +206,8 @@ public class WeiboListFragment extends BaseListFragment {
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		getWeibos();
 		firstLoad = false;
+		getWeibos();
 
 	}
 
@@ -221,7 +233,7 @@ public class WeiboListFragment extends BaseListFragment {
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 					}.getType();
-					weibos = gson.fromJson(json, listType);
+					weibos = gson.fromJson(json, listType); // bug待修复，可能返回string非array
 					if (weibos != null && weibos.size() > 0) {
 						since_id = weibos.get(0).getFeed_id();
 						Log.d("WEIBO SINCE ID", since_id);

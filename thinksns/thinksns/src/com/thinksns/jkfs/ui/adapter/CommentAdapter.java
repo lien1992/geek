@@ -3,20 +3,19 @@ package com.thinksns.jkfs.ui.adapter;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.CommentBean;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
-import com.thinksns.jkfs.util.common.ImageUtils;
-import com.thinksns.jkfs.util.common.ImageUtils.ImageCallback;
+import com.thinksns.jkfs.ui.view.RoundAngleImageView;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -31,6 +30,8 @@ public class CommentAdapter extends BaseAdapter {
 	Activity ctx;
 	PullToRefreshListView lv;
 	LayoutInflater in;
+	
+	private DisplayImageOptions options;
 
 	public void append(List<CommentBean> lists) {
 		if (lists == null) {
@@ -50,25 +51,19 @@ public class CommentAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
-	// 图片加载回调
-	ImageCallback callback = new ImageCallback() {
-		@Override
-		public void loadImage(Bitmap bitmap, String imagePath) {
-			// TODO Auto-generated method stub
-			try {
-				ImageView img = (ImageView) lv.findViewWithTag(imagePath);
-				img.setImageBitmap(bitmap);
-			} catch (NullPointerException ex) {
-				Log.e("error", "ImageView = null");
-			}
-		}
-	};
+	public void clear() {
+		cList.clear();
+		notifyDataSetChanged();
+	}
 
 	public CommentAdapter(Activity context, LayoutInflater inflater,
 			PullToRefreshListView listView) {
 		ctx = context;
 		in = inflater;
 		lv = listView;
+		
+		options = new DisplayImageOptions.Builder().showStubImage(
+				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
 	}
 
 	@Override
@@ -100,7 +95,7 @@ public class CommentAdapter extends BaseAdapter {
 			convertView = in.inflate(R.layout.main_weibo_comment_listview_item,
 					null);
 			Log.d("in is null ?", (in == null) + "");
-			holder.avatar = (ImageView) convertView
+			holder.avatar = (RoundAngleImageView) convertView
 					.findViewById(R.id.wb_cmt_user_img);
 			holder.userName = (TextView) convertView
 					.findViewById(R.id.wb_cmt_u_name);
@@ -114,17 +109,17 @@ public class CommentAdapter extends BaseAdapter {
 		Log.d("comment.getUser().getAvatar_small()", comment.getUser()
 				.getAvatar_small());
 
-		ImageUtils.setThumbnailView(comment.getUser().getAvatar_small(),
-				holder.avatar, ctx, callback);
+		ImageLoader.getInstance().displayImage(comment.getUser().getAvatar_small(),
+				holder.avatar, options);
 		holder.userName.setText(comment.getUser().getUname());
-		holder.content.setText(comment.getContent());
+		holder.content.setText(comment.getListViewSpannableString());
 		holder.time.setText(comment.getTime());
 
 		return convertView;
 	}
 
-	class ViewHolder {
-		public ImageView avatar;
+	static class ViewHolder {
+		public RoundAngleImageView avatar;
 		public TextView userName;
 		public TextView content;
 		public TextView time;

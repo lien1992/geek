@@ -4,10 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/listAllPeople"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-    </ListView>
+   <ListView
+    android:id="@+id/userinfo_list"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:cacheColorHint="#0000"
+    android:divider="@drawable/lv_divider"/>
+
 
 </LinearLayout>

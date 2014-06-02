@@ -7,6 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/green_1"
         android:baselineAligned="false"
         android:orientation="vertical"
         android:paddingBottom="8dp"
@@ -16,21 +17,23 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="155dp"
+            android:layout_height="145dp"
             android:layout_marginBottom="13dp"
             android:layout_marginLeft="13dp"
             android:layout_marginRight="13dp"
             android:layout_marginTop="0dp"
             android:orientation="vertical" >
 
-            <ImageView
+            <com.thinksns.jkfs.ui.view.RoundAngleImageView
+                xmlns:app="http://schemas.android.com/apk/res/com.thinksns.jkfs"
                 android:id="@+id/sm_behind_avatar"
-                android:layout_width="110dp"
-                android:layout_height="110dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:padding="6dp"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/ic_launcher"
+                app:roundHeight="10dp"
+                app:roundWidth="10dp" />
 
             <TextView
                 android:id="@+id/sm_behind_nick"
@@ -40,9 +43,8 @@
                 android:layout_marginTop="8dp"
                 android:singleLine="true"
                 android:text="微博用户名"
-                android:textColor="@color/blue"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -57,16 +59,20 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:clickable="false"
-                android:drawableLeft="@drawable/slide_ico_green5"
+                android:drawableLeft="@drawable/menu_ico_5"
                 android:drawablePadding="8.0dip"
                 android:gravity="left|center"
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="首页"
-                android:textColor="@color/green"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/sm_divider" />
 
         <LinearLayout
             android:id="@+id/sm_at"
@@ -80,16 +86,20 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:clickable="false"
-                android:drawableLeft="@drawable/slide_ico_green1"
+                android:drawableLeft="@drawable/menu_ico_1"
                 android:drawablePadding="8.0dip"
                 android:gravity="left|center"
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="与我有关"
-                android:textColor="@color/green"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/sm_divider" />
 
         <LinearLayout
             android:id="@+id/sm_favorite"
@@ -103,16 +113,20 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:clickable="false"
-                android:drawableLeft="@drawable/slide_ico_green4"
+                android:drawableLeft="@drawable/menu_ico_4"
                 android:drawablePadding="8.0dip"
                 android:gravity="left|center"
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="收藏"
-                android:textColor="@color/green"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/sm_divider" />
 
         <LinearLayout
             android:id="@+id/sm_chat"
@@ -126,16 +140,20 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:clickable="false"
-                android:drawableLeft="@drawable/slide_ico_green3"
+                android:drawableLeft="@drawable/menu_ico_3"
                 android:drawablePadding="8.0dip"
                 android:gravity="left|center"
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="聊天"
-                android:textColor="@color/green"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/sm_divider" />
 
         <LinearLayout
             android:id="@+id/sm_channel"
@@ -149,16 +167,20 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:clickable="false"
-                android:drawableLeft="@drawable/slide_ico_green2"
+                android:drawableLeft="@drawable/menu_ico_2"
                 android:drawablePadding="8.0dip"
                 android:gravity="left|center"
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="频道"
-                android:textColor="@color/green"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/sm_divider" />
 
         <LinearLayout
             android:id="@+id/sm_weiba"
@@ -172,16 +194,20 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:clickable="false"
-                android:drawableLeft="@drawable/slide_ico_green7"
+                android:drawableLeft="@drawable/menu_ico_7"
                 android:drawablePadding="8.0dip"
                 android:gravity="left|center"
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="微吧"
-                android:textColor="@color/green"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/sm_divider" />
 
         <LinearLayout
             android:id="@+id/sm_setting"
@@ -195,16 +221,20 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:clickable="false"
-                android:drawableLeft="@drawable/slide_ico_green6"
+                android:drawableLeft="@drawable/menu_ico_6"
                 android:drawablePadding="8.0dip"
                 android:gravity="left|center"
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="设置"
-                android:textColor="@color/green"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/sm_divider" />
 
         <LinearLayout
             android:id="@+id/sm_logout"
@@ -218,14 +248,14 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:clickable="false"
+                android:drawableLeft="@drawable/menu_ico_8"
                 android:drawablePadding="8.0dip"
                 android:gravity="left|center"
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="退出当前帐户"
-                android:textColor="@color/grey"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="#FF6666"
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 

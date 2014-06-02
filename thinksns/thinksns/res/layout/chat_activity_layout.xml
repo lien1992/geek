@@ -4,5 +4,59 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dip"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/menu_icon"
+            android:layout_width="45dip"
+            android:layout_height="45dip"
+            android:src="@drawable/navigation"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="和xxx聊天中"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            />
+
+    </LinearLayout>
+
+
+    <com.thinksns.jkfs.ui.view.PullToRefreshListView
+        android:id="@+id/chat_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:scrollbars="none"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll">
+    </com.thinksns.jkfs.ui.view.PullToRefreshListView>
+
+
+    <LinearLayout android:id="@+id/listFooter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <EditText
+            android:id="@+id/messageInput"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+             />
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:background="@android:drawable/ic_menu_send"
+            android:onClick="sendButton"
+            />
+    </LinearLayout>
 
 </LinearLayout>

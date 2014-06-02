@@ -15,7 +15,7 @@ public class UserInfoBean implements Parcelable {
 	private String province;
 	private String city;
 	private String location;
-	public CountInfoBean count_info;
+	public UserInfoCountBean count_info;
 
 	// private String last_feed_id;// 最近一条微博ID
 	private String avatar_original;

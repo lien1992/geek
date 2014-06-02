@@ -1,6 +1,7 @@
 package com.thinksns.jkfs.ui;
 
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.constant.SettingsUtil;
 import com.thinksns.jkfs.util.common.PreferencesUtils;
 
@@ -33,6 +34,8 @@ public class WelcomeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        ThinkSNSApplication application=(ThinkSNSApplication)getApplication();
 		super.onCreate(savedInstanceState);
 
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

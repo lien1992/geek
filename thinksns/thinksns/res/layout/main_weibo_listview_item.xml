@@ -5,12 +5,14 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
-    <ImageView
+    <com.thinksns.jkfs.ui.view.RoundAngleImageView
+        xmlns:app="http://schemas.android.com/apk/res/com.thinksns.jkfs"
         android:id="@+id/wb_user_img"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_margin="8dp"
-        android:src="@drawable/ic_launcher" />
+        app:roundHeight="5dp"
+        app:roundWidth="5dp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -65,7 +67,6 @@
                 android:id="@+id/wb_pic1"
                 android:layout_width="80dp"
                 android:layout_height="80dp" />
-
         </LinearLayout>
 
         <!-- 转发微博默认visibility="gone" -->
