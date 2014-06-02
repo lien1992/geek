@@ -80,7 +80,7 @@
         </activity>
         <activity android:name=".ui.UserInfoFanList" >
         </activity>
-           <activity android:name=".ui.UserInfoFollowList" >
+        <activity android:name=".ui.UserInfoFollowList" >
         </activity>
         <activity
             android:name=".test.TestActivity"
@@ -88,6 +88,16 @@
             android:theme="@style/Theme.Sherlock.Light"
             android:uiOptions="splitActionBarWhenNarrow" />
         <activity android:name=".ui.ChatActivity" />
+
+        <service android:name=".util.GetMsgService" />
+
+        <receiver
+            android:name=".ui.MainFragmentActivity$NewMsgReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.thinksns.jkfs.unread_msg" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

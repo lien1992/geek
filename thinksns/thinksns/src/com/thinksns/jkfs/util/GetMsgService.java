@@ -19,6 +19,7 @@ import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.util.Log;
 
 public class GetMsgService extends IntentService {
 	private AccountBean account;
@@ -31,6 +32,7 @@ public class GetMsgService extends IntentService {
 		super.onCreate();
 		application = (ThinkSNSApplication) getApplicationContext();
 		account = application.getAccount(this);
+		Log.d("wj", "GetMsgService was created");
 	}
 
 	public GetMsgService() {
@@ -50,13 +52,14 @@ public class GetMsgService extends IntentService {
 			map.put("oauth_token_secret", account.getOauth_token_secret());
 			String json = HttpUtility.getInstance().executeNormalTask(
 					HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+			Log.d("wj", "unread json" + json);
 			Type listType = new TypeToken<LinkedList<NotificationBean>>() {
 			}.getType();
 			msgs = gson.fromJson(json, listType);
 			if (msgs == null || msgs.size() == 0) {
 				return;
 			} else {
-				Intent in = new Intent(this, MainFragmentActivity.class);
+				Intent in = new Intent();
 				in.setAction(BaseConstant.UNREAD_MSG_BROADCAST);
 				in.putExtra("system", msgs.get(0));
 				in.putExtra("atme", msgs.get(1));
@@ -64,6 +67,7 @@ public class GetMsgService extends IntentService {
 				in.putExtra("follower", msgs.get(3));
 				in.putExtra("pm", msgs.get(4));
 				sendBroadcast(in);
+				Log.d("wj", "unread json sendBroadcast");
 			}
 		} else {
 			return;

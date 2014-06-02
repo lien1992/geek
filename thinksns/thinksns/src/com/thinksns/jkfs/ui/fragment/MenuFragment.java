@@ -159,7 +159,11 @@ public class MenuFragment extends Fragment implements OnClickListener {
 				if (comment_unread != null || at_unread != null) {
 					Bundle args = new Bundle();
 					args.putParcelable("comment_unread", comment_unread);
+					Log.d("wj", "comment_unread.getCount()"
+							+ comment_unread.getCount());
 					args.putParcelable("at_unread", at_unread);
+					Log.d("wj", "at_unread.getCount()"
+							+ at_unread.getCount());
 					atAndCommentFragment.setArguments(args);
 					comment_unread = null;
 					at_unread = null;
