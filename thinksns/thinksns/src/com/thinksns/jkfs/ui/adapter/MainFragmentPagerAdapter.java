@@ -3,14 +3,14 @@ package com.thinksns.jkfs.ui.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.thinksns.jkfs.ui.fragment.AboutMeFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboListFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboListOfMineFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboMainFragment;
 
-public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
+public class MainFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
 	private Fragment fragmentAtP0;
 	private final FragmentManager fm;

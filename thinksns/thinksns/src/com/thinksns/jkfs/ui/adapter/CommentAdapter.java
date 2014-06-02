@@ -8,13 +8,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.CommentBean;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
+import com.thinksns.jkfs.ui.view.RoundAngleImageView;
+
 import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -94,7 +95,7 @@ public class CommentAdapter extends BaseAdapter {
 			convertView = in.inflate(R.layout.main_weibo_comment_listview_item,
 					null);
 			Log.d("in is null ?", (in == null) + "");
-			holder.avatar = (ImageView) convertView
+			holder.avatar = (RoundAngleImageView) convertView
 					.findViewById(R.id.wb_cmt_user_img);
 			holder.userName = (TextView) convertView
 					.findViewById(R.id.wb_cmt_u_name);
@@ -111,14 +112,14 @@ public class CommentAdapter extends BaseAdapter {
 		ImageLoader.getInstance().displayImage(comment.getUser().getAvatar_small(),
 				holder.avatar, options);
 		holder.userName.setText(comment.getUser().getUname());
-		holder.content.setText(comment.getContent());
+		holder.content.setText(comment.getListViewSpannableString());
 		holder.time.setText(comment.getTime());
 
 		return convertView;
 	}
 
 	static class ViewHolder {
-		public ImageView avatar;
+		public RoundAngleImageView avatar;
 		public TextView userName;
 		public TextView content;
 		public TextView time;

@@ -1,10 +1,11 @@
 package com.thinksns.jkfs.util;
 
+import com.thinksns.jkfs.ui.UserInfoActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
-import android.provider.Browser;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
@@ -38,11 +39,13 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
 		return mURL;
 	}
 
-	public void onClick(View widget) {
+	public void onClick(View widget) { // 待修复..
 		Uri uri = Uri.parse(getURL());
 		Context context = widget.getContext();
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+		// Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		// intent.putExtra(Browser.EXTRA_APPLICATION_ID,
+		// context.getPackageName());
+		Intent intent = new Intent(context, UserInfoActivity.class);
 		context.startActivity(intent);
 	}
 

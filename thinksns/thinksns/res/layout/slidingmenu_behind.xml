@@ -25,14 +25,15 @@
             android:orientation="vertical" >
 
             <com.thinksns.jkfs.ui.view.RoundAngleImageView
+                xmlns:app="http://schemas.android.com/apk/res/com.thinksns.jkfs"
                 android:id="@+id/sm_behind_avatar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:padding="6dp"
-
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/ic_launcher"
+                app:roundHeight="10dp"
+                app:roundWidth="10dp" />
 
             <TextView
                 android:id="@+id/sm_behind_nick"

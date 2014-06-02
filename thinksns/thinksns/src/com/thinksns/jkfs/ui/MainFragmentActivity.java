@@ -10,24 +10,13 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 
-/**
- * MainFragmentActivity,待完善..
- * 
- * 调试时，只把MainFragmentActivity和MenuFragment里面
- * 自己的Fragment部分的注释取消，把其他人的Fragments都注释掉。
- * 
- * @author wangjia
- * 
- */
 public class MainFragmentActivity extends SlidingFragmentActivity {
 
 	private SlidingMenu sm;
-    private String TAG="MainFragmentActivity";
+	private String TAG = "MainFragmentActivity";
 
-    private Fragment  mContent;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,31 +40,27 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		}
 
 		if (savedInstanceState == null) {
+			Fragment weiboMain = new WeiboMainFragment();
+			FragmentTransaction transaction = getSupportFragmentManager()
+					.beginTransaction();
+			transaction.replace(R.id.content_frame, weiboMain,
+					WeiboMainFragment.class.getName());
 
+			transaction.commit();
+			FragmentTransaction menuTransation = getSupportFragmentManager()
+					.beginTransaction();
+			menuTransation.replace(R.id.menu_frame, new MenuFragment(),
+					MenuFragment.class.getName());
+			sm.showContent();
+			menuTransation.commit();
 
-            Fragment weiboMain = getWeiboMainFragment();
-            FragmentTransaction transaction = getSupportFragmentManager()
-                    .beginTransaction();
-            if (!weiboMain.isAdded()) {
-                transaction.add(R.id.content_frame, weiboMain,
-                        WeiboMainFragment.class.getName());
-            }
-
-            transaction.commit();
-            FragmentTransaction menuTransation = getSupportFragmentManager()
-                    .beginTransaction();
-            menuTransation.replace(R.id.menu_frame, new MenuFragment(),
-                    MenuFragment.class.getName());
-            sm.showContent();
-            menuTransation.commit();
-
-            // customize the SlidingMenu
-            sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-            sm.setShadowWidthRes(R.dimen.shadow_width);
-            sm.setShadowDrawable(R.drawable.slidingmenu_shadow);
-            sm.setBehindScrollScale(0.25f);
-            sm.setFadeDegree(0.25f);
-        }
+			// customize the SlidingMenu
+			sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+			sm.setShadowWidthRes(R.dimen.shadow_width);
+			sm.setShadowDrawable(R.drawable.slidingmenu_shadow);
+			sm.setBehindScrollScale(0.25f);
+			sm.setFadeDegree(0.25f);
+		}
 
 	}
 
@@ -98,29 +83,16 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		}
 	}
 
-	/* 获得侧滑菜单中的各个Fragment */
-
-	public WeiboMainFragment getWeiboMainFragment() {
-		WeiboMainFragment fragment = ((WeiboMainFragment) getSupportFragmentManager()
-				.findFragmentByTag(WeiboMainFragment.class.getName()));
-		if (fragment == null) {
-			fragment = new WeiboMainFragment();
-		}
-		return fragment;
-	}
-
 	public void switchContent(Fragment fragment) {
 		FragmentManager f = getSupportFragmentManager();
 		FragmentTransaction ft = f.beginTransaction();
-        mContent = fragment;
-        ft.replace(R.id.content_frame, fragment)
-                .commit();
-        Handler h = new Handler();
-        h.postDelayed(new Runnable() {
-            public void run() {
-                getSlidingMenu().showContent();
-            }
-        }, 50);
+		ft.replace(R.id.content_frame, fragment).commit();
+		Handler h = new Handler();
+		h.postDelayed(new Runnable() {
+			public void run() {
+				getSlidingMenu().showContent();
+			}
+		}, 50);
 	}
 
 }

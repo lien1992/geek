@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:id="@+id/wb_detail_sub_root"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
@@ -125,7 +125,8 @@
                             </LinearLayout>
                         </LinearLayout>
 
-                        <ImageView
+                        <com.thinksns.jkfs.ui.view.RoundAngleImageView
+                            xmlns:app="http://schemas.android.com/apk/res/com.thinksns.jkfs"
                             android:id="@+id/wb_detail_user_img"
                             android:layout_width="42dp"
                             android:layout_height="42dp"
@@ -133,7 +134,9 @@
                             android:layout_centerVertical="true"
                             android:layout_margin="8dp"
                             android:layout_marginLeft="14dp"
-                            android:src="@drawable/ic_launcher" />
+                            android:src="@drawable/ic_launcher"
+                            app:roundHeight="5dp"
+                            app:roundWidth="5dp" />
                     </RelativeLayout>
 
                     <View
@@ -215,7 +218,8 @@
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="30dp" >
+                        android:layout_height="30dp"
+                        android:layout_marginTop="8dp" >
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -241,6 +245,7 @@
                                 android:textSize="12sp" />
 
                             <ImageView
+                                android:id="@+id/wb_detail_repost_another"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_marginLeft="8dp"
@@ -257,6 +262,7 @@
                                 android:textSize="12sp" />
 
                             <ImageView
+                                android:id="@+id/wb_detail_comment_list"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_marginLeft="8dp"
@@ -280,7 +286,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/wb_detail_linearLayout2"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal" >
 
                     <TextView
@@ -302,25 +308,14 @@
                         android:layout_marginRight="12dp"
                         android:background="@color/green" />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/wb_detail_comment_layout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/wb_detail_comment_desc"
-                    android:layout_marginTop="5dp"
-                    android:orientation="vertical" >
-
-                    <com.thinksns.jkfs.ui.view.PullToRefreshListView
-                        android:id="@+id/wb_detail_comment_list_view"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:cacheColorHint="#0000"
-                        android:divider="@drawable/lv_divider" />
-                </LinearLayout>
             </RelativeLayout>
         </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/wb_detail_comment_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp" />
     </LinearLayout>
 
     <View

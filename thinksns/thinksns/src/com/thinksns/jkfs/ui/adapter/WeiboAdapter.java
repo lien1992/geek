@@ -18,7 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
-import com.thinksns.jkfs.util.Utility;
+import com.thinksns.jkfs.ui.view.RoundAngleImageView;
 
 /**
  * 微博适配器，适用于需要显示微博列表的所有位置。
@@ -110,7 +110,7 @@ public class WeiboAdapter extends BaseAdapter {
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = in.inflate(R.layout.main_weibo_listview_item, null);
-			holder.avatar = (ImageView) convertView
+			holder.avatar = (RoundAngleImageView) convertView
 					.findViewById(R.id.wb_user_img);
 			holder.userName = (TextView) convertView
 					.findViewById(R.id.wb_u_name);
@@ -148,7 +148,6 @@ public class WeiboAdapter extends BaseAdapter {
 		ImageLoader.getInstance().displayImage(weibo.getAvatar_small(),
 				holder.avatar, options);
 		holder.userName.setText(weibo.getUname());
-		Utility.addHighLightLinks(weibo);
 		holder.content.setText(weibo.getListViewSpannableString());
 		holder.time.setText(weibo.getCtime());
 		int where = Integer.parseInt(weibo.getFrom());
@@ -172,29 +171,39 @@ public class WeiboAdapter extends BaseAdapter {
 		holder.like_count.setText(weibo.getDigg_count() + "");
 		holder.repost_content.setText(weibo.getRepost_count() + "");
 		holder.comment_count.setText(weibo.getComment_count() + "");
+
 		if (weibo.getType().equals("repost")) {
+			holder.weibo_pics.setVisibility(View.GONE);
 			WeiboBean weibo_repost = weibo.getTranspond_data();
 			holder.repost_userName.setText(weibo_repost.getUname());
-			holder.repost_content.setText(weibo_repost.getListViewSpannableString());
+			holder.repost_content.setText(weibo_repost
+					.getListViewSpannableString());
 			if (weibo_repost.getType().equals("postimage")) {
 				ImageLoader.getInstance().displayImage(
 						weibo_repost.getAttach().get(0).getAttach_middle(),
 						holder.repost_weibo_pic, options);
+				holder.repost_pics.setVisibility(View.VISIBLE);
+			} else {
+				holder.repost_pics.setVisibility(View.GONE);
 			}
 			holder.repost.setVisibility(View.VISIBLE);
-			holder.repost_pics.setVisibility(View.VISIBLE);
-		} else if (weibo.getType().equals("postimage")) {
-			ImageLoader.getInstance().displayImage(
-					weibo.getAttach().get(0).getAttach_middle(),
-					holder.weibo_pic, options);
-			holder.weibo_pics.setVisibility(View.VISIBLE);
+		} else {
+			if (weibo.getType().equals("postimage")) {
+				ImageLoader.getInstance().displayImage(
+						weibo.getAttach().get(0).getAttach_middle(),
+						holder.weibo_pic, options);
+				holder.weibo_pics.setVisibility(View.VISIBLE);
+			} else {
+				holder.weibo_pics.setVisibility(View.GONE);
+			}
+			holder.repost.setVisibility(View.GONE);
+			holder.repost_pics.setVisibility(View.GONE);
 		}
-
 		return convertView;
 	}
 
 	static class ViewHolder {
-		public ImageView avatar;
+		public RoundAngleImageView avatar;
 		public TextView userName;
 		public TextView content;
 		public TextView time;

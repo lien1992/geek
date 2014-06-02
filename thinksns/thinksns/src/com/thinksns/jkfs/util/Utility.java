@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 import com.thinksns.jkfs.BuildConfig;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
+import com.thinksns.jkfs.bean.CommentBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 
 public class Utility {
@@ -273,10 +274,15 @@ public class Utility {
 
 	}
 
+	/**
+	 * 解析微博内容
+	 * 
+	 * @param bean
+	 */
 	public static void addHighLightLinks(WeiboBean bean) {
 
 		bean
-				.setListViewSpannableString(getJustHighLightLinks(bean
+				.setListViewSpannableString(getHighLightLinks(bean
 						.getContent()));
 		if (bean.getTranspond_data() != null) {
 			String name = "";
@@ -284,9 +290,9 @@ public class Utility {
 			SpannableString value;
 
 			if (!TextUtils.isEmpty(name)) {
-				value = getJustHighLightLinks("@" + name);
+				value = getHighLightLinks("@" + name);
 			} else {
-				value = getJustHighLightLinks(bean.getTranspond_data()
+				value = getHighLightLinks(bean.getTranspond_data()
 						.getContent());
 			}
 
@@ -294,7 +300,20 @@ public class Utility {
 		}
 	}
 
-	public static SpannableString getJustHighLightLinks(String txt) {
+	/**
+	 * 解析评论内容
+	 * 
+	 * @param bean
+	 */
+
+	public static void addHighLightLinks(CommentBean bean) {
+
+		bean
+				.setListViewSpannableString(getHighLightLinks(bean
+						.getContent()));
+	}
+
+	public static SpannableString getHighLightLinks(String txt) {
 		String hackTxt;
 		if (txt.startsWith("[") && txt.endsWith("]")) {
 			hackTxt = txt + " ";
@@ -304,11 +323,11 @@ public class Utility {
 		SpannableString value;
 		MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
 			public final String transformUrl(final Matcher match, String url) {
-				return match.group(1);
+				return match.group(1); // 匹配正则第一个括号
 			}
 		};
 		// Match @mentions and capture just the username portion of the text.
-		Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
+		Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)"); // 包括unicode汉字编码
 		String scheme = "com.thinksns.jkfs://";
 		value = MyLinkify.getJustHighLightLinks(hackTxt, pattern, scheme, null,
 				mentionFilter);
@@ -329,7 +348,7 @@ public class Utility {
 		while (localMatcher.find()) {
 			String str2 = localMatcher.group(0);
 			int end = str2.length();
-			String string = str2.substring(1, end - 2);
+			String string = str2.substring(1, end - 1);
 			Log.v("emotion image name", string);
 			int k = localMatcher.start();
 			int m = localMatcher.end();

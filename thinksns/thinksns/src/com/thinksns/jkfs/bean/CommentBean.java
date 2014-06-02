@@ -1,7 +1,11 @@
 package com.thinksns.jkfs.bean;
 
+import com.thinksns.jkfs.util.Utility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.SpannableString;
+import android.text.TextUtils;
 
 /**
  * 评论
@@ -16,6 +20,8 @@ public class CommentBean implements Parcelable {
 	private String ctime;
 	private String client_type;
 	private UserInfoBean user_info;
+	
+	private transient SpannableString listViewSpannableString;
 
 	public String getId() {
 		return comment_id;
@@ -71,6 +77,20 @@ public class CommentBean implements Parcelable {
 
 	public String getTo_uid() {
 		return to_uid;
+	}
+	
+	public SpannableString getListViewSpannableString() {
+		if (!TextUtils.isEmpty(listViewSpannableString)) {
+			return listViewSpannableString;
+		} else {
+			Utility.addHighLightLinks(this);
+			return listViewSpannableString;
+		}
+	}
+
+	public void setListViewSpannableString(
+			SpannableString listViewSpannableString) {
+		this.listViewSpannableString = listViewSpannableString;
 	}
 
 	@Override
