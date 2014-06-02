@@ -1,5 +1,6 @@
 package com.thinksns.jkfs.ui.fragment;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 
@@ -7,7 +8,9 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -16,13 +19,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +38,11 @@ import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.UserInfoFollowList;
 import com.thinksns.jkfs.ui.UserInfoWeiboList;
+import com.thinksns.jkfs.util.Base64;
+import com.thinksns.jkfs.util.common.ImageUtils;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
+import com.thinksns.jkfs.util.http.HttpUtils;
 
 /**
  * @author 邓思宇 我的主页列表显示信息 还未完成
@@ -57,7 +63,6 @@ public class AboutMeFragment extends Fragment {
 	private String FOLLOW_DESTROY = "follow_destroy";
 	private String FOLLOW_CREATE = "follow_create";
 
-	
 	private ImageView faceImage;
 
 	private String[] items = new String[] { "选择本地图片", "拍照" };
@@ -69,6 +74,8 @@ public class AboutMeFragment extends Fragment {
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int RESULT_REQUEST_CODE = 2;
 
+	private String picPath = "";
+	
 	
 	public AboutMeFragment() {
 		super();
@@ -152,7 +159,7 @@ public class AboutMeFragment extends Fragment {
 				break;
 
 			case 2:
-				
+
 				Button button2 = (Button) getActivity().findViewById(
 						R.id.changeinfo);
 				if (FLAG == 0) {
@@ -172,8 +179,6 @@ public class AboutMeFragment extends Fragment {
 				}
 
 				break;
-				
-				
 
 			}
 
@@ -214,29 +219,26 @@ public class AboutMeFragment extends Fragment {
 
 				if (FLAG == 0) {
 
-					
-//					Intent intent = new Intent(getActivity(),
-//							ChangeUserInfo.class);
-//					startActivity(intent);
-					
+					// Intent intent = new Intent(getActivity(),
+					// ChangeUserInfo.class);
+					// startActivity(intent);
+
 					showDialog();
-					
-					
-					
+
 				} else if (FLAG == 1) {
 					switch (follow) {
 					case 0:
 
 						followif(uuid, FOLLOW_CREATE); // 点击关注
-						follow = 1;						
+						follow = 1;
 						break;
-						
+
 					case 1:
 
 						followif(uuid, FOLLOW_DESTROY); // 点击取消关注
 						follow = 0;
 						break;
-						
+
 					}
 				}
 
@@ -321,8 +323,6 @@ public class AboutMeFragment extends Fragment {
 		});
 	}
 
-	
-	
 	private void openPage() {
 		switch (FLAG) {
 		case 0:
@@ -384,8 +384,6 @@ public class AboutMeFragment extends Fragment {
 		}
 	}
 
-	
-	
 	// 点击按钮 取消关注或再次关注
 	private void followif(final String uid, final String act) {
 
@@ -410,13 +408,7 @@ public class AboutMeFragment extends Fragment {
 		}.start();
 
 	}
-	
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * 显示选择对话框
 	 */
@@ -489,7 +481,11 @@ public class AboutMeFragment extends Fragment {
 
 				break;
 			case RESULT_REQUEST_CODE:
-				if (data != null) {
+				if (data != null) {				
+//					Uri imageFileUri = data.getData();
+//					picPath = getPicPathFromUri(imageFileUri);					
+//					changeHead(picPath);
+//					
 					getImageToView(data);
 				}
 				break;
@@ -529,8 +525,17 @@ public class AboutMeFragment extends Fragment {
 		if (extras != null) {
 			Bitmap photo = extras.getParcelable("data");
 			Drawable drawable = new BitmapDrawable(photo);
-			
-			
+
+			Uri imageFileUri = data.getData();
+
+			Log.d("uri is null？", (imageFileUri == null) + "");
+
+			String picPath = getPicPathFromUri(imageFileUri);
+
+			changeHead(picPath);
+
+			// String head = BitMapToString(photo);
+
 			faceImage = (ImageView) getActivity().findViewById(R.id.m_head);
 			faceImage.setImageDrawable(drawable);
 		}
@@ -550,35 +555,57 @@ public class AboutMeFragment extends Fragment {
 		}
 
 	}
-	
-	
-	
+
 	// 上传头像
-		private void changeHead(final File head) {
+	private void changeHead(final String head) {
 
-			new Thread() {
-				@Override
-				public void run() {
+		final String uploadPicPath = ImageUtils.compressPic(getActivity(),
+				head, 3);
 
-					Gson gson = new Gson();
-					HashMap<String, String> map = new HashMap<String, String>();
-					map.put("app", "api");
-					map.put("mod", "User");
-					map.put("act", "upload_face");
-					map.put("user_id", account.getUid());
-//					map.put("Filedata", head);
-					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret", account.getOauth_token_secret());
-					String json = HttpUtility.getInstance().executeNormalTask(
-							HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
+		Log.d("uploadPicPath", uploadPicPath);
 
-//					mHandler.sendEmptyMessage(2);
+		new Thread() {
+			@Override
+			public void run() {
 
-				}
-			}.start();
+				Gson gson = new Gson();
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("app", "api");
+				map.put("mod", "User");
+				map.put("act", "upload_face");
+				map.put("Filedata", head);
+				map.put("oauth_token", account.getOauth_token());
+				map.put("oauth_token_secret", account.getOauth_token_secret());
+				HttpUtils.doPost(HttpConstant.THINKSNS_URL, map);
+				boolean result = HttpUtils.doUploadFile(
+						HttpConstant.THINKSNS_URL, map, uploadPicPath);
 
+			}
+		}.start();
+
+	}
+
+	public String BitMapToString(Bitmap bitmap) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		byte[] b = baos.toByteArray();
+		String temp = Base64.encodeToString(b, Base64.DEFAULT);
+		return temp;
+	}
+
+	private String getPicPathFromUri(Uri uri) {
+		String value = uri.getPath();
+		if (value.startsWith("/external")) {
+			String[] proj = { MediaStore.Images.Media.DATA };
+			Cursor cursor = getActivity().managedQuery(uri, proj, null, null,
+					null);
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		} else {
+			return value;
 		}
-	
-	
+	}
 
 }
