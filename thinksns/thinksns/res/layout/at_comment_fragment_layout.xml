@@ -42,7 +42,7 @@
         android:background="@color/white"
         android:orientation="horizontal" >
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -52,33 +52,67 @@
                 android:id="@+id/wb_comment_tab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:background="@drawable/popup_mark"
                 android:gravity="center"
                 android:text="评论我的"
                 android:textColor="@color/green"
                 android:textSize="18sp" />
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/wb_comment_tab_unread"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/unread_bg"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <View
-            android:layout_width="2dp"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/green" />
+            android:background="@color/grey" />
 
-        <TextView
-            android:id="@+id/wb_at_tab"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="\@我的"
-            android:textColor="@color/grey"
-            android:textSize="18sp" />
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/wb_at_tab"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:text="\@我的"
+                android:textColor="@color/grey"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/wb_at_tab_unread"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/unread_bg"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/green" />
+        android:layout_height="1dp"
+        android:background="@color/grey" />
 
     <FrameLayout
         android:id="@+id/at_comment_frame"

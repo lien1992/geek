@@ -7,6 +7,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.NotificationBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
@@ -47,6 +48,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private AccountBean account;
 	private UserInfoBean userinfo;
 	private String json;
+	private NotificationBean comment_unread, at_unread;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -153,8 +155,17 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		case R.id.sm_at:
 			changeBackground(R.id.sm_at);
 			AtAndCommentFragment atAndCommentFragment = new AtAndCommentFragment();
-			if (atAndCommentFragment != null)
+			if (atAndCommentFragment != null) {
+				if (comment_unread != null || at_unread != null) {
+					Bundle args = new Bundle();
+					args.putParcelable("comment_unread", comment_unread);
+					args.putParcelable("at_unread", at_unread);
+					atAndCommentFragment.setArguments(args);
+					comment_unread = null;
+					at_unread = null;
+				}
 				switchFragment(atAndCommentFragment);
+			}
 			break;
 		case R.id.sm_favorite:
 			changeBackground(R.id.sm_favorite);
@@ -256,5 +267,11 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			MainFragmentActivity ra = (MainFragmentActivity) getActivity();
 			ra.switchContent(fragment);
 		}
+	}
+
+	public void setUnread(NotificationBean comment_unread,
+			NotificationBean at_unread) {
+		this.comment_unread = comment_unread;
+		this.at_unread = at_unread;
 	}
 }

@@ -3,18 +3,33 @@ package com.thinksns.jkfs.ui;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.bean.NotificationBean;
+import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.ui.fragment.MenuFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboMainFragment;
+import com.thinksns.jkfs.util.GetMsgService;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 
 public class MainFragmentActivity extends SlidingFragmentActivity {
 
 	private SlidingMenu sm;
+	private AlarmManager alarm;
+	private NewMsgReceiver receiver;
+	private MenuFragment menu;
 	private String TAG = "MainFragmentActivity";
 
 	@Override
@@ -45,12 +60,13 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 					.beginTransaction();
 			transaction.replace(R.id.content_frame, weiboMain,
 					WeiboMainFragment.class.getName());
-
 			transaction.commit();
+
+			menu = new MenuFragment();
 			FragmentTransaction menuTransation = getSupportFragmentManager()
 					.beginTransaction();
-			menuTransation.replace(R.id.menu_frame, new MenuFragment(),
-					MenuFragment.class.getName());
+			menuTransation.replace(R.id.menu_frame, menu, MenuFragment.class
+					.getName());
 			sm.showContent();
 			menuTransation.commit();
 
@@ -67,11 +83,31 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		receiver = new NewMsgReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(BaseConstant.UNREAD_MSG_BROADCAST);
+		registerReceiver(receiver, filter);
+
+		alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(this, GetMsgService.class);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		long triggerAtTime = SystemClock.elapsedRealtime();
+		// 每30s请求一次服务器获取未读消息数目
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, triggerAtTime,
+				30 * 1000, pendingIntent);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		unregisterReceiver(receiver);
+
+		alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(this, GetMsgService.class);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		alarm.cancel(pendingIntent);
 	}
 
 	@Override
@@ -93,6 +129,22 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 				getSlidingMenu().showContent();
 			}
 		}, 50);
+	}
+
+	private class NewMsgReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			NotificationBean comment_unread = intent
+					.getParcelableExtra("comment");
+			NotificationBean at_unread = intent.getParcelableExtra("atme");
+			Log.d("NotificationBean", "comment count:"
+					+ comment_unread.getCount());
+			Log.d("NotificationBean", "at count" + comment_unread.getCount());
+			menu.setUnread(comment_unread, at_unread);
+		}
+
 	}
 
 }
