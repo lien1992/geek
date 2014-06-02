@@ -1,6 +1,5 @@
 package com.thinksns.jkfs.util;
 
-import com.thinksns.jkfs.ui.UserInfoActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -40,13 +39,13 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
 	}
 
 	public void onClick(View widget) { // 待修复..
-		Uri uri = Uri.parse(getURL());
-		Context context = widget.getContext();
-		// Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		// intent.putExtra(Browser.EXTRA_APPLICATION_ID,
-		// context.getPackageName());
-		Intent intent = new Intent(context, UserInfoActivity.class);
-		context.startActivity(intent);
+//		Uri uri = Uri.parse(getURL());
+//		Context context = widget.getContext();
+//		// Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//		// intent.putExtra(Browser.EXTRA_APPLICATION_ID,
+//		// context.getPackageName());
+//		Intent intent = new Intent(context, UserInfoActivity.class);
+//		context.startActivity(intent);
 	}
 
 	@Override
