@@ -1,6 +1,7 @@
 package com.thinksns.jkfs.ui.fragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.ActionBar.LayoutParams;
@@ -20,8 +21,14 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.base.ThinkSNSApplication;
+import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.NotificationBean;
+import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
+import com.thinksns.jkfs.util.Utility;
+import com.thinksns.jkfs.util.http.HttpMethod;
+import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
  * 与我有关：评论（评论我的、我评论的) + at我的
@@ -32,6 +39,8 @@ import com.thinksns.jkfs.ui.MainFragmentActivity;
 public class AtAndCommentFragment extends Fragment {
 
 	public static final String TAG = "AtAndCommentFragment";
+	private ThinkSNSApplication application;
+	private AccountBean account;
 	private PopupWindow popupWindow;
 	private ListView lv_group;
 	private List<String> groups;
@@ -42,7 +51,8 @@ public class AtAndCommentFragment extends Fragment {
 	private TextView at_unread;
 	private LayoutInflater inflater;
 	private NotificationBean comment_unread_bean, at_unread_bean;
-	int comment_count, at_count;
+	private int comment_count, at_count;
+	private String c_unread_result, a_unread_result;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +89,10 @@ public class AtAndCommentFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		application = (ThinkSNSApplication) this.getActivity()
+				.getApplicationContext();
+		account = application.getAccount(this.getActivity());
+
 		if (comment_count != 0) {
 			comment_unread.setText(comment_count + "");
 			comment_unread.setVisibility(View.VISIBLE);
@@ -103,6 +117,7 @@ public class AtAndCommentFragment extends Fragment {
 				comment.setTextColor(getResources().getColor(R.color.grey));
 				getChildFragmentManager().beginTransaction().replace(
 						R.id.at_comment_frame, new AtMeFragment()).commit();
+				setRead("atme");
 				at_unread.setVisibility(View.GONE);
 
 			}
@@ -119,6 +134,32 @@ public class AtAndCommentFragment extends Fragment {
 		getChildFragmentManager().beginTransaction().replace(
 				R.id.at_comment_frame, new CommentToMeFragment()).commit();
 
+	}
+
+	private void setRead(final String type) {
+		if (Utility.isConnected(getActivity())) {
+			new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "Notifytion");
+					map.put("act", "set_notify_read");
+					map.put("type", type);
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					if (type.equals("comment")) {
+						c_unread_result = json;
+					} else if (type.equals("atme")) {
+						a_unread_result = json;
+					}
+				}
+			}.start();
+		}
 	}
 
 	private void showWindow(View parent) {
@@ -153,6 +194,7 @@ public class AtAndCommentFragment extends Fragment {
 					getChildFragmentManager().beginTransaction().replace(
 							R.id.at_comment_frame, new CommentToMeFragment())
 							.commit();
+					setRead("comment");
 					comment_unread.setVisibility(View.GONE);
 				} else {
 					getChildFragmentManager().beginTransaction().replace(

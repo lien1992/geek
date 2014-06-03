@@ -24,6 +24,7 @@ import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseListFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.WeiboDetailActivity;
@@ -34,14 +35,7 @@ import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
-/**
- * 微博列表，后期改为用户关注的微博，目前暂显示公共微博 待完成的部分（新微博提醒、url等的显示）
- * 
- * @author wangjia
- * 
- */
-public class WeiboListFragment extends BaseListFragment {
-
+public class UserInfoWeiboListFragment extends BaseListFragment {
 	private ThinkSNSApplication application;
 	private LinkedList<WeiboBean> weibos = new LinkedList<WeiboBean>();
 	private LinkedList<WeiboBean> weibo_all = new LinkedList<WeiboBean>();
@@ -52,12 +46,12 @@ public class WeiboListFragment extends BaseListFragment {
 	private int totalCount;
 	private String since_id = "";
 	private boolean firstLoad = true;
+	private UserInfoBean userInfo;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				// Log.d("WEIBO COUNT", weibos.size() + "");
 				listView.onLoadMoreComplete();
 				if (weibos == null || weibos.size() == 0) {
 					Toast.makeText(getActivity(), "没有更多微博了亲:(",
@@ -105,7 +99,16 @@ public class WeiboListFragment extends BaseListFragment {
 
 		};
 	};
-	
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Bundle args = this.getArguments();
+		if (args != null) {
+			userInfo = args.getParcelable("uinfo");
+		}
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,7 +144,6 @@ public class WeiboListFragment extends BaseListFragment {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(getActivity(),
 						WeiboDetailActivity.class);
-				Log.d("listview item pos", position + "");
 				intent.putExtra("weibo_detail", weibo_all.get(position - 1));
 				startActivity(intent);
 			}
@@ -179,7 +181,8 @@ public class WeiboListFragment extends BaseListFragment {
 					HashMap<String, String> map = new HashMap<String, String>();
 					map.put("app", "api");
 					map.put("mod", "WeiboStatuses");
-					map.put("act", "public_timeline");
+					map.put("act", "user_timeline");
+					map.put("user_id", userInfo.getUid());
 					map.put("page", currentPage + "");
 					map.put("oauth_token", account.getOauth_token());
 					map.put("oauth_token_secret", account
@@ -222,7 +225,9 @@ public class WeiboListFragment extends BaseListFragment {
 					HashMap<String, String> map = new HashMap<String, String>();
 					map.put("app", "api");
 					map.put("mod", "WeiboStatuses");
-					map.put("act", "public_timeline");
+					map.put("act", "user_timeline");
+					map.put("user_id", userInfo.getUid());
+					Log.d("wj", "userInfo.getUid()" + userInfo.getUid());
 					if (!since_id.equals(""))
 						map.put("since_id", since_id);
 					map.put("oauth_token", account.getOauth_token());
@@ -232,12 +237,9 @@ public class WeiboListFragment extends BaseListFragment {
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 					}.getType();
-					weibos = gson.fromJson(json, listType); // bug待修复，可能返回string非array
+					weibos = gson.fromJson(json, listType);
 					if (weibos != null && weibos.size() > 0) {
 						since_id = weibos.get(0).getFeed_id();
-						Log.d("WEIBO SINCE ID", since_id);
-						Log.d("WEIBO SINCE ID CONTENT", weibos.get(0)
-								.getContent());
 						totalCount += weibos.size();
 					}
 					mHandler.sendEmptyMessage(1);
@@ -256,5 +258,4 @@ public class WeiboListFragment extends BaseListFragment {
 			weibo_all.addFirst(lists.get(i));
 		}
 	}
-
 }

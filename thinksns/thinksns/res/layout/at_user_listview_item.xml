@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal" >
+
+    <com.thinksns.jkfs.ui.view.RoundAngleImageView
+        xmlns:app="http://schemas.android.com/apk/res/com.thinksns.jkfs"
+        android:id="@+id/at_user_item_avatar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_margin="8dp"
+        app:roundHeight="5dp"
+        app:roundWidth="5dp" />
+
+    <TextView
+        android:id="@+id/at_user_item_u_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:gravity="center"
+        android:text="用户名"
+        android:textColor="@color/black"
+        android:textSize="17sp" />
+
+</LinearLayout>

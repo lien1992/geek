@@ -16,7 +16,7 @@
             android:id="@+id/wb_detail_header"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/white" >
+            android:background="@color/white_for_title" >
 
             <ImageView
                 android:id="@+id/wb_detail_back"
