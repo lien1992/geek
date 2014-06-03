@@ -250,10 +250,12 @@ public class AboutMeFragment extends Fragment {
 		button2.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// get the change info activity
-				Intent intent = new Intent(getActivity(),
-						UserInfoWeiboList.class);
-				startActivity(intent);
+				UserInfoWeiboListFragment userInfoWeiboListFragment=new UserInfoWeiboListFragment();
+				Bundle args=new Bundle();
+				args.putParcelable("uinfo", userinfo);
+				userInfoWeiboListFragment.setArguments(args);
+				getChildFragmentManager().beginTransaction().replace(
+						R.id.aboutme_frame, userInfoWeiboListFragment).commit();
 
 			}
 		});
