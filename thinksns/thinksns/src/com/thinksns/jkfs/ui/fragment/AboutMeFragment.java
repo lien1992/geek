@@ -34,6 +34,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.UserFollowBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.UserInfoFollowList;
@@ -87,6 +88,15 @@ public class AboutMeFragment extends Fragment {
 		this.follow = Integer.parseInt(following);
 	}
 
+	
+	
+	public AboutMeFragment(String i,UserFollowBean user ,String following) {
+		this.FLAG = Integer.parseInt(i);
+		this.uuid = user.getUid();
+		this.follow = Integer.parseInt(following);
+	}
+	
+	
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -150,7 +160,7 @@ public class AboutMeFragment extends Fragment {
 					}
 				}
 
-				if (userinfo.getSex() == "男") {
+				if (userinfo.getSex().equals("男")) {
 					sex.setBackgroundResource(R.drawable.male);
 				} else {
 					sex.setBackgroundResource(R.drawable.female);

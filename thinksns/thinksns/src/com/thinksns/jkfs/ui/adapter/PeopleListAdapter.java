@@ -70,6 +70,14 @@ public class PeopleListAdapter extends BaseAdapter {
 		return position;
 	}
 
+	
+	public UserFollowBean getUser(int position){
+		
+		UserFollowBean userfollow = uList.get(position);
+		
+		return userfollow;
+		
+	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
