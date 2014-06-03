@@ -86,13 +86,8 @@
             android:theme="@style/Theme.Sherlock.Light"
             android:uiOptions="splitActionBarWhenNarrow" />
         <activity android:name=".ui.ChatActivity" />
-<<<<<<< HEAD
-        <activity android:name=".ui.WeiboSearchActivity" >
-        </activity>
-=======
-
+        <activity android:name=".ui.SearchActivity" />
         <service android:name=".util.GetMsgService" />
-
         <receiver
             android:name=".ui.MainFragmentActivity$NewMsgReceiver"
             android:exported="false" >
@@ -100,7 +95,6 @@
                 <action android:name="com.thinksns.jkfs.unread_msg" />
             </intent-filter>
         </receiver>
->>>>>>> b3d499ce6abbcadcca7c8b4f8186fefbcd9486ee
     </application>
 
 </manifest>

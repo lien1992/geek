@@ -32,7 +32,7 @@ import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.constant.SettingsUtil;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.WeiboDetailActivity;
-import com.thinksns.jkfs.ui.WeiboSearchActivity;
+import com.thinksns.jkfs.ui.SearchActivity;
 import com.thinksns.jkfs.ui.WriteWeiboActivity;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
@@ -128,6 +128,8 @@ public class ChannelFragment extends Fragment {
 	private String jsonData;
 	private Handler handler;
 	private ArrayList<WeiboBean> weiboList;
+	// 防止没加载微博，还原用
+	private ArrayList<WeiboBean> weiboList_before;
 	private WeiboAdapter listViewAdapter;
 	private String channelTitle = "官方发言";
 	private String channel_category_id = "";
@@ -171,7 +173,7 @@ public class ChannelFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(mContext, WeiboSearchActivity.class);
+				Intent intent = new Intent(mContext, SearchActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -223,9 +225,9 @@ public class ChannelFragment extends Fragment {
 					break;
 				case GETTED_DIF_CHANNEL_WEIBO_LIST:
 					Log.i(TAG, "GETTED_DIF_CHANNEL_WEIBO_LIST");
-					weiboList = (ArrayList<WeiboBean>) msg.obj;
 					// 防止gson出问题，出问题时size=0
-					if (weiboList.size() != 0) {
+					if (((ArrayList<WeiboBean>) msg.obj).size() != 0) {
+						weiboList = (ArrayList<WeiboBean>) msg.obj;
 						listViewAdapter.update(weiboList);
 						Log.i(TAG, weiboList.get(0).getUname());
 						mListView.setSelection(0);
@@ -239,9 +241,9 @@ public class ChannelFragment extends Fragment {
 					}
 					break;
 				case GETTED_REFRESH_CHANNEL_WEIBO_LIST:
-					weiboList = (ArrayList<WeiboBean>) msg.obj;
 					// 防止gson出问题，出问题时size=0
-					if (weiboList.size() != 0) {
+					if (((ArrayList<WeiboBean>) msg.obj).size() != 0) {
+						weiboList = (ArrayList<WeiboBean>) msg.obj;
 						Log.i(TAG, weiboList.size() + "微博个数验证");
 						listViewAdapter.insertToHead(weiboList);
 						mListView.setSelection(0);
@@ -255,9 +257,9 @@ public class ChannelFragment extends Fragment {
 					}
 					break;
 				case GETTED_ON_LOAD_MORE_CHANNEL_WEIBO_LIST:
-					weiboList = (ArrayList<WeiboBean>) msg.obj;
 					// 防止gson出问题，出问题时size=0
-					if (weiboList.size() != 0) {
+					if (((ArrayList<WeiboBean>) msg.obj).size() != 0) {
+						weiboList = (ArrayList<WeiboBean>) msg.obj;
 						listViewAdapter.append(weiboList);
 						mListView.onLoadMoreComplete();
 					}

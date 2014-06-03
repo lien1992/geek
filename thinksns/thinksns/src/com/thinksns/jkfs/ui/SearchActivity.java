@@ -3,6 +3,7 @@ package com.thinksns.jkfs.ui;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -11,10 +12,10 @@ import com.google.gson.reflect.TypeToken;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
+import com.thinksns.jkfs.bean.UserFollowBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.HttpConstant;
-import com.thinksns.jkfs.ui.adapter.ListViewAdapter;
-import com.thinksns.jkfs.ui.adapter.PeopleAdapter;
+import com.thinksns.jkfs.ui.adapter.PeopleListAdapter;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
 import com.thinksns.jkfs.ui.fragment.ChannelFragment;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
@@ -43,7 +44,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
-public class WeiboSearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity {
 
 	public static final String TAG = "zcc";
 	public static final int SEARCH_WEIBO = 0;
@@ -59,6 +60,7 @@ public class WeiboSearchActivity extends BaseActivity {
 	// handler
 	public static final int GET_WEIBOS = 0;
 	public static final int CONNECT_WRONG = 1;
+	public static final int GET_USERS = 2;
 
 	private Activity mContext;
 	private ImageView searchImage;
@@ -74,7 +76,8 @@ public class WeiboSearchActivity extends BaseActivity {
 	private Handler handler;
 	private ArrayList<WeiboBean> weiboList;
 	private WeiboAdapter weiboListViewAdapter;
-	private PeopleAdapter userListViewAdapter;
+	private PeopleListAdapter userListViewAdapter;
+	private LinkedList<UserFollowBean> userList;
 
 	private int search_witch = SEARCH_WEIBO; // 查找标记
 	private String weibo_max_id;
@@ -84,17 +87,20 @@ public class WeiboSearchActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_weibo_search);
+		setContentView(R.layout.activity_search);
 		mContext = this;
-		searchImage = (ImageView) findViewById(R.id.search_weibo_title_search_img);
-		backImg = (ImageView) findViewById(R.id.search_weibo_title_back_img);
-		choose_weibo = findViewById(R.id.search_weibo_choose_weibo);
-		choose_user = findViewById(R.id.search_weibo_choose_user);
-		editText = (EditText) findViewById(R.id.search_weibo_title_edit);
+		searchImage = (ImageView) findViewById(R.id.search_title_search_img);
+		backImg = (ImageView) findViewById(R.id.search_title_back_img);
+		choose_weibo = findViewById(R.id.search_choose_weibo);
+		choose_user = findViewById(R.id.search_choose_user);
+		editText = (EditText) findViewById(R.id.search_title_edit);
 
-		mListView = (PullToRefreshListView) findViewById(R.id.search_weibo_listview);
+		mListView = (PullToRefreshListView) findViewById(R.id.search_listview);
 		mInflater = getLayoutInflater();
 		weiboListViewAdapter = new WeiboAdapter(mContext, mInflater, mListView);
+		userList = new LinkedList<UserFollowBean>();
+		userListViewAdapter = new PeopleListAdapter(mContext, userList,
+				ThinkSNSApplication.getInstance().getAccount(mContext));
 		// 默认微博搜索
 		mListView.setAdapter(weiboListViewAdapter);
 
@@ -106,20 +112,31 @@ public class WeiboSearchActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				switch (msg.what) {
 				case GET_WEIBOS:
-					weiboList = (ArrayList<WeiboBean>) msg.obj;
-					if (weiboList.size() == 0) {
+					if (((ArrayList<WeiboBean>) msg.obj).size() == 0) {
 						Toast.makeText(mContext, "找不到相关结果", Toast.LENGTH_SHORT)
 								.show();
 					} else {
+						weiboList = (ArrayList<WeiboBean>) msg.obj;
 						weiboListViewAdapter.update(weiboList);
 						Log.i(TAG, "搜索了，奥");
 						mListView.setSelection(0);
 						mListView.setVisibility(View.VISIBLE);
-
 					}
 					break;
 				case CONNECT_WRONG:
 					Toast.makeText(mContext, "网络故障", Toast.LENGTH_SHORT).show();
+					break;
+				case GET_USERS:
+					if (((LinkedList<UserFollowBean>) msg.obj).size() == 0) {
+						Toast.makeText(mContext, "找不到相关结果", Toast.LENGTH_SHORT)
+								.show();
+					} else {
+						userList = (LinkedList<UserFollowBean>) msg.obj;
+						userListViewAdapter.update(userList);
+						Log.i(TAG, "搜索了，奥");
+						mListView.setSelection(0);
+						mListView.setVisibility(View.VISIBLE);
+					}
 					break;
 				}
 			}
@@ -131,11 +148,14 @@ public class WeiboSearchActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (search_witch != SEARCH_WEIBO) {
+					Log.i(TAG, "切换了" + search_witch);
 					search_witch = SEARCH_WEIBO;
 					mListView.setVisibility(View.INVISIBLE);
 					weiboListViewAdapter.clear();
 					mListView.setAdapter(weiboListViewAdapter);
+					changeOnItemClick();
 				}
+
 			}
 		});
 
@@ -145,17 +165,17 @@ public class WeiboSearchActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (search_witch != SEARCH_USER) {
+					Log.i(TAG, "切换了" + search_witch);
 					search_witch = SEARCH_USER;
 					mListView.setVisibility(View.INVISIBLE);
-
-					// weiboListViewAdapter.clear();
-					// mListView.setAdapter(weiboListViewAdapter);
+					userListViewAdapter.clear();
+					mListView.setAdapter(userListViewAdapter);
+					changeOnItemClick();
 				}
 			}
 		});
 
 		searchImage.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -180,13 +200,62 @@ public class WeiboSearchActivity extends BaseActivity {
 						getWeibosInThread("", keyWord);
 						break;
 					case SEARCH_USER:
+						getUsersInThread("", keyWord);
 						break;
 					}
 				}
 			}
 		});
+		backImg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 
 		init();
+	}
+
+	private void changeOnItemClick() {
+		if (search_witch == SEARCH_WEIBO) {
+
+			mListView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext,
+							WeiboDetailActivity.class);
+					intent.putExtra("weibo_detail", weiboList.get(position - 1));
+					startActivity(intent);
+				}
+			});
+		} else {
+			mListView.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					// TODO Auto-generated method stub
+					TextView tx = (TextView) arg1
+							.findViewById(R.id.people_item_weibo);// 传送数据 USER
+																	// ID
+					TextView ts = (TextView) arg1
+							.findViewById(R.id.people_item_fo);// 传送数据 FOLLOWING
+					String uuid = tx.getText().toString();
+					String fo = ts.getText().toString();
+
+					Intent i = new Intent(mContext, OtherInfoActivity.class);
+					i.putExtra("uuid", uuid);
+					i.putExtra("following", fo);
+					startActivity(i);
+
+				}
+
+			});
+		}
 	}
 
 	/**
@@ -204,16 +273,7 @@ public class WeiboSearchActivity extends BaseActivity {
 	 * 初始化下拉列表
 	 */
 	private void initListView() {
-		mListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(mContext, WeiboDetailActivity.class);
-				intent.putExtra("weibo_detail", weiboList.get(position - 1));
-				startActivity(intent);
-			}
-		});
+
 		mListView.setLoadMoreEnable(true);
 		mListView.setListener(new RefreshAndLoadMoreListener() {
 
@@ -240,43 +300,43 @@ public class WeiboSearchActivity extends BaseActivity {
 				map.put("oauth_token", OAUTH_TOKEN);
 				map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
 				map.put("mod", MOD);
-				map.put("act", ACT_GET_WEIBO);
+				map.put("act", ACT_GET_USER);
 				map.put("count", "20");
 				map.put("key", keyWord);
 
 				if (!"".equals(max_id)) {
 					map.put("max_id", max_id);
 				}
-				Log.i(TAG, "获取微博");
+				Log.i(TAG, "获取用户");
 				jsonData = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 
 				// 将json转化成bean列表，handler出去
-				handler.obtainMessage(WeiboSearchActivity.GET_WEIBOS,
-						JSONToWeibos(jsonData)).sendToTarget();
+				handler.obtainMessage(SearchActivity.GET_USERS,
+						JSONToUsers(jsonData)).sendToTarget();
 
 			};
 		}.start();
 	}
 
-	private ArrayList<WeiboBean> JSONToUsers(String jsonData) {
+	private LinkedList<UserFollowBean> JSONToUsers(String jsonData) {
 
-		ArrayList<WeiboBean> list = new ArrayList<WeiboBean>();
+		LinkedList<UserFollowBean> list = new LinkedList<UserFollowBean>();
 		try {
-			Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+			Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
 			}.getType();
 			list = new Gson().fromJson(jsonData, listType);
 
-			Log.i(TAG, "微博个数" + list.size());
+			Log.i(TAG, "用户个数" + list.size());
 			if (list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
-				weibo_max_id = list.get(list.size() - 1).getId();
+				weibo_max_id = list.get(list.size() - 1).getFollow_id();
 			}
 		} catch (JsonSyntaxException e) {
-			Log.i(TAG, "json微博出问题");
+			Log.i(TAG, "json用户出问题");
 			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
 		}
-		Log.i(TAG, "微博个数" + list.size());
+		Log.i(TAG, "用户个数" + list.size());
 		return list;
 	}
 
@@ -302,9 +362,8 @@ public class WeiboSearchActivity extends BaseActivity {
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 
 				// 将json转化成bean列表，handler出去
-				handler.obtainMessage(WeiboSearchActivity.GET_WEIBOS,
+				handler.obtainMessage(SearchActivity.GET_WEIBOS,
 						JSONToWeibos(jsonData)).sendToTarget();
-
 			};
 		}.start();
 	}
