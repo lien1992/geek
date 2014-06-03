@@ -140,11 +140,6 @@ public class UserInfoFollowList extends BaseActivity implements
 				String uuid = tx.getText().toString();
 				String fo = ts.getText().toString();
 
-				// Bundle bundle = new Bundle();
-				// bundle.putString("uuid", uuid);
-				// AboutMeFragment fragobj = new AboutMeFragment(1);
-				// fragobj.setArguments(bundle);
-
 				Intent i = new Intent(UserInfoFollowList.this,
 						OtherInfoActivity.class);
 				i.putExtra("uuid", uuid);
