@@ -1,9 +1,10 @@
 package com.thinksns.jkfs.ui;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -57,10 +58,16 @@ public class SearchActivity extends BaseActivity {
 	static private final String ACT_GET_USER = "weibo_search_user";
 	static private String OAUTH_TOKEN;
 	static private String OAUTH_TOKEN_SECRECT;
+
+	static private int onLoadMoreFlag = 0; // 1代表加载更多
+	static private int page = 0;// 0是没有使用
+
 	// handler
 	public static final int GET_WEIBOS = 0;
 	public static final int CONNECT_WRONG = 1;
 	public static final int GET_USERS = 2;
+	public static final int LOAD_MORE_USER = 3;
+	public static final int LOAD_MORE_WEIBO = 4;
 
 	private Activity mContext;
 	private ImageView searchImage;
@@ -74,13 +81,13 @@ public class SearchActivity extends BaseActivity {
 	private LayoutInflater mInflater;
 	private String jsonData;
 	private Handler handler;
-	private ArrayList<WeiboBean> weiboList;
+	private LinkedList<WeiboBean> weiboList;
 	private WeiboAdapter weiboListViewAdapter;
 	private PeopleListAdapter userListViewAdapter;
 	private LinkedList<UserFollowBean> userList;
 
 	private int search_witch = SEARCH_WEIBO; // 查找标记
-	private String weibo_max_id;
+	private String keyWord;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -97,6 +104,7 @@ public class SearchActivity extends BaseActivity {
 
 		mListView = (PullToRefreshListView) findViewById(R.id.search_listview);
 		mInflater = getLayoutInflater();
+		weiboList = new LinkedList<WeiboBean>();
 		weiboListViewAdapter = new WeiboAdapter(mContext, mInflater, mListView);
 		userList = new LinkedList<UserFollowBean>();
 		userListViewAdapter = new PeopleListAdapter(mContext, userList,
@@ -112,11 +120,12 @@ public class SearchActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				switch (msg.what) {
 				case GET_WEIBOS:
-					if (((ArrayList<WeiboBean>) msg.obj).size() == 0) {
+					if (((LinkedList<WeiboBean>) msg.obj).size() == 0) {
 						Toast.makeText(mContext, "找不到相关结果", Toast.LENGTH_SHORT)
 								.show();
+						page = 0;
 					} else {
-						weiboList = (ArrayList<WeiboBean>) msg.obj;
+						weiboList = (LinkedList<WeiboBean>) msg.obj;
 						weiboListViewAdapter.update(weiboList);
 						Log.i(TAG, "搜索了，奥");
 						mListView.setSelection(0);
@@ -130,6 +139,7 @@ public class SearchActivity extends BaseActivity {
 					if (((LinkedList<UserFollowBean>) msg.obj).size() == 0) {
 						Toast.makeText(mContext, "找不到相关结果", Toast.LENGTH_SHORT)
 								.show();
+						page = 0;
 					} else {
 						userList = (LinkedList<UserFollowBean>) msg.obj;
 						userListViewAdapter.update(userList);
@@ -137,6 +147,34 @@ public class SearchActivity extends BaseActivity {
 						mListView.setSelection(0);
 						mListView.setVisibility(View.VISIBLE);
 					}
+					break;
+				case LOAD_MORE_USER:
+					if (((LinkedList<UserFollowBean>) msg.obj).size() == 0) {
+						mListView.onLoadMoreComplete();
+						Log.i(TAG, "没更多了");
+					} else {
+						userList = append(userList,
+								(LinkedList<UserFollowBean>) msg.obj);
+						userListViewAdapter.update(userList);
+						Log.i(TAG, "加载更多了");
+
+					}
+					// 加载完成
+					onLoadMoreFlag = 0;
+					break;
+				case LOAD_MORE_WEIBO:
+					if (((LinkedList<WeiboBean>) msg.obj).size() == 0) {
+						mListView.onLoadMoreComplete();
+						Log.i(TAG, "没更多了");
+					} else {
+						weiboList = append(weiboList,
+								(LinkedList<WeiboBean>) msg.obj);
+						weiboListViewAdapter.update(weiboList);
+						Log.i(TAG, "加载更多了");
+
+					}
+					// 加载完成
+					onLoadMoreFlag = 0;
 					break;
 				}
 			}
@@ -180,7 +218,7 @@ public class SearchActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Log.i(TAG, "搜索点击了");
-				String keyWord = editText.getText().toString();
+				keyWord = editText.getText().toString();
 				Log.i(TAG, "输入框里的东西是" + keyWord);
 				while (keyWord.endsWith(" ")) {
 					keyWord = keyWord.substring(0, keyWord.length() - 1);
@@ -195,12 +233,13 @@ public class SearchActivity extends BaseActivity {
 							.show();
 					return;
 				} else {
+					page = 1;
 					switch (search_witch) {
 					case SEARCH_WEIBO:
-						getWeibosInThread("", keyWord);
+						getWeibosInThread(1, keyWord);
 						break;
 					case SEARCH_USER:
-						getUsersInThread("", keyWord);
+						getUsersInThread(1, keyWord);
 						break;
 					}
 				}
@@ -211,7 +250,7 @@ public class SearchActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				mContext.finish();
 			}
 		});
 
@@ -226,6 +265,7 @@ public class SearchActivity extends BaseActivity {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					// TODO Auto-generated method stub
+					Log.i(TAG, "微博点击");
 					Intent intent = new Intent(mContext,
 							WeiboDetailActivity.class);
 					intent.putExtra("weibo_detail", weiboList.get(position - 1));
@@ -239,6 +279,7 @@ public class SearchActivity extends BaseActivity {
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
 					// TODO Auto-generated method stub
+					Log.i(TAG, "yonghu点击");
 					TextView tx = (TextView) arg1
 							.findViewById(R.id.people_item_weibo);// 传送数据 USER
 																	// ID
@@ -249,6 +290,7 @@ public class SearchActivity extends BaseActivity {
 
 					Intent i = new Intent(mContext, OtherInfoActivity.class);
 					i.putExtra("uuid", uuid);
+					Log.i(TAG, "__" + uuid + "uuid");
 					i.putExtra("following", fo);
 					startActivity(i);
 
@@ -267,6 +309,7 @@ public class SearchActivity extends BaseActivity {
 		OAUTH_TOKEN_SECRECT = application.getOauth_token_secret(mContext);
 		// 下拉列表初始化
 		initListView();
+		changeOnItemClick();
 	}
 
 	/**
@@ -284,14 +327,20 @@ public class SearchActivity extends BaseActivity {
 
 			@Override
 			public void onLoadMore() {
-				// 加载更多还没写
-
+				// 开始加载
+				onLoadMoreFlag = 1;
+				page += 1;
+				if (search_witch == SEARCH_WEIBO) {
+					getWeibosInThread(page, keyWord);
+				} else {
+					getUsersInThread(page, keyWord);
+				}
 			}
 		});
 	}
 
 	// 获取用户
-	private void getUsersInThread(final String max_id, final String keyWord) {
+	private void getUsersInThread(final int page, final String keyWord) {
 
 		new Thread() {
 			public void run() {
@@ -304,17 +353,20 @@ public class SearchActivity extends BaseActivity {
 				map.put("count", "20");
 				map.put("key", keyWord);
 
-				if (!"".equals(max_id)) {
-					map.put("max_id", max_id);
+				if (onLoadMoreFlag == 1) {
+					map.put("page", page + "");
 				}
 				Log.i(TAG, "获取用户");
 				jsonData = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-
-				// 将json转化成bean列表，handler出去
-				handler.obtainMessage(SearchActivity.GET_USERS,
-						JSONToUsers(jsonData)).sendToTarget();
-
+				if (onLoadMoreFlag == 0) {
+					// 将json转化成bean列表，handler出去
+					handler.obtainMessage(SearchActivity.GET_USERS,
+							JSONToUsers(jsonData)).sendToTarget();
+				} else {
+					handler.obtainMessage(SearchActivity.LOAD_MORE_USER,
+							JSONToUsers(jsonData)).sendToTarget();
+				}
 			};
 		}.start();
 	}
@@ -330,7 +382,6 @@ public class SearchActivity extends BaseActivity {
 			Log.i(TAG, "用户个数" + list.size());
 			if (list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
-				weibo_max_id = list.get(list.size() - 1).getFollow_id();
 			}
 		} catch (JsonSyntaxException e) {
 			Log.i(TAG, "json用户出问题");
@@ -341,7 +392,7 @@ public class SearchActivity extends BaseActivity {
 	}
 
 	// 获取微博
-	private void getWeibosInThread(final String max_id, final String keyWord) {
+	private void getWeibosInThread(final int page, final String keyWord) {
 
 		new Thread() {
 			public void run() {
@@ -354,32 +405,37 @@ public class SearchActivity extends BaseActivity {
 				map.put("count", "20");
 				map.put("key", keyWord);
 
-				if (!"".equals(max_id)) {
-					map.put("max_id", max_id);
+				if (onLoadMoreFlag == 1) {
+					Log.i(TAG, "page" + page);
+					map.put("page", page + "");
 				}
 				Log.i(TAG, "获取微博");
 				jsonData = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-
-				// 将json转化成bean列表，handler出去
-				handler.obtainMessage(SearchActivity.GET_WEIBOS,
-						JSONToWeibos(jsonData)).sendToTarget();
+				if (onLoadMoreFlag == 0) {
+					// 将json转化成bean列表，handler出去
+					handler.obtainMessage(SearchActivity.GET_WEIBOS,
+							JSONToWeibos(jsonData)).sendToTarget();
+				} else {
+					Log.i(TAG, "微博加载更多。。。");
+					handler.obtainMessage(SearchActivity.LOAD_MORE_WEIBO,
+							JSONToWeibos(jsonData)).sendToTarget();
+				}
 			};
 		}.start();
 	}
 
-	private ArrayList<WeiboBean> JSONToWeibos(String jsonData) {
+	private LinkedList<WeiboBean> JSONToWeibos(String jsonData) {
 
-		ArrayList<WeiboBean> list = new ArrayList<WeiboBean>();
+		LinkedList<WeiboBean> list = new LinkedList<WeiboBean>();
 		try {
-			Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+			Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 			}.getType();
 			list = new Gson().fromJson(jsonData, listType);
 
 			Log.i(TAG, "微博个数" + list.size());
 			if (list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
-				weibo_max_id = list.get(list.size() - 1).getId();
 			}
 		} catch (JsonSyntaxException e) {
 			Log.i(TAG, "json微博出问题");
@@ -387,5 +443,14 @@ public class SearchActivity extends BaseActivity {
 		}
 		Log.i(TAG, "微博个数" + list.size());
 		return list;
+	}
+
+	// 加到表头
+	public LinkedList append(LinkedList mList, LinkedList list) {
+		if (list == null) {
+			return mList;
+		}
+		mList.addAll(list);
+		return mList;
 	}
 }
