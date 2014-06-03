@@ -9,7 +9,8 @@
     <RelativeLayout
         android:id="@+id/write_weibo_header"
         android:layout_width="match_parent"
-        android:layout_height="50dp" >
+        android:layout_height="50dp"
+        android:background="@color/white_for_title" >
 
         <ImageView
             android:id="@+id/write_weibo_back"
@@ -24,8 +25,8 @@
             android:id="@+id/write_weibo_desc_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/write_weibo_back"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/write_weibo_back"
             android:text="写微博"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -52,12 +53,12 @@
                 android:id="@+id/write_weibo_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/edit_bg"
                 android:fadeScrollbars="true"
                 android:gravity="left|top"
                 android:hint="开开心心写微博啦！:)"
                 android:scrollbarStyle="outsideOverlay"
-                android:scrollbars="vertical"
-                android:background="@drawable/edit_bg" />
+                android:scrollbars="vertical" />
 
             <ImageView
                 android:id="@+id/write_weibo_content_pic"

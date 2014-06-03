@@ -82,6 +82,8 @@
         </activity>
         <activity android:name=".ui.UserInfoFollowList" >
         </activity>
+        <activity android:name=".ui.AtUserActivity" >
+        </activity>
         <activity
             android:name=".test.TestActivity"
             android:configChanges="orientation|screenSize|screenLayout"
