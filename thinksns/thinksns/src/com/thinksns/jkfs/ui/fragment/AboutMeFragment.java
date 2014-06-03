@@ -422,11 +422,14 @@ public class AboutMeFragment extends Fragment {
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case 0:
-							Intent intentFromGallery = new Intent();
-							intentFromGallery.setType("image/*"); // 设置文件类型
+							/*		Intent intentFromGallery = new Intent();
+						     intentFromGallery.setType("image/*"); // 设置文件类型
 							intentFromGallery
-									.setAction(Intent.ACTION_GET_CONTENT);
-							startActivityForResult(intentFromGallery,
+									.setAction(Intent.ACTION_GET_CONTENT);*/
+							Intent choosePictureIntent = new Intent(
+									Intent.ACTION_PICK,
+									android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+							startActivityForResult(choosePictureIntent,
 									IMAGE_REQUEST_CODE);
 							break;
 						case 1:
@@ -460,7 +463,7 @@ public class AboutMeFragment extends Fragment {
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {		
 		// 结果码不等于取消时候
 		if (resultCode != 0) {
 
@@ -526,8 +529,15 @@ public class AboutMeFragment extends Fragment {
 			Bitmap photo = extras.getParcelable("data");
 			Drawable drawable = new BitmapDrawable(photo);
 
-			Uri imageFileUri = data.getData();
-
+			Uri imageFileUri;
+		     if (data.getData() != null)  
+		        {  
+		    	 imageFileUri = data.getData();  
+		        }  
+		        else  
+		        {  
+		        	imageFileUri  = Uri.parse(MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), photo, null,null));      
+		        }  
 			Log.d("uri is null？", (imageFileUri == null) + "");
 
 			String picPath = getPicPathFromUri(imageFileUri);

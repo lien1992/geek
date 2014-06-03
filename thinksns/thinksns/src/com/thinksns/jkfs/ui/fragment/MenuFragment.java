@@ -7,6 +7,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.NotificationBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
@@ -24,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -35,6 +37,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private final int HTTP_GET_OK = 9;
 	private RoundAngleImageView avatar;
 	private TextView nick;
+	private ImageView at_new;
 	private LinearLayout home;
 	private LinearLayout at;
 	private LinearLayout favorite;
@@ -47,6 +50,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private AccountBean account;
 	private UserInfoBean userinfo;
 	private String json;
+	private NotificationBean comment_unread, at_unread;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -89,6 +93,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 				R.layout.slidingmenu_behind, container, false);
 		avatar = (RoundAngleImageView) view.findViewById(R.id.sm_behind_avatar);
 		nick = (TextView) view.findViewById(R.id.sm_behind_nick);
+		at_new = (ImageView) view.findViewById(R.id.sm_at_unread);
 		home = (LinearLayout) view.findViewById(R.id.sm_home);
 		at = (LinearLayout) view.findViewById(R.id.sm_at);
 		favorite = (LinearLayout) view.findViewById(R.id.sm_favorite);
@@ -153,8 +158,21 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		case R.id.sm_at:
 			changeBackground(R.id.sm_at);
 			AtAndCommentFragment atAndCommentFragment = new AtAndCommentFragment();
-			if (atAndCommentFragment != null)
+			if (atAndCommentFragment != null) {
+				if (comment_unread != null || at_unread != null) {
+					Bundle args = new Bundle();
+					args.putParcelable("comment_unread", comment_unread);
+					Log.d("wj", "comment_unread.getCount()"
+							+ comment_unread.getCount());
+					args.putParcelable("at_unread", at_unread);
+					Log.d("wj", "at_unread.getCount()" + at_unread.getCount());
+					atAndCommentFragment.setArguments(args);
+					comment_unread = null;
+					at_unread = null;
+				}
+				at_new.setVisibility(View.GONE);
 				switchFragment(atAndCommentFragment);
+			}
 			break;
 		case R.id.sm_favorite:
 			changeBackground(R.id.sm_favorite);
@@ -255,6 +273,15 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		if (getActivity() instanceof MainFragmentActivity) {
 			MainFragmentActivity ra = (MainFragmentActivity) getActivity();
 			ra.switchContent(fragment);
+		}
+	}
+
+	public void setUnread(NotificationBean comment_unread,
+			NotificationBean at_unread) {
+		this.comment_unread = comment_unread;
+		this.at_unread = at_unread;
+		if (comment_unread.getCount() > 0 || at_unread.getCount() > 0) {
+			at_new.setVisibility(View.VISIBLE);
 		}
 	}
 }

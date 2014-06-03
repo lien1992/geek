@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.bean.NotificationBean;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 
 /**
@@ -37,7 +38,28 @@ public class AtAndCommentFragment extends Fragment {
 	private ImageView back;
 	private TextView comment;
 	private TextView at;
+	private TextView comment_unread;
+	private TextView at_unread;
 	private LayoutInflater inflater;
+	private NotificationBean comment_unread_bean, at_unread_bean;
+	int comment_count, at_count;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Bundle unread = this.getArguments();
+		if (unread != null) {
+			comment_unread_bean = unread.getParcelable("comment_unread");
+			at_unread_bean = unread.getParcelable("at_unread");
+			if (comment_unread_bean != null) {
+				comment_count = comment_unread_bean.getCount();
+			}
+			if (at_unread_bean != null) {
+				at_count = at_unread_bean.getCount();
+			}
+		}
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,12 +70,23 @@ public class AtAndCommentFragment extends Fragment {
 		back = (ImageView) view.findViewById(R.id.wb_at_back);
 		comment = (TextView) view.findViewById(R.id.wb_comment_tab);
 		at = (TextView) view.findViewById(R.id.wb_at_tab);
+		comment_unread = (TextView) view
+				.findViewById(R.id.wb_comment_tab_unread);
+		at_unread = (TextView) view.findViewById(R.id.wb_at_tab_unread);
 		return view;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		if (comment_count != 0) {
+			comment_unread.setText(comment_count + "");
+			comment_unread.setVisibility(View.VISIBLE);
+		}
+		if (at_count != 0) {
+			at_unread.setText(at_count + "");
+			at_unread.setVisibility(View.VISIBLE);
+		}
 		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -70,6 +103,7 @@ public class AtAndCommentFragment extends Fragment {
 				comment.setTextColor(getResources().getColor(R.color.grey));
 				getChildFragmentManager().beginTransaction().replace(
 						R.id.at_comment_frame, new AtMeFragment()).commit();
+				at_unread.setVisibility(View.GONE);
 
 			}
 		});
@@ -119,6 +153,7 @@ public class AtAndCommentFragment extends Fragment {
 					getChildFragmentManager().beginTransaction().replace(
 							R.id.at_comment_frame, new CommentToMeFragment())
 							.commit();
+					comment_unread.setVisibility(View.GONE);
 				} else {
 					getChildFragmentManager().beginTransaction().replace(
 							R.id.at_comment_frame, new CommentByMeFragment())
