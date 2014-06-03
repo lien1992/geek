@@ -108,7 +108,7 @@
                 android:src="@drawable/search_tiao" />
 
             <RelativeLayout
-                android:id="@+id/search_weibo_choose_yonghu"
+                android:id="@+id/search_weibo_choose_user"
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:layout_weight="1" >
@@ -120,21 +120,21 @@
                     android:text="用户" />
             </RelativeLayout>
         </LinearLayout>
-    </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/channel_menu_bottom" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/channel_menu_bottom" />
+    </RelativeLayout>
 
     <com.thinksns.jkfs.ui.view.PullToRefreshListView
         android:id="@+id/search_weibo_listview"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/search_weibo_choose_all" >
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="invisible" >
     </com.thinksns.jkfs.ui.view.PullToRefreshListView>
 
 </LinearLayout>

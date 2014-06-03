@@ -154,7 +154,7 @@ public class PeopleListAdapter extends BaseAdapter {
 	public void addItem(UserFollowBean item) {
 		uList.add(item);
 	}
-
+	
 	// 点击按钮 取消关注或再次关注
 	private void followif(final String uid, final String act) {
 
