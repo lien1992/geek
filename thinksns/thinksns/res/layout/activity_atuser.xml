@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/wb_at_users_header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/white_for_title" >
+
+        <ImageView
+            android:id="@+id/wb_at_users_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0dip"
+            android:paddingBottom="1dip"
+            android:src="@drawable/back" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:src="@color/grey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/wb_at_users_back"
+            android:text="请选择"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/wb_at_users_bottom"
+        android:layout_below="@+id/wb_at_users_header" >
+
+        <com.thinksns.jkfs.ui.view.PullToRefreshListView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/wb_at_users_list_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white"
+            android:cacheColorHint="#0000"
+            android:divider="@drawable/lv_divider" />
+
+        <ProgressBar
+            android:id="@+id/wb_at_users_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/wb_at_users_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white_for_title"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="没有你要\@的用户？点击返回"
+            android:textColor="@color/green"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</RelativeLayout>
