@@ -45,7 +45,7 @@ public class UserInfoFollowList extends BaseActivity implements
 	private int visibleItemCount; // 当前窗口可见项总数
 	// private PeopleListAdapter adapter[];
 
-	private LinkedList<PeopleListAdapter> adapter = new LinkedList<PeopleListAdapter>();
+	private PeopleListAdapter adapter;
 	private int ac = -1;// 判断当前打开的是那个ADAPTER
 	private View loadMoreView;
 	private Button loadMoreButton;
@@ -70,27 +70,17 @@ public class UserInfoFollowList extends BaseActivity implements
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 1:
-				
-				int ffff = userfollows.size();
-
-				ffff = ffff +1;
-				
-				
-				adapter.add(new PeopleListAdapter(UserInfoFollowList.this,
-						userfollows, account));
-
+				adapter=new PeopleListAdapter(UserInfoFollowList.this,
+						userfollows, account);
 				// 自动为id是list的ListView设置适配器
-				listView.setAdapter(adapter.get(ac));
+				listView.setAdapter(adapter);
 				currentPage = currentPage + 1;
-
 				break;
 
 			case 2:
-
 				loadNew();
 				currentPage = currentPage + 1;
-				adapter.get(ac).notifyDataSetChanged(); // 数据集变化后,通知adapter
-
+				adapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
 				break;
 
 			}
@@ -133,17 +123,14 @@ public class UserInfoFollowList extends BaseActivity implements
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				TextView tx = (TextView) arg1
-						.findViewById(R.id.people_item_weibo);// 传送数据 USER ID
-				TextView ts = (TextView) arg1
-						.findViewById(R.id.people_item_fo);//传送数据 FOLLOWING
-				String uuid = tx.getText().toString();
-				String fo = ts.getText().toString();
 
+				UserFollowBean userfollow = adapter.getUser(arg2);
+				String fo = "" +userfollow.follow_state.getFollowing();
+				
 				Intent i = new Intent(UserInfoFollowList.this,
 						OtherInfoActivity.class);
-				i.putExtra("uuid", uuid);
-				i.putExtra("following", fo);
+				i.putExtra("following", fo);		
+				i.putExtra("userinfo", userfollow);
 				startActivity(i);
 
 			}
@@ -462,7 +449,7 @@ public class UserInfoFollowList extends BaseActivity implements
 		if (nicount == 20) {
 
 			for (int i = 0; i < 20; i++) {
-				adapter.get(ac).addItem(userfollows2.get(i));
+				adapter.addItem(userfollows2.get(i));
 			}
 
 			Toast toast = Toast.makeText(this, "1已加载" + nicount + "个人"
@@ -472,7 +459,7 @@ public class UserInfoFollowList extends BaseActivity implements
 		} else if (nicount < 20 && nicount > 0) {
 
 			for (int i = 0; i < nicount; i++) {
-				adapter.get(ac).addItem(userfollows2.get(i));
+				adapter.addItem(userfollows2.get(i));
 			}
 
 			Toast toast = Toast.makeText(this, "2已加载" + nicount + "个人"
