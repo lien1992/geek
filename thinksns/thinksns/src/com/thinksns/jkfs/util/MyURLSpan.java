@@ -8,6 +8,7 @@ import android.os.Parcel;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 
 public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
@@ -40,6 +41,7 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
 
 	public void onClick(View widget) { // 待修复..
 		Uri uri = Uri.parse(getURL());
+		Log.d("wj", "URI:"+uri.toString());
 		Context context = widget.getContext();
 		// Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		// intent.putExtra(Browser.EXTRA_APPLICATION_ID,

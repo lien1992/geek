@@ -6,7 +6,8 @@
     <RelativeLayout
         android:id="@+id/app_header"
         android:layout_width="match_parent"
-        android:layout_height="50dp" >
+        android:layout_height="50dp"
+        android:background="@color/white_for_title" >
 
         <ImageView
             android:id="@+id/app_navi"

@@ -83,7 +83,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		super.onResume();
 		alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(this, GetMsgService.class);
-		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
+		PendingIntent pendingIntent = PendingIntent.getService(this, 2014, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		long triggerAtTime = SystemClock.elapsedRealtime();
 		// 每30s请求一次服务器获取未读消息数目
@@ -97,7 +97,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 
 		alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(this, GetMsgService.class);
-		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
+		PendingIntent pendingIntent = PendingIntent.getService(this, 2014, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.cancel(pendingIntent);
 	}

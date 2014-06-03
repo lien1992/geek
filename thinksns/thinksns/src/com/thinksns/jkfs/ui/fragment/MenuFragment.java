@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private final int HTTP_GET_OK = 9;
 	private RoundAngleImageView avatar;
 	private TextView nick;
+	private ImageView at_new;
 	private LinearLayout home;
 	private LinearLayout at;
 	private LinearLayout favorite;
@@ -91,6 +93,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 				R.layout.slidingmenu_behind, container, false);
 		avatar = (RoundAngleImageView) view.findViewById(R.id.sm_behind_avatar);
 		nick = (TextView) view.findViewById(R.id.sm_behind_nick);
+		at_new = (ImageView) view.findViewById(R.id.sm_at_unread);
 		home = (LinearLayout) view.findViewById(R.id.sm_home);
 		at = (LinearLayout) view.findViewById(R.id.sm_at);
 		favorite = (LinearLayout) view.findViewById(R.id.sm_favorite);
@@ -162,12 +165,12 @@ public class MenuFragment extends Fragment implements OnClickListener {
 					Log.d("wj", "comment_unread.getCount()"
 							+ comment_unread.getCount());
 					args.putParcelable("at_unread", at_unread);
-					Log.d("wj", "at_unread.getCount()"
-							+ at_unread.getCount());
+					Log.d("wj", "at_unread.getCount()" + at_unread.getCount());
 					atAndCommentFragment.setArguments(args);
 					comment_unread = null;
 					at_unread = null;
 				}
+				at_new.setVisibility(View.GONE);
 				switchFragment(atAndCommentFragment);
 			}
 			break;
@@ -277,5 +280,8 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			NotificationBean at_unread) {
 		this.comment_unread = comment_unread;
 		this.at_unread = at_unread;
+		if (comment_unread.getCount() > 0 || at_unread.getCount() > 0) {
+			at_new.setVisibility(View.VISIBLE);
+		}
 	}
 }

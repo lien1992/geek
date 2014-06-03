@@ -8,7 +8,7 @@
         android:id="@+id/wb_at_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white" >
+        android:background="@color/white_for_title" >
 
         <ImageView
             android:id="@+id/wb_at_back"
@@ -61,7 +61,7 @@
 
             <TextView
                 android:id="@+id/wb_comment_tab_unread"
-                android:layout_width="wrap_content"
+                android:layout_width="28dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginRight="30dp"
@@ -95,7 +95,7 @@
 
             <TextView
                 android:id="@+id/wb_at_tab_unread"
-                android:layout_width="wrap_content"
+                android:layout_width="28dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginRight="25dp"

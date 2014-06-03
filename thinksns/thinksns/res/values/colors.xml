@@ -11,6 +11,7 @@
     
     <color name="green_1">#66cc99</color>
     <color name="green_2">#99cccc</color>
+    <color name="white_for_title">#f0f0f0</color>
     <color name="sm_divider">#F7F7F7</color>
 
     <!-- 测试而用 -->
