@@ -4,135 +4,133 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@color/common_white"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <!-- profile image -->
+
+            <FrameLayout
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp" >
+
+                <ImageView
+                    android:id="@+id/m_head"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/mushishi" />
+                <!-- image corner -->
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/cover" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/m_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:text="username"
+                        android:textSize="20dp" />
+
+                    <ImageView
+                        android:id="@+id/m_sex"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/m_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="address"
+                    android:textSize="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/changeinfo"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/myinfo_but"
+                    android:text="修改" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/common_white"
             android:orientation="vertical" >
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/common_grey"
                 android:orientation="horizontal" >
 
-                <!-- profile image -->
-
-                <FrameLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp" >
-
-                    <ImageView
-                        android:id="@+id/m_head"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@drawable/mushishi" />
-                    <!-- image corner -->
-
-                    <ImageView
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@drawable/cover" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/m_weibo"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical" >
+                    android:background="@drawable/tab_but1"
+                    android:drawableBottom="@drawable/weibowds"
+                    android:text="@string/myweibonum"
+                    android:textColor="@color/common_blue" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
-
-                        <TextView
-                            android:id="@+id/m_username"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:text="username"
-                            android:textSize="20dp" />
-
-                        <ImageView
-                            android:id="@+id/m_sex"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/m_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:text="address"
-                        android:textSize="20dp" />
-
-                    
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/m_follow"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="vertical" >
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_but2"
+                    android:drawableBottom="@drawable/followwds"
+                    android:text="@string/myfollownum"
+                    android:textColor="@color/common_blue" />
 
-                    <Button
-                        android:id="@+id/changeinfo"
-                        android:layout_width="80dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/myinfo_but"
-                        android:text="修改" />
-                </LinearLayout>
+                <Button
+                    android:id="@+id/m_followme"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_but1"
+                    android:drawableBottom="@drawable/followerswds"
+                    android:text="@string/followmenum"
+                    android:textColor="@color/common_blue" />
             </LinearLayout>
 
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/aboutme_frame"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/common_grey"
-                    android:orientation="horizontal" >
-
-                    <Button
-                        android:id="@+id/m_weibo"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/tab_but1"
-                        android:drawableBottom="@drawable/weibowds"
-                        android:text="@string/myweibonum"
-                        android:textColor="@color/common_blue" />
-
-                    <Button
-                        android:id="@+id/m_follow"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/tab_but2"
-                        android:drawableBottom="@drawable/followwds"
-                        android:text="@string/myfollownum"
-                        android:textColor="@color/common_blue" />
-
-                    <Button
-                        android:id="@+id/m_followme"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/tab_but1"
-                        android:drawableBottom="@drawable/followerswds"
-                        android:text="@string/followmenum"
-                        android:textColor="@color/common_blue" />
-                </LinearLayout>
+                android:layout_height="match_parent" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -211,12 +209,9 @@
                             android:text="address"
                             android:textColor="#ff333333"
                             android:textSize="18sp" />
-
-                        
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
-    </ScrollView>
-
+    </LinearLayout>
 </LinearLayout>
