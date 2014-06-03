@@ -49,13 +49,15 @@ public class AtAndCommentFragment extends Fragment {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		Bundle unread = this.getArguments();
-		comment_unread_bean = unread.getParcelable("comment_unread");
-		at_unread_bean = unread.getParcelable("at_unread");
-		if (comment_unread_bean != null) {
-			comment_count = comment_unread_bean.getCount();
-		}
-		if (at_unread_bean != null) {
-			at_count = at_unread_bean.getCount();
+		if (unread != null) {
+			comment_unread_bean = unread.getParcelable("comment_unread");
+			at_unread_bean = unread.getParcelable("at_unread");
+			if (comment_unread_bean != null) {
+				comment_count = comment_unread_bean.getCount();
+			}
+			if (at_unread_bean != null) {
+				at_count = at_unread_bean.getCount();
+			}
 		}
 	}
 

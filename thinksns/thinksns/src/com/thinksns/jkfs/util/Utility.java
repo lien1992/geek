@@ -328,7 +328,7 @@ public class Utility {
 		};
 		// Match @mentions and capture just the username portion of the text.
 		Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)"); // 包括unicode汉字编码
-		String scheme = "com.thinksns.jkfs://";
+		String scheme = "com.thinksns.jkfs://"; //uri scheme
 		value = MyLinkify.getJustHighLightLinks(hackTxt, pattern, scheme, null,
 				mentionFilter);
 

@@ -6,6 +6,7 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.util.Patterns;
 import android.webkit.WebView;
 import android.widget.TextView;

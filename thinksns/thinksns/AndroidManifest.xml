@@ -78,7 +78,7 @@
         </activity>
         <activity android:name=".ui.UserInfoFanList" >
         </activity>
-           <activity android:name=".ui.UserInfoFollowList" >
+        <activity android:name=".ui.UserInfoFollowList" >
         </activity>
         <activity
             android:name=".test.TestActivity"
@@ -86,8 +86,21 @@
             android:theme="@style/Theme.Sherlock.Light"
             android:uiOptions="splitActionBarWhenNarrow" />
         <activity android:name=".ui.ChatActivity" />
+<<<<<<< HEAD
         <activity android:name=".ui.WeiboSearchActivity" >
         </activity>
+=======
+
+        <service android:name=".util.GetMsgService" />
+
+        <receiver
+            android:name=".ui.MainFragmentActivity$NewMsgReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.thinksns.jkfs.unread_msg" />
+            </intent-filter>
+        </receiver>
+>>>>>>> b3d499ce6abbcadcca7c8b4f8186fefbcd9486ee
     </application>
 
 </manifest>
