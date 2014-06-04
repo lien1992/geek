@@ -5,5 +5,8 @@ package com.thinksns.jkfs.constant;
  */
 public interface BaseConstant {
 	public static final String UNREAD_MSG_BROADCAST = "com.thinksns.jkfs.unread_msg";
+	//Preference keys
+	public static final String NO_IMAGE_MODE_KEY = "no_image_mode";
+	public static final String ABOUT_US_KEY = "about_us";
 
 }
