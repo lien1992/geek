@@ -6,6 +6,7 @@ import java.util.List;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
+import com.thinksns.jkfs.ui.SearchActivity;
 import com.thinksns.jkfs.ui.WriteWeiboActivity;
 import com.thinksns.jkfs.ui.adapter.MainFragmentPagerAdapter;
 import com.thinksns.jkfs.ui.adapter.MainFragmentPagerAdapter.SwitchGroupListener;
@@ -106,7 +107,8 @@ public class WeiboMainFragment extends Fragment {
 							WriteWeiboActivity.class));
 					break;
 				case 2:
-					// 搜索
+					startActivity(new Intent(getActivity(),
+							SearchActivity.class));
 					break;
 				}
 			}

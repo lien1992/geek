@@ -10,12 +10,12 @@
         android:id="@+id/search_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#f6f5ec" >
+        android:background="@color/white_for_title"  >
 
         <ImageView
             android:id="@+id/search_title_back_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="0dip"
             android:paddingBottom="1dip"
@@ -27,9 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/search_title_back_img"
-            android:paddingLeft="10dp"
             android:text="搜索"
-            android:textSize="15sp" />
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/search_title_search_img"
