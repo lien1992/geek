@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SearchActivity" >
+
+    <RelativeLayout
+        android:id="@+id/search_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f6f5ec" >
+
+        <ImageView
+            android:id="@+id/search_title_back_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0dip"
+            android:paddingBottom="1dip"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/search_title_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/search_title_back_img"
+            android:paddingLeft="10dp"
+            android:text="搜索"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/search_title_search_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="20dp"
+            android:src="@drawable/send_2" />
+
+        <EditText
+            android:id="@+id/search_title_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/search_title_search_img"
+            android:layout_toRightOf="@id/search_title_name"
+            android:background="@null"
+            android:hint="请输入关键词!"
+            android:paddingLeft="15dp"
+            android:paddingRight="20dp"
+            android:singleLine="true"
+            android:textSize="12sp" >
+        </EditText>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/search_title_edit"
+            android:layout_alignRight="@id/search_title_edit"
+            android:layout_below="@id/search_title_edit"
+            android:paddingLeft="13dp"
+            android:paddingRight="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/editview_tiao" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/search_choose_all"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="#f6f5ec" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/channel_menu_bottom" />
+        <!-- width需要在代码中设置，根据屏幕宽度，对半分 -->
+
+        <LinearLayout
+            android:id="@+id/search_choose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:id="@+id/search_choose_weibo"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="微博" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/search_tiao" />
+
+            <RelativeLayout
+                android:id="@+id/search_choose_user"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="用户" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/channel_menu_bottom" />
+    </RelativeLayout>
+
+    <com.thinksns.jkfs.ui.view.PullToRefreshListView
+        android:id="@+id/search_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="invisible" >
+    </com.thinksns.jkfs.ui.view.PullToRefreshListView>
+
+</LinearLayout>
