@@ -37,7 +37,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@color/common_white" >
 
         <TextView
             android:id="@+id/app_version"
@@ -64,20 +65,21 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:background="@color/common_white"
                 android:src="@drawable/tree" />
 
             <TextView
                 android:id="@+id/our_names"
                 android:layout_width="fill_parent"
-                android:layout_height="18dp"
+                android:layout_height="22dp"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="bottom"
+                android:background="@color/green"
                 android:gravity="center"
                 android:text="邓思宇-莫胜磊-王佳-杨智勇-张楚宸"
                 android:textColor="@color/white"
                 android:textSize="13sp"
-                android:textStyle="bold"
-                android:background="@color/green" />
+                android:textStyle="bold" />
         </FrameLayout>
 
         <TextView
