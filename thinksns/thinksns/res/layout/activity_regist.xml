@@ -9,8 +9,7 @@
         android:id="@+id/reg_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="5dp" >
+        android:layout_alignParentTop="true" >
 
         <TextView
             android:id="@+id/reg_title_txt"
