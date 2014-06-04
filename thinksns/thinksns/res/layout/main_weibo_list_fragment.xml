@@ -8,9 +8,10 @@
         android:id="@+id/main_weibo_list_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/white"
+        android:background="@color/common_white"
         android:cacheColorHint="#0000"
-        android:divider="@drawable/lv_divider" />
+        android:divider="@drawable/lv_divider"
+        android:fastScrollEnabled="true" />
 
     <ProgressBar
         android:id="@+id/main_weibo_progressbar"

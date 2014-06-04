@@ -2,9 +2,11 @@ package com.thinksns.jkfs.ui.adapter;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +21,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserFollowBean;
+import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.UserInfoFollowList;
 import com.thinksns.jkfs.util.http.HttpMethod;
@@ -107,8 +110,7 @@ public class PeopleListAdapter extends BaseAdapter {
 
 		holder.userText.setText(userfollow.getUid());
 		holder.userFo.setText("" + userfollow.follow_state.getFollowing());
-		
-		
+
 		if (userfollow.follow_state.getFollowing() == 1) {
 			holder.button.setText("取消关注");
 		} else {
@@ -161,6 +163,33 @@ public class PeopleListAdapter extends BaseAdapter {
 	 */
 	public void addItem(UserFollowBean item) {
 		uList.add(item);
+	}
+
+	// 在后面添加
+	public void append(List<UserFollowBean> lists) {
+		if (lists == null) {
+			return;
+		}
+		uList.addAll(lists);
+		Log.d("adapter all weibos", uList.size() + "");
+		notifyDataSetChanged();
+	}
+
+	public void clear() {
+		uList.clear();
+		notifyDataSetChanged();
+	}
+
+	// 更新微博列表，不要原来的数据
+	public void update(List<UserFollowBean> lists) {
+		if (lists == null) {
+			return;
+		}
+		uList.clear();
+		for (int i = lists.size() - 1; i >= 0; --i) {
+			uList.addFirst(lists.get(i));
+		}
+		notifyDataSetChanged();
 	}
 
 	// 点击按钮 取消关注或再次关注

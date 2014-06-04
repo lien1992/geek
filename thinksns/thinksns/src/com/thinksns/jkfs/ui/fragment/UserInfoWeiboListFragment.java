@@ -182,7 +182,7 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 					map.put("app", "api");
 					map.put("mod", "WeiboStatuses");
 					map.put("act", "user_timeline");
-					map.put("uid", userInfo.getUid());
+					map.put("user_id", userInfo.getUid());
 					map.put("page", currentPage + "");
 					map.put("oauth_token", account.getOauth_token());
 					map.put("oauth_token_secret", account
@@ -226,7 +226,7 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 					map.put("app", "api");
 					map.put("mod", "WeiboStatuses");
 					map.put("act", "user_timeline");
-					map.put("uid", userInfo.getUid());
+					map.put("user_id", userInfo.getUid());
 					Log.d("wj", "userInfo.getUid()" + userInfo.getUid());
 					if (!since_id.equals(""))
 						map.put("since_id", since_id);

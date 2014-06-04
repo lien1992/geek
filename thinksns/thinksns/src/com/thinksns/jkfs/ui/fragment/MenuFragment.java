@@ -11,12 +11,14 @@ import com.thinksns.jkfs.bean.NotificationBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
+import com.thinksns.jkfs.ui.SettingActivity;
 import com.thinksns.jkfs.ui.view.RoundAngleImageView;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -200,9 +202,10 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.sm_setting:
 			changeBackground(R.id.sm_setting);
-			SettingFragment settingFragment = new SettingFragment();
+/*			SettingFragment settingFragment = new SettingFragment();
 			if (settingFragment != null)
-				switchFragment(settingFragment);
+				switchFragment(settingFragment);*/
+			startActivity(new Intent(getActivity(),SettingActivity.class));
 			break;
 		case R.id.sm_logout:
 			changeBackground(R.id.sm_logout);
