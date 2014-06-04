@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -25,9 +24,9 @@ import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserFollowBean;
+import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.adapter.PeopleListAdapter;
-import com.thinksns.jkfs.ui.fragment.AboutMeFragment;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -125,6 +124,7 @@ public class UserInfoFollowList extends BaseActivity implements
 				// TODO Auto-generated method stub
 
 				UserFollowBean userfollow = adapter.getUser(arg2);
+				
 				String fo = "" +userfollow.follow_state.getFollowing();
 				
 				Intent i = new Intent(UserInfoFollowList.this,

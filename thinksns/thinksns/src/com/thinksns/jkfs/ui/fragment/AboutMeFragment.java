@@ -165,7 +165,6 @@ public class AboutMeFragment extends Fragment {
 				} else {
 					sex.setBackgroundResource(R.drawable.female);
 				}
-
 				break;
 
 			case 2:
