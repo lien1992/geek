@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/linearLayout1" >
 
             <ImageView
@@ -41,13 +41,12 @@
 
         <!-- 提示、最近更新 -->
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/linearLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:gravity="center_horizontal" >
 
             <!-- 提示 -->
 
@@ -56,19 +55,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="下拉刷新"
-                android:textColor="#000000"
+                android:textColor="@color/grey"
                 android:textSize="20sp" />
 
             <!-- 最近更新 -->
+        </RelativeLayout>
 
-            <TextView
-                android:id="@+id/head_lastUpdatedTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="上次更新"
-                android:textColor="#000000"
-                android:textSize="10sp" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/head_lastUpdatedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout1"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_marginTop="4dp"
+            android:text="上次更新"
+            android:textColor="@color/grey"
+            android:textSize="10sp" />
     </RelativeLayout>
 
 </LinearLayout>
