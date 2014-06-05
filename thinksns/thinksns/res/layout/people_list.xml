@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <Button
+        android:id="@+id/list_head"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/tab_but_1"
+        android:text="列表" />
+
    <ListView
     android:id="@+id/userinfo_list"
     android:layout_width="fill_parent"

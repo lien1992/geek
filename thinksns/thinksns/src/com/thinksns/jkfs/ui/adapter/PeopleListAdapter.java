@@ -24,6 +24,7 @@ import com.thinksns.jkfs.bean.UserFollowBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.UserInfoFollowList;
+import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -193,7 +194,7 @@ public class PeopleListAdapter extends BaseAdapter {
 	}
 
 	// 点击按钮 取消关注或再次关注
-	private void followif(final String uid, final String act) {
+	private void followif(final String uid, final String act) {	
 
 		new Thread() {
 			@Override
