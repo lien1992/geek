@@ -84,6 +84,8 @@
         </activity>
         <activity android:name=".ui.SettingActivity" >
         </activity>
+        <activity android:name=".ui.AboutUsActivity" >
+        </activity>
         <activity
             android:name=".test.TestActivity"
             android:configChanges="orientation|screenSize|screenLayout"
@@ -91,7 +93,9 @@
             android:uiOptions="splitActionBarWhenNarrow" />
         <activity android:name=".ui.ChatActivity" />
         <activity android:name=".ui.SearchActivity" />
+
         <service android:name=".util.GetMsgService" />
+
         <receiver
             android:name=".ui.MainFragmentActivity$NewMsgReceiver"
             android:exported="false" >
