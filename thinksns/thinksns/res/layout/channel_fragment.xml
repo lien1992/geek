@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
-        android:background="#f6f5ec" >
+        android:background="@color/white_for_title" >
 
         <ImageView
             android:id="@+id/channel_fragment_title_setting_img"
@@ -25,9 +25,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/channel_fragment_title_setting_img"
-            android:paddingLeft="5dp"
             android:text="官方发言"
-            android:textSize="15sp" />
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/channel_fragment_title_drop_img"

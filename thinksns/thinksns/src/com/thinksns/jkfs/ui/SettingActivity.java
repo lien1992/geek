@@ -3,12 +3,14 @@ package com.thinksns.jkfs.ui;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.constant.BaseConstant;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.widget.Toast;
 
@@ -54,5 +56,14 @@ public class SettingActivity extends PreferenceActivity implements
 		if (aboutUs == preference)
 			Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
 		return false;
+	}
+
+	@Override
+	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
+			Preference preference) {
+		// TODO Auto-generated method stub
+		if (aboutUs == preference)
+			startActivity(new Intent(this, AboutUsActivity.class));
+		return super.onPreferenceTreeClick(preferenceScreen, preference);
 	}
 }

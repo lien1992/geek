@@ -332,7 +332,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	 */
 	public void onRefreshComplete() {
 		state = DONE;
-		lastUpdatedTextView.setText("最近更新:" + new Date().toLocaleString());
+		lastUpdatedTextView.setText("最近更新:" + new Date().toLocaleString().substring(8));
 		changeHeaderViewByState();
 	}
 
@@ -457,7 +457,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	}
 
 	public void setState(int state) {
-		footContent.setVisibility(View.INVISIBLE);
 		footProgressBar.setVisibility(View.INVISIBLE);
 		footHintView.setVisibility(View.INVISIBLE);
 		if (state == STATE_READY) {

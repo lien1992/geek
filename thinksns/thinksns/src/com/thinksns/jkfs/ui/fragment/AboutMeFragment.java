@@ -40,6 +40,7 @@ import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.UserInfoFollowList;
 import com.thinksns.jkfs.ui.UserInfoWeiboList;
 import com.thinksns.jkfs.util.Base64;
+import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.common.ImageUtils;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
@@ -76,8 +77,7 @@ public class AboutMeFragment extends Fragment {
 	private static final int RESULT_REQUEST_CODE = 2;
 
 	private String picPath = "";
-	
-	
+
 	public AboutMeFragment() {
 		super();
 	}
@@ -88,15 +88,12 @@ public class AboutMeFragment extends Fragment {
 		this.follow = Integer.parseInt(following);
 	}
 
-	
-	
-	public AboutMeFragment(String i,UserFollowBean user ,String following) {
+	public AboutMeFragment(String i, UserFollowBean user, String following) {
 		this.FLAG = Integer.parseInt(i);
 		this.uuid = user.getUid();
 		this.follow = Integer.parseInt(following);
 	}
-	
-	
+
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -165,7 +162,6 @@ public class AboutMeFragment extends Fragment {
 				} else {
 					sex.setBackgroundResource(R.drawable.female);
 				}
-
 				break;
 
 			case 2:
@@ -188,6 +184,12 @@ public class AboutMeFragment extends Fragment {
 					}
 				}
 
+				break;
+
+			case 3:
+				Toast toast = Toast.makeText(getActivity(), "网络未连接",
+						Toast.LENGTH_SHORT);
+				toast.show();
 				break;
 
 			}
@@ -260,12 +262,13 @@ public class AboutMeFragment extends Fragment {
 		button2.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				UserInfoWeiboListFragment userInfoWeiboListFragment=new UserInfoWeiboListFragment();
-				Bundle args=new Bundle();
+				UserInfoWeiboListFragment userInfoWeiboListFragment = new UserInfoWeiboListFragment();
+				Bundle args = new Bundle();
 				args.putParcelable("uinfo", userinfo);
 				userInfoWeiboListFragment.setArguments(args);
-				getChildFragmentManager().beginTransaction().replace(
-						R.id.aboutme_frame, userInfoWeiboListFragment).commit();
+				getChildFragmentManager().beginTransaction()
+						.replace(R.id.aboutme_frame, userInfoWeiboListFragment)
+						.commit();
 
 			}
 		});
@@ -338,87 +341,102 @@ public class AboutMeFragment extends Fragment {
 	private void openPage() {
 		switch (FLAG) {
 		case 0:
+			if (Utility.isConnected(getActivity())) {
+				// 待添加超时判断
 
-			new Thread() {
-				@Override
-				public void run() {
-					Gson gson = new Gson();
-					HashMap<String, String> map = new HashMap<String, String>();
-					map = new HashMap<String, String>();
-					map.put("app", "api");
-					map.put("mod", "User");
-					map.put("act", "show");
-					map.put("user_id", account.getUid());
-					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
-					String json = HttpUtility.getInstance().executeNormalTask(
-							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+				new Thread() {
+					@Override
+					public void run() {
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("act", "show");
+						map.put("user_id", account.getUid());
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
 
-					if (json != null && !"".equals(json)) {
+						if (json != null && !"".equals(json)) {
 
-						userinfo = gson.fromJson(json, UserInfoBean.class);
-						mHandler.sendEmptyMessage(1);
+							userinfo = gson.fromJson(json, UserInfoBean.class);
+							mHandler.sendEmptyMessage(1);
+						}
+
 					}
-
-				}
-			}.start();
-
+				}.start();
+			} else {
+				mHandler.sendEmptyMessage(3);
+			}
 			break;
 		case 1:
+			if (Utility.isConnected(getActivity())) {
+				// 待添加超时判断
 
-			new Thread() {
-				@Override
-				public void run() {
-					Gson gson = new Gson();
-					HashMap<String, String> map = new HashMap<String, String>();
-					map = new HashMap<String, String>();
-					map.put("app", "api");
-					map.put("mod", "User");
-					map.put("act", "show");
-					map.put("user_id", uuid);
-					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
-					String json = HttpUtility.getInstance().executeNormalTask(
-							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+				new Thread() {
+					@Override
+					public void run() {
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("act", "show");
+						map.put("user_id", uuid);
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret",
+								account.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
 
-					if (json != null && !"".equals(json)) {
+						if (json != null && !"".equals(json)) {
 
-						userinfo = gson.fromJson(json, UserInfoBean.class);
-						mHandler.sendEmptyMessage(1);
+							userinfo = gson.fromJson(json, UserInfoBean.class);
+							mHandler.sendEmptyMessage(1);
+						}
+
 					}
-
-				}
-			}.start();
-
+				}.start();
+			} else {
+				mHandler.sendEmptyMessage(3);
+			}
 			break;
 		}
 	}
 
 	// 点击按钮 取消关注或再次关注
 	private void followif(final String uid, final String act) {
+		if (Utility.isConnected(getActivity())) {
+			// 待添加超时判断
 
-		new Thread() {
-			@Override
-			public void run() {
+			new Thread() {
+				@Override
+				public void run() {
 
-				Gson gson = new Gson();
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("app", "api");
-				map.put("mod", "User");
-				map.put("act", act);
-				map.put("oauth_token", account.getOauth_token());
-				map.put("oauth_token_secret", account.getOauth_token_secret());
-				map.put("user_id", uid);
-				String json = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "User");
+					map.put("act", act);
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
+					map.put("user_id", uid);
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
 
-				mHandler.sendEmptyMessage(2);
+					mHandler.sendEmptyMessage(2);
 
-			}
-		}.start();
-
+				}
+			}.start();
+		} else {
+			mHandler.sendEmptyMessage(3);
+		}
 	}
 
 	/**
@@ -434,10 +452,12 @@ public class AboutMeFragment extends Fragment {
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case 0:
-							/*		Intent intentFromGallery = new Intent();
-						     intentFromGallery.setType("image/*"); // 设置文件类型
-							intentFromGallery
-									.setAction(Intent.ACTION_GET_CONTENT);*/
+							/*
+							 * Intent intentFromGallery = new Intent();
+							 * intentFromGallery.setType("image/*"); // 设置文件类型
+							 * intentFromGallery
+							 * .setAction(Intent.ACTION_GET_CONTENT);
+							 */
 							Intent choosePictureIntent = new Intent(
 									Intent.ACTION_PICK,
 									android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -475,7 +495,7 @@ public class AboutMeFragment extends Fragment {
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {		
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// 结果码不等于取消时候
 		if (resultCode != 0) {
 
@@ -496,11 +516,11 @@ public class AboutMeFragment extends Fragment {
 
 				break;
 			case RESULT_REQUEST_CODE:
-				if (data != null) {				
-//					Uri imageFileUri = data.getData();
-//					picPath = getPicPathFromUri(imageFileUri);					
-//					changeHead(picPath);
-//					
+				if (data != null) {
+					// Uri imageFileUri = data.getData();
+					// picPath = getPicPathFromUri(imageFileUri);
+					// changeHead(picPath);
+					//
 					getImageToView(data);
 				}
 				break;
@@ -542,14 +562,12 @@ public class AboutMeFragment extends Fragment {
 			Drawable drawable = new BitmapDrawable(photo);
 
 			Uri imageFileUri;
-		     if (data.getData() != null)  
-		        {  
-		    	 imageFileUri = data.getData();  
-		        }  
-		        else  
-		        {  
-		        	imageFileUri  = Uri.parse(MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), photo, null,null));      
-		        }  
+			if (data.getData() != null) {
+				imageFileUri = data.getData();
+			} else {
+				imageFileUri = Uri.parse(MediaStore.Images.Media.insertImage(
+						getActivity().getContentResolver(), photo, null, null));
+			}
 			Log.d("uri is null？", (imageFileUri == null) + "");
 
 			String picPath = getPicPathFromUri(imageFileUri);
@@ -584,26 +602,31 @@ public class AboutMeFragment extends Fragment {
 		final String uploadPicPath = ImageUtils.compressPic(getActivity(),
 				head, 3);
 
-		Log.d("uploadPicPath", uploadPicPath);
+		if (Utility.isConnected(getActivity())) {
+			// 待添加超时判断
 
-		new Thread() {
-			@Override
-			public void run() {
+			new Thread() {
+				@Override
+				public void run() {
 
-				Gson gson = new Gson();
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("app", "api");
-				map.put("mod", "User");
-				map.put("act", "upload_face");
-				map.put("Filedata", head);
-				map.put("oauth_token", account.getOauth_token());
-				map.put("oauth_token_secret", account.getOauth_token_secret());
-				HttpUtils.doPost(HttpConstant.THINKSNS_URL, map);
-				boolean result = HttpUtils.doUploadFile(
-						HttpConstant.THINKSNS_URL, map, uploadPicPath);
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "User");
+					map.put("act", "upload_face");
+					map.put("Filedata", head);
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
+					HttpUtils.doPost(HttpConstant.THINKSNS_URL, map);
+					boolean result = HttpUtils.doUploadFile(
+							HttpConstant.THINKSNS_URL, map, uploadPicPath);
 
-			}
-		}.start();
+				}
+			}.start();
+		} else {
+			mHandler.sendEmptyMessage(3);
+		}
 
 	}
 

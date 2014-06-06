@@ -42,7 +42,8 @@
         android:id="@+id/write_weibo_container"
         android:layout_width="fill_parent"
         android:layout_height="0.0dip"
-        android:layout_weight="1.0" >
+        android:layout_weight="1.0"
+        android:background="@color/common_white" >
 
         <FrameLayout
             android:layout_width="match_parent"
