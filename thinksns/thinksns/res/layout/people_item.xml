@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-     android:background="@color/common_white"
+    android:background="@color/common_white"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal" >
 
@@ -12,8 +12,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp" 
-         android:background="@color/common_white">
+        android:layout_marginTop="5dp"
+        android:background="@color/common_white" >
 
         <!-- 头像 -->
 
@@ -33,12 +33,12 @@
     </FrameLayout>
 
     <LinearLayout
-        android:layout_width="0dip"
+        android:layout_width="wrap_content"
         android:layout_height="60dip"
         android:layout_marginLeft="3dp"
         android:layout_weight="1"
-         android:focusable="false"
         android:background="@color/common_white"
+        android:focusable="false"
         android:gravity="center_vertical"
         android:orientation="vertical" >
 
@@ -56,8 +56,8 @@
             android:layout_width="0dip"
             android:layout_height="0dip"
             android:layout_marginLeft="3dp"
-             android:focusable="false"
             android:background="@color/common_white"
+            android:focusable="false"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
 
@@ -87,6 +87,7 @@
         android:layout_height="40dp"
         android:layout_marginLeft="90dip"
         android:layout_marginTop="10dip"
+        android:background="@drawable/sel_but"
         android:focusable="false"
         android:text="关注" />
 

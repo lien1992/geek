@@ -69,9 +69,11 @@ public class ChatListAdapter extends BaseAdapter {
         ImageView userImage=(ImageView)convertView.findViewById(R.id.user_image);
         TextView userName=(TextView)convertView.findViewById(R.id.user_name);
         TextView content=(TextView)convertView.findViewById(R.id.content);
+        TextView listId=(TextView)convertView.findViewById(R.id.list_id);
         ChatBean chatBean=(ChatBean)getList().get(position);
         userName.setText(chatBean.from_uname);
         content.setText(chatBean.content);
+        listId.setText(chatBean.list_id);
         return convertView;
     }
 

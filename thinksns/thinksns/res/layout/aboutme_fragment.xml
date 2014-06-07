@@ -27,7 +27,7 @@
                     android:id="@+id/m_head"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:background="@drawable/mushishi" />
+                    />
                 <!-- image corner -->
 
                 <ImageView
@@ -52,8 +52,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
-                        android:text="username"
-                        android:textSize="20dp" />
+                        android:textSize="15dp" />
 
                     <ImageView
                         android:id="@+id/m_sex"
@@ -66,8 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:text="address"
-                    android:textSize="20dp" />
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -81,7 +79,7 @@
                     android:layout_width="80dp"
                     android:layout_height="40dp"
                     android:background="@drawable/sel_but"
-                    android:text="修改" />
+                    android:text="修改头像" />
             </LinearLayout>
         </LinearLayout>
 
@@ -155,7 +153,6 @@
                         android:background="@drawable/sel_but"
                         android:gravity="center"
                         android:paddingTop="5dip"
-                        android:text="uid"
                         android:textColor="#ff333333"
                         android:textSize="18sp" />
 
@@ -173,7 +170,6 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/sel_but"
                             android:gravity="center"
-                            android:text="uname"
                             android:textColor="#ff333333"
                             android:textSize="18sp" />
 
@@ -184,7 +180,6 @@
                             android:layout_marginTop="-8dip"
                             android:background="@drawable/sel_but"
                             android:gravity="center"
-                            android:text="email"
                             android:textColor="#ff333333"
                             android:textSize="18sp" />
 
@@ -195,7 +190,6 @@
                             android:layout_marginTop="-8dip"
                             android:background="@drawable/sel_but"
                             android:gravity="center"
-                            android:text="sex"
                             android:textColor="#ff333333"
                             android:textSize="18sp" />
 
@@ -206,7 +200,6 @@
                             android:layout_marginTop="-8dip"
                             android:background="@drawable/sel_but"
                             android:gravity="center"
-                            android:text="address"
                             android:textColor="#ff333333"
                             android:textSize="18sp" />
                     </LinearLayout>

@@ -8,6 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
+        <TextView
+            android:id="@+id/list_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
         <ImageView
             android:layout_alignParentLeft="true"
             android:id="@+id/user_image"

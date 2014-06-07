@@ -195,9 +195,16 @@ public class ChatFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG,"position"+position+" "+"id"+id);
 
-                TextView userName=(TextView)view.findViewById(R.id.user_name);
 
-                startActivity(new Intent(getActivity(), ChatActivity.class));
+                TextView userName=(TextView)view.findViewById(R.id.user_name);
+                TextView listId=(TextView)view.findViewById(R.id.list_id);
+                String list_id=listId.getText().toString();
+                Log.d(TAG,list_id);
+                Intent intent=new Intent(getActivity(), ChatActivity.class);
+//                Bundle bundle=new Bundle();
+//                bundle.putString("list_id",list_id);
+                intent.putExtra("data",list_id);
+                startActivity(intent);
                 Log.d(TAG,"position"+userName.getText());
 
 
