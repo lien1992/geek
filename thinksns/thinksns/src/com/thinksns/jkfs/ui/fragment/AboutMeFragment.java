@@ -30,6 +30,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.exception.DbException;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
@@ -50,7 +54,7 @@ import com.thinksns.jkfs.util.http.HttpUtils;
  * @author 邓思宇 我的主页列表显示信息 还未完成
  * 
  */
-@SuppressLint({ "HandlerLeak", "ValidFragment" })
+@SuppressLint( { "HandlerLeak", "ValidFragment" })
 public class AboutMeFragment extends Fragment {
 
 	public static final String TAG = "AboutMeFragment";
@@ -77,6 +81,10 @@ public class AboutMeFragment extends Fragment {
 	private static final int RESULT_REQUEST_CODE = 2;
 
 	private String picPath = "";
+
+	private DbUtils db;
+
+	private DisplayImageOptions options;
 
 	public AboutMeFragment() {
 		super();
@@ -136,8 +144,8 @@ public class AboutMeFragment extends Fragment {
 				String us = userinfo.getLocation();
 				maddress.setText(us);
 
-				ImageLoader.getInstance().displayImage(userinfo.getAvatar(),
-						head);
+				ImageLoader.getInstance().displayImage(
+						userinfo.getAvatar_original(), head, options);
 
 				Button button = (Button) getActivity().findViewById(
 						R.id.changeinfo);
@@ -214,6 +222,11 @@ public class AboutMeFragment extends Fragment {
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
 
+		options = new DisplayImageOptions.Builder().showStubImage(
+				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
+		db = DbUtils.create(getActivity());
+		db.configDebug(true);
+
 		openPage();
 
 	}
@@ -266,9 +279,8 @@ public class AboutMeFragment extends Fragment {
 				Bundle args = new Bundle();
 				args.putParcelable("uinfo", userinfo);
 				userInfoWeiboListFragment.setArguments(args);
-				getChildFragmentManager().beginTransaction()
-						.replace(R.id.aboutme_frame, userInfoWeiboListFragment)
-						.commit();
+				getChildFragmentManager().beginTransaction().replace(
+						R.id.aboutme_frame, userInfoWeiboListFragment).commit();
 
 			}
 		});
@@ -341,7 +353,10 @@ public class AboutMeFragment extends Fragment {
 	private void openPage() {
 		switch (FLAG) {
 		case 0:
-			if (Utility.isConnected(getActivity())) {
+			if (application.getUser() != null) {
+				userinfo = application.getUser();
+				mHandler.sendEmptyMessage(1);
+			} else if (Utility.isConnected(getActivity())) {
 				// 待添加超时判断
 
 				new Thread() {
@@ -355,8 +370,8 @@ public class AboutMeFragment extends Fragment {
 						map.put("act", "show");
 						map.put("user_id", account.getUid());
 						map.put("oauth_token", account.getOauth_token());
-						map.put("oauth_token_secret",
-								account.getOauth_token_secret());
+						map.put("oauth_token_secret", account
+								.getOauth_token_secret());
 						String json = HttpUtility.getInstance()
 								.executeNormalTask(HttpMethod.Get,
 										HttpConstant.THINKSNS_URL, map);
@@ -370,7 +385,18 @@ public class AboutMeFragment extends Fragment {
 					}
 				}.start();
 			} else {
-				mHandler.sendEmptyMessage(3);
+				try {
+					userinfo = db.findFirst(Selector.from(UserInfoBean.class)
+							.orderBy("id", true));
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (userinfo != null)
+					mHandler.sendEmptyMessage(1);
+				else
+					mHandler.sendEmptyMessage(3);
+
 			}
 			break;
 		case 1:
@@ -388,8 +414,8 @@ public class AboutMeFragment extends Fragment {
 						map.put("act", "show");
 						map.put("user_id", uuid);
 						map.put("oauth_token", account.getOauth_token());
-						map.put("oauth_token_secret",
-								account.getOauth_token_secret());
+						map.put("oauth_token_secret", account
+								.getOauth_token_secret());
 						String json = HttpUtility.getInstance()
 								.executeNormalTask(HttpMethod.Get,
 										HttpConstant.THINKSNS_URL, map);
@@ -424,8 +450,8 @@ public class AboutMeFragment extends Fragment {
 					map.put("mod", "User");
 					map.put("act", act);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
 					map.put("user_id", uid);
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
@@ -444,9 +470,8 @@ public class AboutMeFragment extends Fragment {
 	 */
 	private void showDialog() {
 
-		new AlertDialog.Builder(getActivity())
-				.setTitle("设置头像")
-				.setItems(items, new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(getActivity()).setTitle("设置头像").setItems(items,
+				new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -483,8 +508,8 @@ public class AboutMeFragment extends Fragment {
 							break;
 						}
 					}
-				})
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				}).setNegativeButton("取消",
+				new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -505,9 +530,9 @@ public class AboutMeFragment extends Fragment {
 				break;
 			case CAMERA_REQUEST_CODE:
 				if (hasSdcard()) {
-					File tempFile = new File(
-							Environment.getExternalStorageDirectory()
-									+ IMAGE_FILE_NAME);
+					File tempFile = new File(Environment
+							.getExternalStorageDirectory()
+							+ IMAGE_FILE_NAME);
 					startPhotoZoom(Uri.fromFile(tempFile));
 				} else {
 					Toast.makeText(getActivity(), "未找到存储卡，无法存储照片！",
@@ -616,8 +641,8 @@ public class AboutMeFragment extends Fragment {
 					map.put("act", "upload_face");
 					map.put("Filedata", head);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
 					HttpUtils.doPost(HttpConstant.THINKSNS_URL, map);
 					boolean result = HttpUtils.doUploadFile(
 							HttpConstant.THINKSNS_URL, map, uploadPicPath);

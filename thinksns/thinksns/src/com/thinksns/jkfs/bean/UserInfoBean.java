@@ -1,5 +1,11 @@
 package com.thinksns.jkfs.bean;
 
+import com.lidroid.xutils.db.annotation.Column;
+import com.lidroid.xutils.db.annotation.Finder;
+import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
+import com.lidroid.xutils.db.annotation.Transient;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,25 +13,40 @@ import android.os.Parcelable;
  * 用户基本资料
  * 
  */
+@Table(name = "user_info")
 public class UserInfoBean implements Parcelable {
+	@Id
+	private int id;
+	@Column
 	private String uid;
+	@Column
 	private String uname;
+	@Column
 	private String email;
+	@Column
 	private String sex;
+	@Column
 	private String province;
+	@Column
 	private String city;
+	@Column
 	private String location;
+	@Finder(valueColumn = "id", targetColumn = "userInfoId")
 	public UserInfoCountBean count_info;
+	@Transient
 	public UserFollowStateBean follow_state;
-
-	// private String last_feed_id;// 最近一条微博ID
+	@Column
 	private String avatar_original;
-
+	@Column
 	private String avatar_big;
+	@Column
 	private String avatar_middle;
+	@Column
 	private String avatar_small;
 
-	// private UserInfoCountBean count_info;
+	public UserInfoBean() {
+
+	}
 
 	public String getUid() {
 		return uid;
@@ -75,13 +96,6 @@ public class UserInfoBean implements Parcelable {
 		this.city = city;
 	}
 
-	public String getAvatar() {
-		return avatar_original;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar_original = avatar;
-	}
 
 	// public void setCount_info(UserInfoCountBean count_info) {
 	// this.count_info = count_info;
@@ -90,6 +104,14 @@ public class UserInfoBean implements Parcelable {
 	// public UserInfoCountBean getCount_info() {
 	// return count_info;
 	// }
+
+	public String getAvatar_original() {
+		return avatar_original;
+	}
+
+	public void setAvatar_original(String avatarOriginal) {
+		avatar_original = avatarOriginal;
+	}
 
 	@Override
 	public int describeContents() {
@@ -182,6 +204,14 @@ public class UserInfoBean implements Parcelable {
 
 	public String getAvatar_small() {
 		return avatar_small;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public static final Parcelable.Creator<UserInfoBean> CREATOR = new Parcelable.Creator<UserInfoBean>() {

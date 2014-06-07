@@ -227,7 +227,6 @@ public class WeiboListFragment extends BaseListFragment {
 							+ weibos_cache.get(i).getAttach().size()
 							+ " weibo.type:" + weibos_cache.get(i).getType());
 					WeiboBean wb = weibos_cache.get(i);
-					// 备忘：dbUtils需单独处理一对一的情况
 					if (wb.getType().equals("repost")) {
 						Log.d("wj", "weibo");
 						WeiboRepostBean wrb = db.findFirst(Selector.from(
