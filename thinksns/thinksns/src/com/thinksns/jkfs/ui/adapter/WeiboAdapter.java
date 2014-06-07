@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.WeiboBean;
+import com.thinksns.jkfs.bean.WeiboRepostBean;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.RoundAngleImageView;
 
@@ -174,7 +175,7 @@ public class WeiboAdapter extends BaseAdapter {
 
 		if (weibo.getType().equals("repost")) {
 			holder.weibo_pics.setVisibility(View.GONE);
-			WeiboBean weibo_repost = weibo.getTranspond_data();
+			WeiboRepostBean weibo_repost = weibo.getTranspond_data();
 			holder.repost_userName.setText(weibo_repost.getUname());
 			holder.repost_content.setText(weibo_repost
 					.getListViewSpannableString());
@@ -187,12 +188,17 @@ public class WeiboAdapter extends BaseAdapter {
 				holder.repost_pics.setVisibility(View.GONE);
 			}
 			holder.repost.setVisibility(View.VISIBLE);
+		} else if (weibo.getType().equals("weiba_repost")) {
+			// 转发微吧
+
 		} else {
 			if (weibo.getType().equals("postimage")) {
-				ImageLoader.getInstance().displayImage(
-						weibo.getAttach().get(0).getAttach_middle(),
-						holder.weibo_pic, options);
-				holder.weibo_pics.setVisibility(View.VISIBLE);
+				if (weibo.getAttach().size() > 0) {
+					ImageLoader.getInstance().displayImage(
+							weibo.getAttach().get(0).getAttach_middle(),
+							holder.weibo_pic, options);
+					holder.weibo_pics.setVisibility(View.VISIBLE);
+				}
 			} else {
 				holder.weibo_pics.setVisibility(View.GONE);
 			}

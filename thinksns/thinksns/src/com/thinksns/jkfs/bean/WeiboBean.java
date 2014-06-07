@@ -1,7 +1,13 @@
 package com.thinksns.jkfs.bean;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.lidroid.xutils.db.annotation.Column;
+import com.lidroid.xutils.db.annotation.Finder;
+import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
+import com.lidroid.xutils.db.annotation.Transient;
 import com.thinksns.jkfs.util.Utility;
 
 import android.os.Parcel;
@@ -13,26 +19,43 @@ import android.text.TextUtils;
  * 微博
  * 
  */
+@Table(name = "weibo")
 public class WeiboBean implements Parcelable {
+	@Id
+	private int id;
+	@Column(column = "feed_id")
 	private String feed_id;
+	@Column(column = "type")
 	private String type; // postimage、repost...
+	@Column(column = "content")
 	private String content;
+	@Column(column = "ctime")
 	private String ctime;
+	@Column(column = "from_source")
 	private String from; // 0、1、2
+	@Column(column = "uid")
 	private String uid;
+	@Column(column = "uname")
 	private String uname;
+	@Column(column = "avatar_big")
 	private String avatar_big;
+	@Column(column = "avatar_middle")
 	private String avatar_middle;
+	@Column(column = "avatar_small")
 	private String avatar_small;
+	@Column(column = "has_attach")
 	private String has_attach; // 0、1
-
+	@Column(column = "comment_count")
 	private int comment_count; // 评论数
+	@Column(column = "repost_count")
 	private int repost_count; // 转发数
+	@Column(column = "digg_count")
 	private int digg_count; // 赞数
-
-	private ArrayList<WeiboAttachBean> attach;
-	private WeiboBean transpond_data; // 被转发微博
-
+	@Finder(valueColumn = "id", targetColumn = "weiboId")
+	private List<WeiboAttachBean> attach;
+	@Transient//@Finder(valueColumn = "id", targetColumn = "originId")
+	private WeiboRepostBean transpond_data; // 被转发微博
+	@Transient
 	private SpannableString listViewSpannableString;
 
 	public WeiboBean(String feed_id, String type, String content, String ctime,
@@ -65,12 +88,12 @@ public class WeiboBean implements Parcelable {
 		return feed_id;
 	}
 
-	public void setTranspond_data(WeiboBean transpond_data) {
-		this.transpond_data = transpond_data;
+	public WeiboRepostBean getTranspond_data() {
+		return transpond_data;
 	}
 
-	public WeiboBean getTranspond_data() {
-		return transpond_data;
+	public void setTranspond_data(WeiboRepostBean transpondData) {
+		transpond_data = transpondData;
 	}
 
 	public void setFeed_id(String feed_id) {
@@ -107,14 +130,6 @@ public class WeiboBean implements Parcelable {
 
 	public void setHas_attach(String hasAttach) {
 		has_attach = hasAttach;
-	}
-
-	public String getId() {
-		return feed_id;
-	}
-
-	public void setId(String id) {
-		this.feed_id = id;
 	}
 
 	public String getContent() {
@@ -203,13 +218,6 @@ public class WeiboBean implements Parcelable {
 		this.listViewSpannableString = listViewSpannableString;
 	}
 
-	/*
-	 * public ArrayList<WeiboAttachBean> getAttachList() { return attachList; }
-	 * 
-	 * public void setAttachList(ArrayList<WeiboAttachBean> attachList) {
-	 * this.attachList = attachList; }
-	 */
-
 	public static Parcelable.Creator<WeiboBean> getCreator() {
 		return CREATOR;
 	}
@@ -250,12 +258,20 @@ public class WeiboBean implements Parcelable {
 		return digg_count;
 	}
 
-	public void setAttach(ArrayList<WeiboAttachBean> attach) {
+	public void setAttach(List<WeiboAttachBean> attach) {
 		this.attach = attach;
 	}
 
-	public ArrayList<WeiboAttachBean> getAttach() {
+	public List<WeiboAttachBean> getAttach() {
 		return attach;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public static final Parcelable.Creator<WeiboBean> CREATOR = new Parcelable.Creator<WeiboBean>() {
@@ -275,8 +291,8 @@ public class WeiboBean implements Parcelable {
 			wb.comment_count = in.readInt();
 			wb.repost_count = in.readInt();
 			wb.digg_count = in.readInt();
-			wb.attach=new ArrayList<WeiboAttachBean>();
-			in.readTypedList(wb.attach,WeiboAttachBean.CREATOR);
+			wb.attach = new ArrayList<WeiboAttachBean>();
+			in.readTypedList(wb.attach, WeiboAttachBean.CREATOR);
 			wb.transpond_data = in.readParcelable(WeiboBean.class
 					.getClassLoader());
 

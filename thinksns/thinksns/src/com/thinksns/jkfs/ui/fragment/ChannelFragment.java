@@ -724,8 +724,8 @@ public class ChannelFragment extends Fragment {
 
 			if (list!=null && list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
-				weibo_max_id = list.get(list.size() - 1).getId();
-				weibo_since_id = list.get(0).getId();
+				weibo_max_id = list.get(list.size() - 1).getFeed_id();
+				weibo_since_id = list.get(0).getFeed_id();
 			}
 		} catch (JsonSyntaxException e) {
 			Log.i(TAG, "json微博出问题");

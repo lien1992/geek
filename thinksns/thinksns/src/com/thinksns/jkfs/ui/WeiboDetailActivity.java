@@ -29,6 +29,7 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.WeiboAttachBean;
 import com.thinksns.jkfs.bean.WeiboBean;
+import com.thinksns.jkfs.bean.WeiboRepostBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.fragment.CommentListFragment;
 import com.thinksns.jkfs.ui.view.RoundAngleImageView;
@@ -214,7 +215,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		content.setText(weibo.getListViewSpannableString());
 		attaches = weibo.getAttach();
 		if (weibo.getType().equals("repost")) {
-			WeiboBean weibo_repost = weibo.getTranspond_data();
+			WeiboRepostBean weibo_repost = weibo.getTranspond_data();
 			re_user_name.setText(weibo_repost.getUname());
 			re_content.setText(weibo_repost.getListViewSpannableString());
 			if (weibo_repost.getType().equals("postimage")) {
@@ -299,7 +300,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "favorite_create");
 							map.put("source_table_name", "feed");
-							map.put("source_id", weibo.getFeed_id());
+							map.put("source_id", weibo.getFeed_id()+"");
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -325,7 +326,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "favorite_destroy");
 							map.put("source_table_name", "feed");
-							map.put("source_id", weibo.getFeed_id());
+							map.put("source_id", weibo.getFeed_id()+"");
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -370,7 +371,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("act", "comment");
 							map.put("content", comment_content.getText()
 									.toString());
-							map.put("row_id", weibo.getFeed_id());
+							map.put("row_id", weibo.getFeed_id()+"");
 							map.put("table_name ", "feed");
 							map.put("to_uid", account.getUid());
 							map.put("oauth_token", account.getOauth_token());
