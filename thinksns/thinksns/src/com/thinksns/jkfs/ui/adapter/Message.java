@@ -4,6 +4,7 @@ public class Message {
 
 	private int type;//指定是哪种类型
 	private String value;//值
+	private String face;
 	public int getType() {
 		return type;
 	}
@@ -15,5 +16,11 @@ public class Message {
 	}
 	public void setValue(String value) {
 		this.value = value;
+	}
+	public String getFace() {
+		return face;
+	}
+	public void setFace(String face) {
+		this.face = face;
 	}
 }

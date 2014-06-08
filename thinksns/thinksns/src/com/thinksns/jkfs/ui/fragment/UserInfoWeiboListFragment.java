@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -95,6 +98,13 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
 						.show();
+				break;
+			case 3:
+				adapter.update(weibo_all);
+				adapter.notifyDataSetChanged();
+				Toast.makeText(getActivity(), "删除微博成功", Toast.LENGTH_SHORT)
+						.show();
+				break;
 			}
 
 		};
@@ -153,11 +163,31 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
+					final int position, long id) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getActivity(),
-						WriteWeiboActivity.class);
-				startActivity(intent);
+				if (userInfo.getUid().equals(account.getUid())) {
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity()).setTitle("删除此微博")
+							.setPositiveButton("确定", new OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+									String id = weibo_all.get(position - 1)
+											.getFeed_id();					
+									delWeibo(id);
+									
+									weibo_all.remove(position - 1);
+									
+								}
+							}).setNegativeButton("取消", null);
+
+					builder.create();
+					builder.show();
+
+				}
 				return true;
 			}
 
@@ -185,8 +215,8 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 					map.put("user_id", userInfo.getUid());
 					map.put("page", currentPage + "");
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret", account
-							.getOauth_token_secret());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
@@ -231,8 +261,8 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 					if (!since_id.equals(""))
 						map.put("since_id", since_id);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret", account
-							.getOauth_token_secret());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
@@ -257,5 +287,32 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 		for (int i = lists.size() - 1; i >= 0; --i) {
 			weibo_all.addFirst(lists.get(i));
 		}
+	}
+
+	public void delWeibo(final String id) {
+		if (Utility.isConnected(getActivity())) {
+
+			new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "WeiboStatuses");
+					map.put("act", "destroy");
+					map.put("id", id);
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
+					mHandler.sendEmptyMessage(3);
+				}
+			}.start();
+		} else {
+			mHandler.sendEmptyMessage(2);
+		}
+
 	}
 }
