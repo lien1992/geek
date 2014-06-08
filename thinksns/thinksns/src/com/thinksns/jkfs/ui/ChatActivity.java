@@ -1,5 +1,6 @@
 package com.thinksns.jkfs.ui;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +12,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,22 +24,27 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+
 import com.thinksns.jkfs.bean.MessageBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.adapter.ChatAdapter;
 import com.thinksns.jkfs.ui.adapter.Message;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
-import com.thinksns.jkfs.util.http.HttpUtils;
+
+
+
 
 /**
  * Created by mosl on 14-5-24.
  */
 public class ChatActivity extends BaseActivity {
+
 
 	public static final String TAG = "ChatActivity";
 

@@ -204,7 +204,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			if (application.isNewWork(LoginActivity.this)) {
+			if (isNetworkAvailable(this)) {
 				mDialog = ProgressDialog.show(LoginActivity.this, "",
 						"正在登录...", true);
 				final Map<String, String> map = new HashMap<String, String>();

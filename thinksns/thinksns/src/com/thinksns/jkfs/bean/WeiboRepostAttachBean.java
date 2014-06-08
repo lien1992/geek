@@ -9,25 +9,53 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * 微博附件
+ * 被转发微博附件
  * 
  */
-@Table(name = "weibo_attach")
-public class WeiboAttachBean implements Parcelable {
+@Table(name = "weibo_repost_attach")
+public class WeiboRepostAttachBean implements Parcelable {
 	@Id
 	private int id;
-	@Column(column = "attach_id")
+	@Column
 	private String attach_id;
-	@Column(column = "attach_name")
+	@Column
 	private String attach_name;
-	@Column(column = "attach_url")
+	@Column
 	private String attach_url;
-	@Column(column = "attach_small")
+	@Column
 	private String attach_small;
-	@Column(column = "attach_middle")
+	@Column
 	private String attach_middle;
-	@Foreign(column = "weiboId", foreign = "id")
-	public WeiboBean weibo;
+	@Foreign(column = "weiboRepostId", foreign = "id")
+	public WeiboRepostBean repost;
+
+	public WeiboRepostAttachBean() {
+
+	}
+
+	public String getAttach_id() {
+		return attach_id;
+	}
+
+	public void setAttach_id(String attachId) {
+		attach_id = attachId;
+	}
+
+	public String getAttach_name() {
+		return attach_name;
+	}
+
+	public void setAttach_name(String attachName) {
+		attach_name = attachName;
+	}
+
+	public String getAttach_url() {
+		return attach_url;
+	}
+
+	public void setAttach_url(String attachUrl) {
+		attach_url = attachUrl;
+	}
 
 	public String getFile_name() {
 		return attach_name;
@@ -35,14 +63,6 @@ public class WeiboAttachBean implements Parcelable {
 
 	public void setFile_name(String fileName) {
 		attach_name = fileName;
-	}
-
-	public String getUrl() {
-		return attach_url;
-	}
-
-	public void setUrl(String url) {
-		this.attach_url = url;
 	}
 
 	@Override
@@ -61,25 +81,25 @@ public class WeiboAttachBean implements Parcelable {
 		dest.writeString(attach_middle);
 	}
 
-	public static final Parcelable.Creator<WeiboAttachBean> CREATOR = new Parcelable.Creator<WeiboAttachBean>() {
+	public static final Parcelable.Creator<WeiboRepostAttachBean> CREATOR = new Parcelable.Creator<WeiboRepostAttachBean>() {
 
 		@Override
-		public WeiboAttachBean createFromParcel(Parcel in) {
+		public WeiboRepostAttachBean createFromParcel(Parcel in) {
 			// TODO Auto-generated method stub
-			WeiboAttachBean wab = new WeiboAttachBean();
-			wab.attach_id = in.readString();
-			wab.attach_name = in.readString();
-			wab.attach_url = in.readString();
-			wab.attach_small = in.readString();
-			wab.attach_middle = in.readString();
+			WeiboRepostAttachBean wrab = new WeiboRepostAttachBean();
+			wrab.attach_id = in.readString();
+			wrab.attach_name = in.readString();
+			wrab.attach_url = in.readString();
+			wrab.attach_small = in.readString();
+			wrab.attach_middle = in.readString();
 
-			return wab;
+			return wrab;
 		}
 
 		@Override
-		public WeiboAttachBean[] newArray(int size) {
+		public WeiboRepostAttachBean[] newArray(int size) {
 			// TODO Auto-generated method stub
-			return new WeiboAttachBean[size];
+			return new WeiboRepostAttachBean[size];
 		}
 
 	};
@@ -106,14 +126,6 @@ public class WeiboAttachBean implements Parcelable {
 
 	public int getId() {
 		return id;
-	}
-
-	public String getAttach_id() {
-		return attach_id;
-	}
-
-	public void setAttach_id(String attachId) {
-		attach_id = attachId;
 	}
 
 }

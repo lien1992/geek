@@ -199,7 +199,7 @@
         android:layout_marginLeft="25dip"
         android:layout_marginRight="25dip"
         android:layout_marginTop="20dip"
-        android:background="@drawable/button_selector"
+        android:background="@drawable/wel_but"
         android:gravity="center"
         android:paddingTop="5dip"
         android:text="注 册"

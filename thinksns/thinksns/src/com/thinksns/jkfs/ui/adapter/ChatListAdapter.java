@@ -93,4 +93,5 @@ public class ChatListAdapter extends BaseAdapter {
 		ImageView icon;
 	}
 
+
 }

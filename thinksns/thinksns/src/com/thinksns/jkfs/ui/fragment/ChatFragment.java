@@ -169,6 +169,7 @@ public class ChatFragment extends Fragment {
                 i.putExtra("list_id",ID);
                 startActivity(i);
                
+
                 Log.d(TAG,"position"+userName.getText());
 
 

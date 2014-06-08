@@ -2,6 +2,7 @@ package com.thinksns.jkfs.ui.fragment;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,11 +21,17 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseListFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.WeiboAttachBean;
 import com.thinksns.jkfs.bean.WeiboBean;
+import com.thinksns.jkfs.bean.WeiboRepostAttachBean;
+import com.thinksns.jkfs.bean.WeiboRepostBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.WeiboDetailActivity;
 import com.thinksns.jkfs.ui.WriteWeiboActivity;
@@ -52,6 +59,10 @@ public class WeiboListFragment extends BaseListFragment {
 	private int totalCount;
 	private String since_id = "";
 	private boolean firstLoad = true;
+	private boolean cacheMode = true;
+
+	private DbUtils db;
+	private List<WeiboBean> weibos_cache;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -87,6 +98,39 @@ public class WeiboListFragment extends BaseListFragment {
 					listView.setLoadMoreEnable(true);
 				}
 				adapter.insertToHead(weibos);
+				try {
+					for (int i = weibos.size() - 1; i >= 0; --i) {
+						WeiboBean wb = weibos.get(i);
+						List<WeiboAttachBean> wabs = wb.getAttach();
+						if (wabs != null)
+							for (int j = 0; j < wabs.size(); ++j) {
+								WeiboAttachBean wab = wabs.get(j);
+								wab.weibo = wb;
+								db.save(wab);
+							}
+						else {
+							WeiboRepostBean wrb = wb.getTranspond_data();
+							if (wrb != null) {
+								wrb.weibo = wb;
+								List<WeiboRepostAttachBean> wrabs = wrb
+										.getAttach();
+								if (wrabs != null)
+									for (int j = 0; j < wrabs.size(); ++j) {
+										WeiboRepostAttachBean wrab = wrabs
+												.get(j);
+										wrab.repost = wrb;
+										db.save(wrab);
+									}
+								else
+									db.save(wrb);
+							} else
+								db.save(wb);
+						}
+					}
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				insertToHead(weibos);
 				Log.d("all weibos", weibo_all.size() + "");
 				if (!firstLoad)
@@ -105,7 +149,6 @@ public class WeiboListFragment extends BaseListFragment {
 
 		};
 	};
-	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,6 +173,10 @@ public class WeiboListFragment extends BaseListFragment {
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
 
+		db = DbUtils.create(getActivity(), "thinksns2.db");
+		// db.configAllowTransaction(true);
+		db.configDebug(true);
+
 		listView.setListener(this);
 		adapter = new WeiboAdapter(getActivity(), mInflater, listView);
 		listView.setAdapter(adapter);
@@ -139,11 +186,21 @@ public class WeiboListFragment extends BaseListFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getActivity(),
-						WeiboDetailActivity.class);
-				Log.d("listview item pos", position + "");
-				intent.putExtra("weibo_detail", weibo_all.get(position - 1));
-				startActivity(intent);
+				if (cacheMode) {
+					Intent intent = new Intent(getActivity(),
+							WeiboDetailActivity.class);
+					intent.putExtra("weibo_detail", weibos_cache
+							.get(position - 1));
+					startActivity(intent);
+
+				} else {
+					Intent intent = new Intent(getActivity(),
+							WeiboDetailActivity.class);
+					intent
+							.putExtra("weibo_detail", weibo_all
+									.get(position - 1));
+					startActivity(intent);
+				}
 			}
 
 		});
@@ -160,9 +217,41 @@ public class WeiboListFragment extends BaseListFragment {
 			}
 
 		});
+		try {
+			weibos_cache = db.findAll(Selector.from(WeiboBean.class).limit(20)
+					.orderBy("id", true));
+			if (weibos_cache != null && weibos_cache.size() > 0) {
+				Log.d("wj", "weibos_cache.size():" + weibos_cache.size());
+				for (int i = 0; i < weibos_cache.size(); ++i) {
+					Log.d("wj", "attach.size(): "
+							+ weibos_cache.get(i).getAttach().size()
+							+ " weibo.type:" + weibos_cache.get(i).getType());
+					WeiboBean wb = weibos_cache.get(i);
+					if (wb.getType().equals("repost")) {
+						Log.d("wj", "weibo");
+						WeiboRepostBean wrb = db.findFirst(Selector.from(
+								WeiboRepostBean.class).where("originId", "=",
+								wb.getId()));
+						wb.setTranspond_data(wrb);
+					}
 
-		if (totalCount == 0)
-			getWeibos();
+				}
+				Log.d("wj", "weibo attach table size:"
+						+ db.findAll(Selector.from(WeiboAttachBean.class))
+								.size());
+				Log.d("wj", "weibo repost table size:"
+						+ db.findAll(Selector.from(WeiboRepostBean.class))
+								.size());
+				adapter.insertToHead(weibos_cache);
+				progressBar.setVisibility(View.INVISIBLE);
+			} else {
+				getWeibos();
+				cacheMode = false;
+			}
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

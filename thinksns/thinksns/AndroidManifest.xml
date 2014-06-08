@@ -6,7 +6,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="8"
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -86,11 +86,7 @@
         </activity>
         <activity android:name=".ui.AboutUsActivity" >
         </activity>
-        <activity
-            android:name=".test.TestActivity"
-            android:configChanges="orientation|screenSize|screenLayout"
-            android:theme="@style/Theme.Sherlock.Light"
-            android:uiOptions="splitActionBarWhenNarrow" />
+        <activity android:name=".test.TestActivity" />
         <activity android:name=".ui.ChatActivity" />
         <activity android:name=".ui.SearchActivity" />
 
