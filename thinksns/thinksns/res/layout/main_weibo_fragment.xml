@@ -113,7 +113,7 @@
                 sat:expandDuration="200"
                 sat:mainImage="@drawable/circle_ico_green_6"
                 sat:satelliteDistance="80dp"
-                sat:totalSpacingDegree="120" />
+                sat:totalSpacingDegree="130" />
         </FrameLayout>
     </LinearLayout>
 

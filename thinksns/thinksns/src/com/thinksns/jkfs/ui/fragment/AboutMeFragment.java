@@ -96,12 +96,6 @@ public class AboutMeFragment extends Fragment {
 		this.follow = Integer.parseInt(following);
 	}
 
-	public AboutMeFragment(String i, UserFollowBean user, String following) {
-		this.FLAG = Integer.parseInt(i);
-		this.uuid = user.getUid();
-		this.follow = Integer.parseInt(following);
-	}
-
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {

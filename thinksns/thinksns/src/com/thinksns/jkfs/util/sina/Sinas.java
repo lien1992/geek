@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.sina;
+package com.thinksns.jkfs.util.sina;
 
 public interface Sinas {
 

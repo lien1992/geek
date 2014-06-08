@@ -96,7 +96,8 @@ public class WeiboMainFragment extends Fragment {
 		indicator.setFadeLength(500);
 		indicator.setOnPageChangeListener(new MyPageChangeListener());
 		List<SatelliteMenuItem> items = new ArrayList<SatelliteMenuItem>();
-		items.add(new SatelliteMenuItem(2, R.drawable.circle_ico_green_3_w));
+		items.add(new SatelliteMenuItem(3, R.drawable.circle_ico_green_3_w));
+		items.add(new SatelliteMenuItem(2, R.drawable.circle_ico_green_qiandao));
 		items.add(new SatelliteMenuItem(1, R.drawable.circle_ico_green_1_w));
 		menu.addItems(items);
 		menu.setOnItemClickedListener(new SateliteClickedListener() {
@@ -107,6 +108,9 @@ public class WeiboMainFragment extends Fragment {
 							WriteWeiboActivity.class));
 					break;
 				case 2:
+					//签到
+					break;
+				case 3:
 					startActivity(new Intent(getActivity(),
 							SearchActivity.class));
 					break;

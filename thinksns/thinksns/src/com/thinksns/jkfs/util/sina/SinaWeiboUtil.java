@@ -1,4 +1,4 @@
-package com.thinksns.jkfs.sina;
+package com.thinksns.jkfs.util.sina;
 
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
