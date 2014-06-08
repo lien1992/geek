@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.ChatBean;
+import com.thinksns.jkfs.bean.WeiboBean;
 
 /**
  * Created by mosl on 14-5-27.
@@ -23,17 +24,20 @@ public class ChatListAdapter extends BaseAdapter {
 	private Context mContext;
 	private LayoutInflater mInflater;
 
-	public ChatListAdapter(List<ChatBean> list, Context context,
+	public ChatListAdapter(LinkedList<ChatBean> list, Context context,
 			LayoutInflater inflater) {
 		mList = list;
 		mContext = context;
 		mInflater = inflater;
 	}
 
-	private List<ChatBean> mList = new LinkedList<ChatBean>();
+	private LinkedList<ChatBean> mList = new LinkedList<ChatBean>();
 
-	public List<ChatBean> getList() {
-		return mList;
+	// 更新微博列表，不要原来的数据
+	public void removeList(int position) {
+
+		mList.remove(position);
+		notifyDataSetChanged();
 	}
 
 	public void appendToList(List<ChatBean> list) {
@@ -63,26 +67,26 @@ public class ChatListAdapter extends BaseAdapter {
 		return 0;
 	}
 
-	public String getId(int position){
-		ChatBean chatBean = (ChatBean) getList().get(position);		
+	public String getId(int position) {
+		ChatBean chatBean = (ChatBean) mList.get(position);
 		return chatBean.list_id;
-		
+
 	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.chat_fragment_item,
 					parent, false);
 		}
-		if (getList().size() == 0)
+		if (mList.size() == 0)
 			return convertView;
 		ImageView userImage = (ImageView) convertView
 				.findViewById(R.id.user_image);
 		TextView userName = (TextView) convertView.findViewById(R.id.user_name);
 		TextView content = (TextView) convertView.findViewById(R.id.content);
-		ChatBean chatBean = (ChatBean) getList().get(position);		
-		ImageLoader.getInstance().displayImage(chatBean.from_face,
-				userImage);
+		ChatBean chatBean = (ChatBean) mList.get(position);
+		ImageLoader.getInstance().displayImage(chatBean.from_face, userImage);
 		userName.setText(chatBean.from_uname);
 		content.setText(chatBean.content);
 		return convertView;
@@ -92,6 +96,5 @@ public class ChatListAdapter extends BaseAdapter {
 		TextView text;
 		ImageView icon;
 	}
-
 
 }

@@ -2,6 +2,7 @@ package com.thinksns.jkfs.ui.fragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class ChatFragment extends Fragment {
     private AccountBean mAccountBean;
     private ListView chat_listview;
     private ChatListAdapter chatListAdapter;
-    private List<ChatBean> mListChat=new ArrayList<ChatBean>();
+    private LinkedList<ChatBean> mListChat=new LinkedList<ChatBean>();
     private LayoutInflater mInflater;
     private View mMenuSlide;
     private ThinkSNSApplication mApplication;
@@ -78,22 +79,9 @@ public class ChatFragment extends Fragment {
                         e.printStackTrace();
                     }
                 break;
-                case HANDLER_GET_JSON_REFRESH:
-                    try {
-                        JSONArray jsonObject=new JSONArray(mJsonData);
-                        if(jsonObject!=null)
-                            chatListAdapter.clearList();
-                            for(int i=0;i<jsonObject.length();i++){
-                                JSONObject obj=jsonObject.getJSONObject(i);
-                                mListChat.add(ChatBean.JsonToBean(obj));
-                            }
-                        chatListAdapter.notifyDataSetChanged();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    break;
                 case CHANGE_ADAPTER:
-//                	chat_listvsiew.invalidateViews();
+                   
+                	Toast.makeText(getActivity(), "成功删除私信", 1000).show();
                 	break;
             }
         }
@@ -110,7 +98,7 @@ public class ChatFragment extends Fragment {
         View view=inflater.inflate(R.layout.chat_fragment_layout,container,false);
         initViews(view);
 
-//        chat_listview.setLoadMoreEnable(true);
+
         if(mApplication.isNewWork(getActivity())){
             new Thread(new Runnable() {
                 @Override
@@ -148,11 +136,7 @@ public class ChatFragment extends Fragment {
             }
         });
 
-
-        mAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,m);
-        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner=(Spinner)view.findViewById(R.id.group_spinner);
-        mSpinner.setAdapter(mAdapter);
+ 
 
         chatListAdapter=new ChatListAdapter(mListChat,getActivity(),mInflater);
         chat_listview.setAdapter(chatListAdapter);
@@ -179,7 +163,7 @@ public class ChatFragment extends Fragment {
         chat_listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 				// TODO Auto-generated method stub
 				 final String ID = chatListAdapter.getId(position);
 				
@@ -189,9 +173,9 @@ public class ChatFragment extends Fragment {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
+						// TODO Auto-generated method stub						
+						chatListAdapter.removeList(position);
 						delMessage(ID);
-						chat_listview.invalidateViews();
 					}
 				})
 				.setNegativeButton("取消",null);

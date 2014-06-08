@@ -5,16 +5,21 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thinksns.jkfs.R;
@@ -131,6 +136,7 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 			}
 
 		});
+		
 
 		if (totalCount == 0)
 			getWeibos();
@@ -153,8 +159,8 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 					map.put("count", "10");
 					map.put("page", currentPage + "");
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret", account
-							.getOauth_token_secret());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
@@ -199,8 +205,8 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 					if (!since_id.equals(""))
 						map.put("since_id", since_id);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret", account
-							.getOauth_token_secret());
+					map.put("oauth_token_secret",
+							account.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
@@ -226,5 +232,5 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 			weibo_all.addFirst(lists.get(i));
 		}
 	}
-
+	
 }

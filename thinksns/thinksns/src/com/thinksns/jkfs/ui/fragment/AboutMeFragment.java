@@ -134,7 +134,10 @@ public class AboutMeFragment extends Fragment {
 				uname.setText(userinfo.getUname());
 				address.setText(userinfo.getLocation());
 				msex.setText(userinfo.getSex());
-				mweibo.setText(userinfo.count_info.getWeibo_count());
+				String weibocount = userinfo.count_info.getWeibo_count();
+				int i = Integer.parseInt(weibocount)+1;
+				String weic = i+"";
+				mweibo.setText(weic);
 				mfollow.setText(userinfo.count_info.getFollowing_count());
 				mfollowme.setText(userinfo.count_info.getFollower_count());
 				muid.setText(userinfo.getUid());

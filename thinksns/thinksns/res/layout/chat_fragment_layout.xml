@@ -16,26 +16,11 @@
             android:layout_alignParentLeft="true"
             android:src="@drawable/navigation" />
 
-        <Spinner
-            android:id="@+id/group_spinner"
-            android:layout_width="80dp"
-            android:layout_height="40dip"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dip"
-            android:layout_toRightOf="@+id/menu_icon" />
+        
 
-        <ImageView
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:layout_toLeftOf="@+id/xiala"
-            android:src="@drawable/add" />
+        
 
-        <ImageView
-            android:id="@+id/xiala"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/droplist" />
+        
     </RelativeLayout>
 
     <ListView
