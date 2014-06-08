@@ -40,23 +40,20 @@ import com.thinksns.jkfs.util.http.HttpUtility;
 
 public class UserInfoFollowList extends BaseActivity implements
 		OnScrollListener {
+
 	private ListView listView;
 	private int visibleLastIndex = 0; // 最后的可视项索引
 	private int visibleItemCount; // 当前窗口可见项总数
-	// private PeopleListAdapter adapter[];
-
 	private PeopleListAdapter adapter;
 	private int ac = -1;// 判断当前打开的是那个ADAPTER
 	private View loadMoreView;
 	private Button loadMoreButton;
 	private Handler handler = new Handler();
 	private int currentPage;
-
 	private ThinkSNSApplication application;
 	private LinkedList<UserFollowBean> userfollows = new LinkedList<UserFollowBean>();// 提取全部的userfollowbean信息
 	private LinkedList<UserFollowBean> userfollows2 = new LinkedList<UserFollowBean>();// 分页查看时候提取信息
 	private AccountBean account;
-
 	private int FLAG = 0;// 判断是打开自己的主页还是别人的主页 0为自己的
 	private int FLAGG = 0;// 判断是打开关注人列表还是粉丝列表 0为关注人的
 	private String uuid;
@@ -72,25 +69,20 @@ public class UserInfoFollowList extends BaseActivity implements
 			case 1:
 				adapter = new PeopleListAdapter(UserInfoFollowList.this,
 						userfollows, account);
-				// 自动为id是list的ListView设置适配器
 				listView.setAdapter(adapter);
 				currentPage = currentPage + 1;
 				break;
-
 			case 2:
 				loadNew();
 				currentPage = currentPage + 1;
 				adapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
 				break;
-
 			case 3:
 				Toast toast = Toast.makeText(UserInfoFollowList.this, "网络未连接",
 						Toast.LENGTH_SHORT);
 				toast.show();
 				break;
-
 			}
-
 		};
 	};
 
@@ -99,7 +91,6 @@ public class UserInfoFollowList extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.people_list);
 		currentPage = 1;
-
 		Bundle extras = getIntent().getExtras();
 		String flag = extras.getString("FLAG");
 		String flagg = extras.getString("FLAGG");
@@ -120,12 +111,12 @@ public class UserInfoFollowList extends BaseActivity implements
 		listView.addFooterView(loadMoreView); // 设置列表底部视图
 
 		Button listhead = (Button) findViewById(R.id.list_head);
-		if(FLAGG==0){
+		if (FLAGG == 0) {
 			listhead.setText("关注列表");
-		}else if (FLAGG==1){
+		} else if (FLAGG == 1) {
 			listhead.setText("粉丝列表");
 		}
-		
+
 		initAdapter();
 
 		listView.setOnScrollListener(this); // 添加滑动监听
@@ -136,11 +127,8 @@ public class UserInfoFollowList extends BaseActivity implements
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-
 				UserFollowBean userfollow = adapter.getUser(arg2);
-
 				String fo = "" + userfollow.follow_state.getFollowing();
-
 				Intent i = new Intent(UserInfoFollowList.this,
 						OtherInfoActivity.class);
 				i.putExtra("following", fo);
@@ -489,7 +477,6 @@ public class UserInfoFollowList extends BaseActivity implements
 	}
 
 	private void loadNew() {
-		// int count = adapter.getCount();
 		int nicount = userfollows2.size();// 测试判断剩下的数量
 		if (nicount == 20) {
 
@@ -497,8 +484,8 @@ public class UserInfoFollowList extends BaseActivity implements
 				adapter.addItem(userfollows2.get(i));
 			}
 
-			Toast toast = Toast.makeText(this, "已加载" + nicount + "个人"
-					, Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(this, "已加载" + nicount + "个人",
+					Toast.LENGTH_SHORT);
 			toast.show();
 
 		} else if (nicount < 20 && nicount > 0) {
@@ -507,13 +494,12 @@ public class UserInfoFollowList extends BaseActivity implements
 				adapter.addItem(userfollows2.get(i));
 			}
 
-			Toast toast = Toast.makeText(this, "已加载" + nicount + "个人"
-					, Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(this, "已加载" + nicount + "个人",
+					Toast.LENGTH_SHORT);
 			toast.show();
 
 		} else {
-			Toast toast = Toast.makeText(this, "已没有更多的人",
-					Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(this, "已没有更多的人", Toast.LENGTH_SHORT);
 			toast.show();
 		}
 

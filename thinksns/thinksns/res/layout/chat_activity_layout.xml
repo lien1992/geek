@@ -26,7 +26,7 @@
     </LinearLayout>
 
 
-    <com.thinksns.jkfs.ui.view.PullToRefreshListView
+    <ListView
         android:id="@+id/chat_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -34,7 +34,7 @@
         android:scrollbars="none"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll">
-    </com.thinksns.jkfs.ui.view.PullToRefreshListView>
+    </ListView>
 
 
     <LinearLayout android:id="@+id/listFooter"
