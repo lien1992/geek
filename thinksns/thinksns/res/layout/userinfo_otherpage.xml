@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/other_page_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
 
+    <RelativeLayout
+        android:id="@+id/user_page_header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white_for_title" >
 
-        
+        <ImageView
+            android:id="@+id/user_page_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0dip"
+            android:paddingBottom="1dip"
+            android:src="@drawable/back" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:background="@color/grey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/user_page_back"
+            android:text="用户主页"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/other_page_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white" >
+
+        <ProgressBar
+            android:id="@+id/user_page_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
 </LinearLayout>

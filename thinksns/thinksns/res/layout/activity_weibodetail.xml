@@ -9,9 +9,10 @@
         android:id="@+id/wb_detail_sub_root"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/wb_detail_bottom_layout"
         android:layout_alignParentTop="true"
-        android:orientation="vertical" 
-        android:background="@color/common_white">
+        android:background="@color/common_white"
+        android:orientation="vertical" >
 
         <RelativeLayout
             android:id="@+id/wb_detail_header"
@@ -151,8 +152,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:focusable="true"
                         android:padding="2dp"
-                        android:text="微博内容"
                         android:textColor="#444444"
                         android:textSize="16sp" />
 
@@ -188,7 +189,6 @@
                             android:id="@+id/re_detail_user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="被转发用户名"
                             android:textColor="#383838"
                             android:textSize="16sp" />
 
@@ -197,7 +197,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="被转发微博内容"
+                            android:focusable="true"
                             android:textColor="#484848"
                             android:textSize="14sp" />
 
@@ -320,6 +320,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/wb_detail_bottom_layout_view"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:layout_above="@+id/wb_detail_bottom_layout"

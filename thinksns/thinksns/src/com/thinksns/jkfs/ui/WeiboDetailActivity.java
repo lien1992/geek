@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -224,11 +225,13 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		}
 		time.setText(weibo.getCtime());
 		content.setText(weibo.getListViewSpannableString());
+		content.setMovementMethod(LinkMovementMethod.getInstance()); 
 		attaches = weibo.getAttach();
 		if (weibo.getType().equals("repost")) {
 			WeiboRepostBean weibo_repost = weibo.getTranspond_data();
 			re_user_name.setText(weibo_repost.getUname());
 			re_content.setText(weibo_repost.getListViewSpannableString());
+			re_content.setMovementMethod(LinkMovementMethod.getInstance()); 
 			if (weibo_repost.getType().equals("postimage") && !isNoImageMode) {
 				ImageLoader.getInstance().displayImage(
 						weibo_repost.getAttach().get(0).getAttach_middle(),

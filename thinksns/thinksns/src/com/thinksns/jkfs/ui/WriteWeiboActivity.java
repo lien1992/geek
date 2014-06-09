@@ -264,7 +264,7 @@ public class WriteWeiboActivity extends BaseActivity implements
 					} else {
 						sendDialogShow();
 						final String uploadPicPath = ImageUtils.compressPic(
-								this, picPath, 3);
+								this, picPath, 1);
 						new Thread() {
 							@Override
 							public void run() {

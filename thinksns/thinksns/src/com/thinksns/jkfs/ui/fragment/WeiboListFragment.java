@@ -133,9 +133,9 @@ public class WeiboListFragment extends BaseListFragment {
 				}
 				insertToHead(weibos);
 				Log.d("all weibos", weibo_all.size() + "");
-				if (!firstLoad)
+/*				if (!firstLoad)
 					Toast.makeText(getActivity(), "新增微博" + weibos.size() + "条",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT).show();*/
 				currentPage = totalCount / 20 + 1;
 				break;
 			case 2:
@@ -145,6 +145,14 @@ public class WeiboListFragment extends BaseListFragment {
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
 						.show();
+			case 3:
+				if (firstLoad) {
+					progressBar.setVisibility(View.INVISIBLE);
+				}
+				listView.onRefreshComplete();
+				Toast.makeText(getActivity(), "出现意外，微博加载失败:(",
+						Toast.LENGTH_SHORT).show();
+				break;
 			}
 
 		};
@@ -302,7 +310,7 @@ public class WeiboListFragment extends BaseListFragment {
 	private void getWeibos() {
 		// TODO Auto-generated method stub
 		if (Utility.isConnected(getActivity())) {
-
+			cacheMode = false;
 			new Thread() {
 				@Override
 				public void run() {
@@ -319,17 +327,21 @@ public class WeiboListFragment extends BaseListFragment {
 							.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
-					}.getType();
-					weibos = gson.fromJson(json, listType); // bug待修复，可能返回string非array
-					if (weibos != null && weibos.size() > 0) {
-						since_id = weibos.get(0).getFeed_id();
-						Log.d("WEIBO SINCE ID", since_id);
-						Log.d("WEIBO SINCE ID CONTENT", weibos.get(0)
-								.getContent());
-						totalCount += weibos.size();
-					}
-					mHandler.sendEmptyMessage(1);
+					if (json != null && !"".equals(json)
+							&& json.startsWith("[")) {
+						Type listType = new TypeToken<LinkedList<WeiboBean>>() {
+						}.getType();
+						weibos = gson.fromJson(json, listType);
+						if (weibos != null && weibos.size() > 0) {
+							since_id = weibos.get(0).getFeed_id();
+							Log.d("WEIBO SINCE ID", since_id);
+							Log.d("WEIBO SINCE ID CONTENT", weibos.get(0)
+									.getContent());
+							totalCount += weibos.size();
+						}
+						mHandler.sendEmptyMessage(1);
+					} else
+						mHandler.sendEmptyMessage(3);
 				}
 			}.start();
 		} else {
