@@ -1,5 +1,10 @@
 package com.thinksns.jkfs.bean;
 
+import com.lidroid.xutils.db.annotation.Column;
+import com.lidroid.xutils.db.annotation.Foreign;
+import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,20 +12,22 @@ import android.os.Parcelable;
  * 微博附件
  * 
  */
+@Table(name = "weibo_attach")
 public class WeiboAttachBean implements Parcelable {
+	@Id
+	private int id;
+	@Column(column = "attach_id")
 	private String attach_id;
+	@Column(column = "attach_name")
 	private String attach_name;
+	@Column(column = "attach_url")
 	private String attach_url;
+	@Column(column = "attach_small")
 	private String attach_small;
+	@Column(column = "attach_middle")
 	private String attach_middle;
-
-	public String getId() {
-		return attach_id;
-	}
-
-	public void setId(String id) {
-		this.attach_id = id;
-	}
+	@Foreign(column = "weiboId", foreign = "id")
+	public WeiboBean weibo;
 
 	public String getFile_name() {
 		return attach_name;
@@ -91,6 +98,22 @@ public class WeiboAttachBean implements Parcelable {
 
 	public String getAttach_middle() {
 		return attach_middle;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getAttach_id() {
+		return attach_id;
+	}
+
+	public void setAttach_id(String attachId) {
+		attach_id = attachId;
 	}
 
 }

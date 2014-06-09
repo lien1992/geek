@@ -689,6 +689,8 @@ public class ChannelFragment extends Fragment {
 				Log.i(TAG, "获取微博");
 				jsonData = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+				if(JSONToWeibos(jsonData)==null)
+					return;
 
 				// 将json转化成bean列表，handler出去
 				if (ifchannelSameOfDif == channel_DIF) {
@@ -720,17 +722,16 @@ public class ChannelFragment extends Fragment {
 			}.getType();
 			list = new Gson().fromJson(jsonData, listType);
 
-			Log.i(TAG, "微博个数" + list.size());
-			if (list.size() != 0) {
+			if (list!=null && list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
-				weibo_max_id = list.get(list.size() - 1).getId();
-				weibo_since_id = list.get(0).getId();
+				weibo_max_id = list.get(list.size() - 1).getFeed_id();
+				weibo_since_id = list.get(0).getFeed_id();
 			}
 		} catch (JsonSyntaxException e) {
 			Log.i(TAG, "json微博出问题");
 			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
 		}
-		Log.i(TAG, "微博个数" + list.size() + "yanzhwng");
+		//Log.i(TAG, "微博个数" + list.size() + "yanzhwng");
 		return list;
 	}
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="流量控制" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="no_image_mode"
+            android:summary="不显示微博、头像等图片，更省流量:)"
+            android:title="无图模式" >
+        </CheckBoxPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="关于" >
+        <Preference
+            android:key="about_us"
+            android:title="关于我们" >
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

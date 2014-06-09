@@ -20,13 +20,13 @@ import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.constant.HttpConstant;
-import com.thinksns.jkfs.sina.PreferenceUtil;
-import com.thinksns.jkfs.sina.SinaWeiboUtil;
-import com.thinksns.jkfs.sina.Sinas;
-import com.thinksns.jkfs.sina.WeiboListener;
 import com.thinksns.jkfs.util.*;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
+import com.thinksns.jkfs.util.sina.PreferenceUtil;
+import com.thinksns.jkfs.util.sina.SinaWeiboUtil;
+import com.thinksns.jkfs.util.sina.Sinas;
+import com.thinksns.jkfs.util.sina.WeiboListener;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -204,7 +204,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			if (application.isNewWork(LoginActivity.this)) {
+			if (isNetworkAvailable(this)) {
 				mDialog = ProgressDialog.show(LoginActivity.this, "",
 						"正在登录...", true);
 				final Map<String, String> map = new HashMap<String, String>();

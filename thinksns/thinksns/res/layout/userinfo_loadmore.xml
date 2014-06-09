@@ -9,5 +9,6 @@
    		android:layout_width="fill_parent"
    		android:layout_height="wrap_content"
    		android:text="load more"
+   		android:background="@drawable/sel_but"
    		android:onClick="loadMore"/>
 </LinearLayout>

@@ -268,7 +268,7 @@
                 android:gravity="left|center"
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
-                android:text="退出当前帐户"
+                android:text="注销"
                 android:textColor="#FF6666"
                 android:textSize="18sp" />
         </LinearLayout>

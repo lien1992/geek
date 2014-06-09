@@ -52,7 +52,6 @@ public class GetMsgService extends IntentService {
 			map.put("oauth_token_secret", account.getOauth_token_secret());
 			String json = HttpUtility.getInstance().executeNormalTask(
 					HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-			Log.d("wj", "unread json" + json);
 			Type listType = new TypeToken<LinkedList<NotificationBean>>() {
 			}.getType();
 			msgs = gson.fromJson(json, listType);

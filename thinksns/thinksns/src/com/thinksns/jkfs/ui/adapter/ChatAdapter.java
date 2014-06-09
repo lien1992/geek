@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 
 import java.util.List;
@@ -41,10 +42,11 @@ public class ChatAdapter extends BaseAdapter {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-    public void addMessage(Message msg){
-        myList.add(msg);
-        notifyDataSetChanged();
-    }
+	public void addMessage(Message msg) {
+		myList.add(msg);
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public int getCount() {
 		return myList.size();
@@ -72,136 +74,104 @@ public class ChatAdapter extends BaseAdapter {
 		ViewHolderLeftText holderLeftText = null;
 		ViewHolderLeftImg holderLeftImg = null;
 		ViewHolderLeftAudio holderLeftAudio = null;
-		
+
 		if (convertView == null) {
 			switch (type) {
-			case VALUE_TIME_TIP:
-				holderTime = new ViewHolderTime();
-				convertView = mInflater.inflate(R.layout.list_item_time_tip,
-						null);
-				holderTime.tvTimeTip = (TextView) convertView
-						.findViewById(R.id.tv_time_tip);
-				holderTime.tvTimeTip.setText(msg.getValue());
-				convertView.setTag(holderTime);
-				break;
+
+
 			// 左边
 			case VALUE_LEFT_TEXT:
 				holderLeftText = new ViewHolderLeftText();
 				convertView = mInflater.inflate(R.layout.list_item_left_text,
 						null);
-				holderLeftText.ivLeftIcon = (ImageView) convertView
-						.findViewById(R.id.iv_icon);
+				// holderLeftText.ivLeftIcon = (ImageView) convertView
+				// .findViewById(R.id.iv_icon);
+				ImageLoader.getInstance().displayImage(msg.getFace(),
+						holderLeftText.ivLeftIcon);
 				holderLeftText.btnLeftText = (Button) convertView
 						.findViewById(R.id.btn_left_text);
 				holderLeftText.btnLeftText.setText(msg.getValue());
 				convertView.setTag(holderLeftText);
 				break;
 
-			case VALUE_LEFT_IMAGE:
-				holderLeftImg = new ViewHolderLeftImg();
-				convertView = mInflater.inflate(R.layout.list_item_left_iamge,
-						null);
-				holderLeftImg.ivLeftIcon = (ImageView) convertView
-						.findViewById(R.id.iv_icon);
-				holderLeftImg.ivLeftImage = (ImageView) convertView
-						.findViewById(R.id.iv_left_image);
-				//holderLeftImg.ivLeftImage.setImageResource(R.drawable.test);
-				convertView.setTag(holderLeftImg);
-				break;
+			// case VALUE_LEFT_IMAGE:
+			// holderLeftImg = new ViewHolderLeftImg();
+			// convertView = mInflater.inflate(R.layout.list_item_left_iamge,
+			// null);
+			// holderLeftImg.ivLeftIcon = (ImageView) convertView
+			// .findViewById(R.id.iv_icon);
+			// holderLeftImg.ivLeftImage = (ImageView) convertView
+			// .findViewById(R.id.iv_left_image);
+			// //holderLeftImg.ivLeftImage.setImageResource(R.drawable.test);
+			// convertView.setTag(holderLeftImg);
+			// break;
 
-			case VALUE_LEFT_AUDIO:
-				holderLeftAudio = new ViewHolderLeftAudio();
-				convertView = mInflater.inflate(R.layout.list_item_left_audio,
-						null);
-				holderLeftAudio.ivLeftIcon = (ImageView) convertView
-						.findViewById(R.id.iv_icon);
-				holderLeftAudio.btnLeftAudio = (Button) convertView
-						.findViewById(R.id.btn_left_audio);
-				holderLeftAudio.tvLeftAudioTime = (TextView) convertView
-						.findViewById(R.id.tv_left_audio_time);
-				holderLeftAudio.tvLeftAudioTime.setText(msg.getValue());
-				convertView.setTag(holderLeftAudio);
-				break;
 			// 右边
 			case VALUE_RIGHT_TEXT:
-				holderRightText= new ViewHolderRightText();
+				holderRightText = new ViewHolderRightText();
 				convertView = mInflater.inflate(R.layout.list_item_right_text,
 						null);
-				holderRightText.ivRightIcon = (ImageView) convertView
-						.findViewById(R.id.iv_icon);
+				// holderRightText.ivRightIcon = (ImageView) convertView
+				// .findViewById(R.id.iv_icon);
+				ImageLoader.getInstance().displayImage(msg.getFace(),
+						holderRightText.ivRightIcon);
 				holderRightText.btnRightText = (Button) convertView
 						.findViewById(R.id.btn_right_text);
 				holderRightText.btnRightText.setText(msg.getValue());
+
 				convertView.setTag(holderRightText);
 				break;
 
-			case VALUE_RIGHT_IMAGE:
-				holderRightImg= new ViewHolderRightImg();
-				convertView = mInflater.inflate(R.layout.list_item_right_iamge,
-						null);
-				holderRightImg.ivRightIcon = (ImageView) convertView
-						.findViewById(R.id.iv_icon);
-				holderRightImg.ivRightImage = (ImageView) convertView
-						.findViewById(R.id.iv_right_image);
-				//holderRightImg.ivRightImage.setImageResource(R.drawable.test);
-				convertView.setTag(holderRightImg);
-				break;
-
-			case VALUE_RIGHT_AUDIO:
-				holderRightAudio=new ViewHolderRightAudio();
-				convertView = mInflater.inflate(R.layout.list_item_right_audio,
-						null);
-				holderRightAudio.ivRightIcon = (ImageView) convertView
-						.findViewById(R.id.iv_icon);
-				holderRightAudio.btnRightAudio = (Button) convertView
-						.findViewById(R.id.btn_right_audio);
-				holderRightAudio.tvRightAudioTime = (TextView) convertView
-						.findViewById(R.id.tv_right_audio_time);
-				holderRightAudio.tvRightAudioTime.setText(msg.getValue());
-				convertView.setTag(holderRightAudio);
-				break;
+			// case VALUE_RIGHT_IMAGE:
+			// holderRightImg= new ViewHolderRightImg();
+			// convertView = mInflater.inflate(R.layout.list_item_right_iamge,
+			// null);
+			// holderRightImg.ivRightIcon = (ImageView) convertView
+			// .findViewById(R.id.iv_icon);
+			// holderRightImg.ivRightImage = (ImageView) convertView
+			// .findViewById(R.id.iv_right_image);
+			// //holderRightImg.ivRightImage.setImageResource(R.drawable.test);
+			// convertView.setTag(holderRightImg);
+			// break;
 
 			default:
 				break;
 			}
-			
+
 		} else {
 			Log.d("baseAdapter", "Adapter_:" + (convertView == null));
 			switch (type) {
 			case VALUE_TIME_TIP:
-				holderTime=(ViewHolderTime)convertView.getTag();
+				holderTime = (ViewHolderTime) convertView.getTag();
 				holderTime.tvTimeTip.setText(msg.getValue());
 				break;
 			case VALUE_LEFT_TEXT:
-				holderLeftText=(ViewHolderLeftText)convertView.getTag();
+				holderLeftText = (ViewHolderLeftText) convertView.getTag();
 				holderLeftText.btnLeftText.setText(msg.getValue());
 				break;
 			case VALUE_LEFT_IMAGE:
-				holderLeftImg=(ViewHolderLeftImg)convertView.getTag();
-				//holderLeftImg.ivLeftImage.setImageResource(R.drawable.test);
+				holderLeftImg = (ViewHolderLeftImg) convertView.getTag();
+				// holderLeftImg.ivLeftImage.setImageResource(R.drawable.test);
 				break;
 			case VALUE_LEFT_AUDIO:
-				holderLeftAudio=(ViewHolderLeftAudio)convertView.getTag();
+				holderLeftAudio = (ViewHolderLeftAudio) convertView.getTag();
 				holderLeftAudio.tvLeftAudioTime.setText(msg.getValue());
 				break;
 			case VALUE_RIGHT_TEXT:
-				holderRightText=(ViewHolderRightText)convertView.getTag();
+				holderRightText = (ViewHolderRightText) convertView.getTag();
 				holderRightText.btnRightText.setText(msg.getValue());
 				break;
 			case VALUE_RIGHT_IMAGE:
-				holderRightImg=(ViewHolderRightImg)convertView.getTag();
-				//holderRightImg.ivRightImage.setImageResource(R.drawable.test);
+				holderRightImg = (ViewHolderRightImg) convertView.getTag();
 				break;
 			case VALUE_RIGHT_AUDIO:
-				holderRightAudio=(ViewHolderRightAudio)convertView.getTag();
+				holderRightAudio = (ViewHolderRightAudio) convertView.getTag();
 				holderRightAudio.tvRightAudioTime.setText(msg.getValue());
 				break;
 
 			default:
 				break;
 			}
-			
-			//holder = (ViewHolder) convertView.getTag();
 		}
 		return convertView;
 	}

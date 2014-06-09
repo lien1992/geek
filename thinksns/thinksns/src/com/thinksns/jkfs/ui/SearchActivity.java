@@ -385,8 +385,7 @@ public class SearchActivity extends BaseActivity {
 			}.getType();
 			list = new Gson().fromJson(jsonData, listType);
 
-			Log.i(TAG, "用户个数" + list.size());
-			if (list.size() != 0) {
+			if (list!=null && list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
 			}
 		} catch (JsonSyntaxException e) {
@@ -439,8 +438,7 @@ public class SearchActivity extends BaseActivity {
 			}.getType();
 			list = new Gson().fromJson(jsonData, listType);
 
-			Log.i(TAG, "微博个数" + list.size());
-			if (list.size() != 0) {
+			if (list!=null && list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
 			}
 		} catch (JsonSyntaxException e) {

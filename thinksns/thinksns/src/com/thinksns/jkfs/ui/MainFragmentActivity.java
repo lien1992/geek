@@ -136,7 +136,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			Log
 					.d("wj", "NotificationBean at count"
 							+ comment_unread.getCount());
-			menu.setUnread(comment_unread, at_unread);
+			//menu.setUnread(comment_unread, at_unread);
 		}
 
 	}

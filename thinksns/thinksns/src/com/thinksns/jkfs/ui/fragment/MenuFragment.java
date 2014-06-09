@@ -3,20 +3,27 @@ package com.thinksns.jkfs.ui.fragment;
 import java.util.HashMap;
 
 import com.google.gson.Gson;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.exception.DbException;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.NotificationBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
+import com.thinksns.jkfs.bean.UserInfoCountBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
+import com.thinksns.jkfs.ui.SettingActivity;
 import com.thinksns.jkfs.ui.view.RoundAngleImageView;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -51,6 +58,8 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private UserInfoBean userinfo;
 	private String json;
 	private NotificationBean comment_unread, at_unread;
+	private DbUtils db;
+	private DisplayImageOptions options;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -61,9 +70,17 @@ public class MenuFragment extends Fragment implements OnClickListener {
 					Gson gson = new Gson();
 					userinfo = gson.fromJson(json, UserInfoBean.class);
 					ImageLoader.getInstance().displayImage(
-							userinfo.getAvatar(), avatar);
+							userinfo.getAvatar_original(), avatar, options);
 					nick.setText(userinfo.getUname());
-					mHandler.sendEmptyMessage(0);
+					try {
+						UserInfoCountBean userInfoCount = userinfo.count_info;
+						userInfoCount.setUser_info(userinfo);
+						db.save(userInfoCount);
+					} catch (DbException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					application.setUser(userinfo);
 				}
 				break;
 
@@ -103,29 +120,6 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		setting = (LinearLayout) view.findViewById(R.id.sm_setting);
 		logout = (LinearLayout) view.findViewById(R.id.sm_logout);
 
-		application = (ThinkSNSApplication) this.getActivity()
-				.getApplicationContext();
-		account = application.getAccount(this.getActivity());
-
-		new Thread() {
-			@Override
-			public void run() {
-				Log.d(TAG, "run");
-				HashMap<String, String> map = new HashMap<String, String>();
-				map = new HashMap<String, String>();
-				map.put("app", "api");
-				map.put("mod", "User");
-				map.put("act", "show");
-				map.put("user_id", account.getUid());
-				map.put("oauth_token", account.getOauth_token());
-				map.put("oauth_token_secret", account.getOauth_token_secret());
-				json = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				mHandler.sendEmptyMessage(HTTP_GET_OK);
-
-			}
-		}.start();
-
 		return view;
 	}
 
@@ -142,6 +136,49 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		setting.setOnClickListener(this);
 		logout.setOnClickListener(this);
 		changeBackground(R.id.sm_home);
+
+		application = (ThinkSNSApplication) this.getActivity()
+				.getApplicationContext();
+		account = application.getAccount(this.getActivity());
+
+		options = new DisplayImageOptions.Builder().showStubImage(
+				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
+
+		db = DbUtils.create(MenuFragment.this.getActivity());
+		db.configDebug(true);
+		UserInfoBean uib = null;
+		try {
+			uib = db.findFirst(Selector.from(UserInfoBean.class).orderBy("id",
+					true));
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (uib != null) {
+			ImageLoader.getInstance().displayImage(uib.getAvatar_original(),
+					avatar, options);
+			nick.setText(uib.getUname());
+		} else {
+			new Thread() {
+				@Override
+				public void run() {
+					Log.d(TAG, "run");
+					HashMap<String, String> map = new HashMap<String, String>();
+					map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "User");
+					map.put("act", "show");
+					map.put("user_id", account.getUid());
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
+					json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					mHandler.sendEmptyMessage(HTTP_GET_OK);
+
+				}
+			}.start();
+		}
 
 	}
 
@@ -200,9 +237,11 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.sm_setting:
 			changeBackground(R.id.sm_setting);
-			SettingFragment settingFragment = new SettingFragment();
-			if (settingFragment != null)
-				switchFragment(settingFragment);
+			/*
+			 * SettingFragment settingFragment = new SettingFragment(); if
+			 * (settingFragment != null) switchFragment(settingFragment);
+			 */
+			startActivity(new Intent(getActivity(), SettingActivity.class));
 			break;
 		case R.id.sm_logout:
 			changeBackground(R.id.sm_logout);
