@@ -1,5 +1,8 @@
 package com.thinksns.jkfs.ui;
 
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.DbUtils.DbUpgradeListener;
+import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.constant.BaseConstant;
 
@@ -18,6 +21,7 @@ public class SettingActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener, OnPreferenceClickListener {
 	private CheckBoxPreference mCheckPreference;
 	private Preference aboutUs;
+	private Preference clearCache;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,6 +33,7 @@ public class SettingActivity extends PreferenceActivity implements
 	private void initPreferences() {
 		mCheckPreference = (CheckBoxPreference) findPreference(BaseConstant.NO_IMAGE_MODE_KEY);
 		aboutUs = findPreference(BaseConstant.ABOUT_US_KEY);
+		clearCache = findPreference(BaseConstant.CLEAR_CACHE_KEY);
 	}
 
 	protected void onResume() {
@@ -64,6 +69,24 @@ public class SettingActivity extends PreferenceActivity implements
 		// TODO Auto-generated method stub
 		if (aboutUs == preference)
 			startActivity(new Intent(this, AboutUsActivity.class));
+		if (clearCache == preference) {
+			DbUtils db = DbUtils.create(this, "thinksns2.db", 10, new DbUpgradeListener(){
+
+				@Override
+				public void onUpgrade(DbUtils db, int oldVersion, int newVersion) {
+					// TODO Auto-generated method stub
+					try {
+						db.dropDb();
+					} catch (DbException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+				
+			});
+
+		}
 		return super.onPreferenceTreeClick(preferenceScreen, preference);
 	}
 }
