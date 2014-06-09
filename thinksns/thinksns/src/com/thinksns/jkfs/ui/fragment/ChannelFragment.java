@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -111,7 +111,7 @@ public class ChannelFragment extends Fragment {
 	static private final int MENU_ITEM_HEIGHT = 80;
 	static private final int MENU_ITEM_COUNT = 4;
 	// 只加载一次
-	static private ArrayList<ChannelBean> channelList;
+	static private LinkedList<ChannelBean> channelList;
 	// 菜单的属性
 	static private int MENU_HEIGHT = 0;
 	static private int DOWNLOAD_IMAGE_COUNT = 0;
@@ -127,9 +127,9 @@ public class ChannelFragment extends Fragment {
 	private LayoutInflater mInflater;
 	private String jsonData;
 	private Handler handler;
-	private ArrayList<WeiboBean> weiboList;
+	private LinkedList<WeiboBean> weiboList;
 	// 防止没加载微博，还原用
-	private ArrayList<WeiboBean> weiboList_before;
+	private LinkedList<WeiboBean> weiboList_before;
 	private WeiboAdapter listViewAdapter;
 	private String channelTitle = "官方发言";
 	private String channel_category_id = "";
@@ -167,18 +167,6 @@ public class ChannelFragment extends Fragment {
 				.findViewById(R.id.channel_listview);
 		mInflater = LayoutInflater.from(view.getContext());
 
-		// 测试搜索++++++++++++++++++++++++++
-		titleName.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(mContext, SearchActivity.class);
-				startActivity(intent);
-			}
-		});
-		// 测试搜索++++++++++++++++++++++++++
-
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -186,7 +174,7 @@ public class ChannelFragment extends Fragment {
 				super.handleMessage(msg);
 				switch (msg.what) {
 				case GETTED_CHANNEL_LIST_WITHOUT_IMAGE:
-					channelList = (ArrayList<ChannelBean>) msg.obj;
+					channelList = (LinkedList<ChannelBean>) msg.obj;
 					// 初始化微博列表,""是默认id，这样代表没赋值过
 					boolean isNull;
 					if (isNull = "".equals(channel_category_id)) {
@@ -226,8 +214,8 @@ public class ChannelFragment extends Fragment {
 				case GETTED_DIF_CHANNEL_WEIBO_LIST:
 					Log.i(TAG, "GETTED_DIF_CHANNEL_WEIBO_LIST");
 					// 防止gson出问题，出问题时size=0
-					if (((ArrayList<WeiboBean>) msg.obj).size() != 0) {
-						weiboList = (ArrayList<WeiboBean>) msg.obj;
+					if (((LinkedList<WeiboBean>) msg.obj).size() != 0) {
+						weiboList = (LinkedList<WeiboBean>) msg.obj;
 						listViewAdapter.update(weiboList);
 						Log.i(TAG, weiboList.get(0).getUname());
 						mListView.setSelection(0);
@@ -242,8 +230,8 @@ public class ChannelFragment extends Fragment {
 					break;
 				case GETTED_REFRESH_CHANNEL_WEIBO_LIST:
 					// 防止gson出问题，出问题时size=0
-					if (((ArrayList<WeiboBean>) msg.obj).size() != 0) {
-						weiboList = (ArrayList<WeiboBean>) msg.obj;
+					if (((LinkedList<WeiboBean>) msg.obj).size() != 0) {
+						weiboList = (LinkedList<WeiboBean>) msg.obj;
 						Log.i(TAG, weiboList.size() + "微博个数验证");
 						listViewAdapter.insertToHead(weiboList);
 						mListView.setSelection(0);
@@ -257,12 +245,19 @@ public class ChannelFragment extends Fragment {
 					}
 					break;
 				case GETTED_ON_LOAD_MORE_CHANNEL_WEIBO_LIST:
-					// 防止gson出问题，出问题时size=0
-					if (((ArrayList<WeiboBean>) msg.obj).size() != 0) {
-						weiboList = (ArrayList<WeiboBean>) msg.obj;
-						listViewAdapter.append(weiboList);
-						mListView.onLoadMoreComplete();
+
+					if (((LinkedList<WeiboBean>) msg.obj).size() == 0) {
+						Toast.makeText(mContext, "没有更多微博了亲:(",
+								Toast.LENGTH_SHORT).show();
+						Log.i(TAG, "没更多了");
+					} else {
+						weiboList = append(weiboList,
+								(LinkedList<WeiboBean>) msg.obj);
+						listViewAdapter.update(weiboList);
+						Log.i(TAG, "加载更多了");
 					}
+					mListView.onLoadMoreComplete();
+
 					break;
 				}
 			}
@@ -539,7 +534,7 @@ public class ChannelFragment extends Fragment {
 					jsonData = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Log.i(TAG, jsonData);
-					ArrayList<ChannelBean> channelList = JSONToChannels(jsonData);
+					LinkedList<ChannelBean> channelList = JSONToChannels(jsonData);
 					if (channelList.size() != 0) {
 						handler.obtainMessage(
 								ChannelFragment.GETTED_CHANNEL_LIST_WITHOUT_IMAGE,
@@ -558,8 +553,8 @@ public class ChannelFragment extends Fragment {
 	 *            需要转换的json格式的String
 	 * @return 数组size为0时，出错了
 	 */
-	ArrayList<ChannelBean> JSONToChannels(String jsonData) {
-		ArrayList<ChannelBean> channelList = new ArrayList<ChannelBean>();
+	LinkedList<ChannelBean> JSONToChannels(String jsonData) {
+		LinkedList<ChannelBean> channelList = new LinkedList<ChannelBean>();
 		try {
 			JSONObject obj = new JSONObject(jsonData);
 			Iterator<String> it = obj.keys();
@@ -689,7 +684,7 @@ public class ChannelFragment extends Fragment {
 				Log.i(TAG, "获取微博");
 				jsonData = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				if(JSONToWeibos(jsonData)==null)
+				if (JSONToWeibos(jsonData) == null)
 					return;
 
 				// 将json转化成bean列表，handler出去
@@ -714,15 +709,15 @@ public class ChannelFragment extends Fragment {
 		}.start();
 	}
 
-	private ArrayList<WeiboBean> JSONToWeibos(String jsonData) {
+	private LinkedList<WeiboBean> JSONToWeibos(String jsonData) {
 
-		ArrayList<WeiboBean> list = new ArrayList<WeiboBean>();
+		LinkedList<WeiboBean> list = new LinkedList<WeiboBean>();
 		try {
-			Type listType = new TypeToken<ArrayList<WeiboBean>>() {
+			Type listType = new TypeToken<LinkedList<WeiboBean>>() {
 			}.getType();
 			list = new Gson().fromJson(jsonData, listType);
 
-			if (list!=null && list.size() != 0) {
+			if (list != null && list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
 				weibo_max_id = list.get(list.size() - 1).getFeed_id();
 				weibo_since_id = list.get(0).getFeed_id();
@@ -731,7 +726,7 @@ public class ChannelFragment extends Fragment {
 			Log.i(TAG, "json微博出问题");
 			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
 		}
-		//Log.i(TAG, "微博个数" + list.size() + "yanzhwng");
+		// Log.i(TAG, "微博个数" + list.size() + "yanzhwng");
 		return list;
 	}
 
@@ -754,5 +749,14 @@ public class ChannelFragment extends Fragment {
 				}
 			}
 		});
+	}
+
+	// 加到表头
+	public LinkedList append(LinkedList mList, LinkedList list) {
+		if (list == null) {
+			return mList;
+		}
+		mList.addAll(list);
+		return mList;
 	}
 }
