@@ -287,16 +287,12 @@ public class Utility {
 
 		bean.setListViewSpannableString(getHighLightLinks(bean.getContent()));
 		if (bean.getTranspond_data() != null) {
-			String name = "";
-			name = bean.getTranspond_data().getUname();
 			SpannableString value;
-
-			if (!TextUtils.isEmpty(name)) {
-				value = getHighLightLinks("@" + name);
-			} else {
+			if (!TextUtils.isEmpty(bean.getTranspond_data().getContent())) {
 				value = getHighLightLinks(bean.getTranspond_data().getContent());
+			} else {
+				value = SpannableString.valueOf("");
 			}
-
 			bean.getTranspond_data().setListViewSpannableString(value);
 		}
 	}
@@ -361,7 +357,7 @@ public class Utility {
 						result = matcher.group(1); // 得到url中的uid
 					}
 					weiboSpan = new MyURLSpan(urlSpans[i].getURL(), result);
-				}else{
+				} else {
 					weiboSpan = new MyURLSpan(urlSpans[i].getURL());
 				}
 				int start = value.getSpanStart(urlSpans[i]);

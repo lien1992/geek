@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -156,7 +157,10 @@ public class WeiboAdapter extends BaseAdapter {
 		ImageLoader.getInstance().displayImage(weibo.getAvatar_small(),
 				holder.avatar, options);
 		holder.userName.setText(weibo.getUname());
-		holder.content.setText(weibo.getListViewSpannableString());
+		if (!TextUtils.isEmpty(weibo.getContent()))
+			holder.content.setText(weibo.getListViewSpannableString());
+		else
+			holder.content.setVisibility(View.GONE);
 		holder.time.setText(weibo.getCtime());
 		int where = Integer.parseInt(weibo.getFrom());
 		switch (where) {
@@ -184,8 +188,11 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.weibo_pics.setVisibility(View.GONE);
 			WeiboRepostBean weibo_repost = weibo.getTranspond_data();
 			holder.repost_userName.setText(weibo_repost.getUname());
-			holder.repost_content.setText(weibo_repost
-					.getListViewSpannableString());
+			if (!TextUtils.isEmpty(weibo_repost.getContent()))
+				holder.repost_content.setText(weibo_repost
+						.getListViewSpannableString());
+			else
+				holder.repost_content.setVisibility(View.GONE);
 			if (weibo_repost.getType().equals("postimage")) {
 				if (!isNoImageMode) {
 					ImageLoader.getInstance().displayImage(

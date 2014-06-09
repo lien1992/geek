@@ -126,14 +126,16 @@ public class WeiboDetailActivity extends FragmentActivity implements
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 7:
-				// 赞成功
+				int like = Integer.parseInt(like_count.getText().toString());
+				like_count.setText((++like) + "");
 				break;
 			case 8:
 				Toast.makeText(WeiboDetailActivity.this, "出现意外，赞失败了:(",
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 9:
-				// 取消赞成功
+				int dislike = Integer.parseInt(like_count.getText().toString());
+				like_count.setText((--dislike) + "");
 				break;
 			case 10:
 				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消赞失败了:(",
@@ -225,13 +227,13 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		}
 		time.setText(weibo.getCtime());
 		content.setText(weibo.getListViewSpannableString());
-		content.setMovementMethod(LinkMovementMethod.getInstance()); 
+		content.setMovementMethod(LinkMovementMethod.getInstance());
 		attaches = weibo.getAttach();
 		if (weibo.getType().equals("repost")) {
 			WeiboRepostBean weibo_repost = weibo.getTranspond_data();
 			re_user_name.setText(weibo_repost.getUname());
 			re_content.setText(weibo_repost.getListViewSpannableString());
-			re_content.setMovementMethod(LinkMovementMethod.getInstance()); 
+			re_content.setMovementMethod(LinkMovementMethod.getInstance());
 			if (weibo_repost.getType().equals("postimage") && !isNoImageMode) {
 				ImageLoader.getInstance().displayImage(
 						weibo_repost.getAttach().get(0).getAttach_middle(),
@@ -315,6 +317,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("act", "favorite_create");
 							map.put("source_table_name", "feed");
 							map.put("source_id", weibo.getFeed_id() + "");
+							map.put("source_app", "public");
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -341,6 +344,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("act", "favorite_destroy");
 							map.put("source_table_name", "feed");
 							map.put("source_id", weibo.getFeed_id() + "");
+							map.put("source_app", "public");
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -420,7 +424,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("app", "api");
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "add_digg");
-							// map.put("", weibo.getFeed_id());
+							map.put("feed_id", weibo.getFeed_id());
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -446,7 +450,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("app", "api");
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "delete_digg");
-							// map.put("", weibo.getFeed_id());
+							map.put("feed_id", weibo.getFeed_id());
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());

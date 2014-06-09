@@ -39,7 +39,7 @@
         android:id="@+id/other_page_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/white" >
+        android:background="@color/common_white" >
 
         <ProgressBar
             android:id="@+id/user_page_progressbar"
