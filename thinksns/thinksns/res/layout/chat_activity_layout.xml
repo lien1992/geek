@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="和xxx聊天中"
+            android:text="聊天中"
             android:gravity="center"
             android:layout_gravity="center_horizontal"
             />
@@ -29,10 +29,9 @@
     <ListView
         android:id="@+id/chat_list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dip"
         android:layout_weight="1"
         android:scrollbars="none"
-        android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll">
     </ListView>
 
