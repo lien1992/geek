@@ -128,10 +128,7 @@ public class AboutMeFragment extends Fragment {
 				uname.setText(userinfo.getUname());
 				address.setText(userinfo.getLocation());
 				msex.setText(userinfo.getSex());
-				String weibocount = userinfo.count_info.getWeibo_count();
-				int i = Integer.parseInt(weibocount)+1;
-				String weic = i+"";
-				mweibo.setText(weic);
+				mweibo.setText(userinfo.count_info.getWeibo_count());
 				mfollow.setText(userinfo.count_info.getFollowing_count());
 				mfollowme.setText(userinfo.count_info.getFollower_count());
 				muid.setText(userinfo.getUid());
@@ -240,10 +237,6 @@ public class AboutMeFragment extends Fragment {
 				// get the change info activity
 
 				if (FLAG == 0) {
-
-					// Intent intent = new Intent(getActivity(),
-					// ChangeUserInfo.class);
-					// startActivity(intent);
 
 					showDialog();
 
