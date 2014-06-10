@@ -181,8 +181,10 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		time = (TextView) findViewById(R.id.wb_detail_time);
 		content = (TextView) findViewById(R.id.wb_detail_text);
 		pic = (ImageView) findViewById(R.id.wb_detail_pic1);
+		pic.setOnClickListener(this);
 		repost_layout = (LinearLayout) findViewById(R.id.wb_detail_repost_layout);
 		repost_pic = (ImageView) findViewById(R.id.re_detail_wb_pic1);
+		repost_pic.setOnClickListener(this);
 		re_user_name = (TextView) findViewById(R.id.re_detail_user_name);
 		re_content = (TextView) findViewById(R.id.re_detail_wb_text);
 		like_count = (TextView) findViewById(R.id.wb_detail_like_count);
@@ -239,6 +241,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 						weibo_repost.getAttach().get(0).getAttach_middle(),
 						repost_pic, options);
 				repost_pic.setVisibility(View.VISIBLE);
+				repost_pic.setFocusable(true);
 			}
 			repost_layout.setVisibility(View.VISIBLE);
 
@@ -250,6 +253,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 			ImageLoader.getInstance().displayImage(
 					weibo.getAttach().get(0).getAttach_middle(), pic, options);
 			pic.setVisibility(View.VISIBLE);
+			pic.setFocusable(true);
 		}
 		like_count.setText(weibo.getDigg_count() + "");
 		repost_count.setText(weibo.getRepost_count() + "");
@@ -481,6 +485,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 			in_r.putExtra("repost", weibo);
 			startActivity(in_r);
 			FaceDialog.release();
+			break;
 		case R.id.wb_detail_user_img:
 			if (Utility.isConnected(this)) {
 
@@ -518,6 +523,20 @@ public class WeiboDetailActivity extends FragmentActivity implements
 				}.start();
 			} else
 				mHandler.sendEmptyMessage(0);
+			break;
+		case R.id.wb_detail_pic1:
+			Intent in_browse = new Intent(WeiboDetailActivity.this,
+					BrowseImageActivity.class);
+			in_browse.putExtra("url", weibo.getAttach().get(0).getAttach_url());
+			startActivity(in_browse);
+			break;
+		case R.id.re_detail_wb_pic1:
+			Intent in_r_browse = new Intent(WeiboDetailActivity.this,
+					BrowseImageActivity.class);
+			in_r_browse.putExtra("url", weibo.getTranspond_data().getAttach()
+					.get(0).getAttach_url());
+			startActivity(in_r_browse);
+			break;
 		}
 	}
 
