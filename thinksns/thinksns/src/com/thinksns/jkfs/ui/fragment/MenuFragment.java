@@ -18,6 +18,7 @@ import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.SettingActivity;
 import com.thinksns.jkfs.ui.view.RoundAngleImageView;
+import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -74,8 +75,10 @@ public class MenuFragment extends Fragment implements OnClickListener {
 					nick.setText(userinfo.getUname());
 					try {
 						UserInfoCountBean userInfoCount = userinfo.count_info;
-						userInfoCount.setUser_info(userinfo);
-						db.save(userInfoCount);
+						if (userInfoCount != null) {
+							userInfoCount.setUser_info(userinfo);
+							db.save(userInfoCount);
+						}
 					} catch (DbException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -159,25 +162,26 @@ public class MenuFragment extends Fragment implements OnClickListener {
 					avatar, options);
 			nick.setText(uib.getUname());
 		} else {
-			new Thread() {
-				@Override
-				public void run() {
-					Log.d(TAG, "run");
-					HashMap<String, String> map = new HashMap<String, String>();
-					map = new HashMap<String, String>();
-					map.put("app", "api");
-					map.put("mod", "User");
-					map.put("act", "show");
-					map.put("user_id", account.getUid());
-					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret", account
-							.getOauth_token_secret());
-					json = HttpUtility.getInstance().executeNormalTask(
-							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-					mHandler.sendEmptyMessage(HTTP_GET_OK);
+			if (Utility.isConnected(getActivity()))
+				new Thread() {
+					@Override
+					public void run() {
+						Log.d(TAG, "run");
+						HashMap<String, String> map = new HashMap<String, String>();
+						map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("act", "show");
+						map.put("user_id", account.getUid());
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret", account
+								.getOauth_token_secret());
+						json = HttpUtility.getInstance().executeNormalTask(
+								HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+						mHandler.sendEmptyMessage(HTTP_GET_OK);
 
-				}
-			}.start();
+					}
+				}.start();
 		}
 
 	}

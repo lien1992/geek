@@ -195,7 +195,7 @@ public class CommentByMeFragment extends BaseListFragment {
 					}.getType();
 					cbm_comments = gson.fromJson(json, listType);
 					if (cbm_comments != null && cbm_comments.size() > 0) {
-						cbm_since_id = cbm_comments.get(0).getId();
+						cbm_since_id = cbm_comments.get(0).getComment_id();
 						cbm_totalCount += cbm_comments.size();
 					}
 					mHandler.sendEmptyMessage(1);

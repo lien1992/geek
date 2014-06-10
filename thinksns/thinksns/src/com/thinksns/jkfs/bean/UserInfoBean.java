@@ -43,6 +43,8 @@ public class UserInfoBean implements Parcelable {
 	private String avatar_middle;
 	@Column
 	private String avatar_small;
+	@Finder(valueColumn = "id", targetColumn = "userId")
+	private CommentBean comment;
 
 	public UserInfoBean() {
 
@@ -212,6 +214,14 @@ public class UserInfoBean implements Parcelable {
 
 	public int getId() {
 		return id;
+	}
+
+	public void setComment(CommentBean comment) {
+		this.comment = comment;
+	}
+
+	public CommentBean getComment() {
+		return comment;
 	}
 
 	public static final Parcelable.Creator<UserInfoBean> CREATOR = new Parcelable.Creator<UserInfoBean>() {

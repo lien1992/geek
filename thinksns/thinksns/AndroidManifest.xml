@@ -94,6 +94,7 @@
         <activity android:name=".test.TestActivity" />
         <activity android:name=".ui.ChatActivity" />
         <activity android:name=".ui.SearchActivity" />
+        <activity android:name=".ui.BrowseImageActivity" />
 
         <service android:name=".util.GetMsgService" />
 

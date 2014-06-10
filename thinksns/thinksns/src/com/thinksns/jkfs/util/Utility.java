@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.SpannableString;
@@ -344,21 +345,29 @@ public class Utility {
 		Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
 		URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
 		MyURLSpan weiboSpan = null;
+		int at_count = 0;
 		Log.d("wj", "urlSpans.length:" + urlSpans.length);
 		if (urlSpans.length > 0)
 			for (int i = 0; i < urlSpans.length; ++i) {
-				if (urls.size() > 0) {
-					String content = urls.get(i);
-					String result = "";
-					String pattern = "uid=([0-9]*)";
-					Pattern p = Pattern.compile(pattern, 2 | Pattern.DOTALL);
-					Matcher matcher = p.matcher(content);
-					if (matcher.find()) {
-						result = matcher.group(1); // 得到url中的uid
-					}
-					weiboSpan = new MyURLSpan(urlSpans[i].getURL(), result);
-				} else {
+				String scheme = Uri.parse(urlSpans[i].getURL()).getScheme();
+				Log.d("wj", "urlSpans scheme:" + scheme);
+				if (scheme.startsWith("http")
+						|| scheme.startsWith("com.thinksns.jkfs.topic")) {
 					weiboSpan = new MyURLSpan(urlSpans[i].getURL());
+				} else {
+					Log.d("wj", "it goes to here -- contains at");
+					if (urls.size()>0) { //为何size为0？待定
+						String content = urls.get(at_count++);
+						String result = "";
+						String pattern = "uid=([0-9]*)";
+						Pattern p = Pattern
+								.compile(pattern, 2 | Pattern.DOTALL);
+						Matcher matcher = p.matcher(content);
+						if (matcher.find()) {
+							result = matcher.group(1); // 得到url中的uid
+						}
+						weiboSpan = new MyURLSpan(urlSpans[i].getURL(), result);
+					}
 				}
 				int start = value.getSpanStart(urlSpans[i]);
 				int end = value.getSpanEnd(urlSpans[i]);

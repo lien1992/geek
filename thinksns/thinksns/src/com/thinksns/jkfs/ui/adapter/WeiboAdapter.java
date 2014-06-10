@@ -157,10 +157,7 @@ public class WeiboAdapter extends BaseAdapter {
 		ImageLoader.getInstance().displayImage(weibo.getAvatar_small(),
 				holder.avatar, options);
 		holder.userName.setText(weibo.getUname());
-		if (!TextUtils.isEmpty(weibo.getContent()))
-			holder.content.setText(weibo.getListViewSpannableString());
-		else
-			holder.content.setVisibility(View.GONE);
+		holder.content.setText(weibo.getListViewSpannableString());
 		holder.time.setText(weibo.getCtime());
 		int where = Integer.parseInt(weibo.getFrom());
 		switch (where) {
@@ -188,11 +185,8 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.weibo_pics.setVisibility(View.GONE);
 			WeiboRepostBean weibo_repost = weibo.getTranspond_data();
 			holder.repost_userName.setText(weibo_repost.getUname());
-			if (!TextUtils.isEmpty(weibo_repost.getContent()))
-				holder.repost_content.setText(weibo_repost
-						.getListViewSpannableString());
-			else
-				holder.repost_content.setVisibility(View.GONE);
+			holder.repost_content.setText(weibo_repost
+					.getListViewSpannableString());
 			if (weibo_repost.getType().equals("postimage")) {
 				if (!isNoImageMode) {
 					ImageLoader.getInstance().displayImage(

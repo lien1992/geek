@@ -106,14 +106,14 @@ public class CommentAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		Log.d("comment.getUser().getAvatar_small()", comment.getUser()
+		Log.d("comment.getUser().getAvatar_small()", comment.getUser_info()
 				.getAvatar_small());
 
-		ImageLoader.getInstance().displayImage(comment.getUser().getAvatar_small(),
+		ImageLoader.getInstance().displayImage(comment.getUser_info().getAvatar_small(),
 				holder.avatar, options);
-		holder.userName.setText(comment.getUser().getUname());
+		holder.userName.setText(comment.getUser_info().getUname());
 		holder.content.setText(comment.getListViewSpannableString());
-		holder.time.setText(comment.getTime());
+		holder.time.setText(comment.getCtime());
 
 		return convertView;
 	}

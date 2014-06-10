@@ -205,7 +205,7 @@ public class CommentToMeFragment extends BaseListFragment {
 					}.getType();
 					ctm_comments = gson.fromJson(json, listType);
 					if (ctm_comments != null && ctm_comments.size() > 0) {
-						ctm_since_id = ctm_comments.get(0).getId();
+						ctm_since_id = ctm_comments.get(0).getComment_id();
 						ctm_totalCount += ctm_comments.size();
 					}
 					mHandler.sendEmptyMessage(1);

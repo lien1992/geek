@@ -216,7 +216,7 @@ public class CommentListFragment extends BaseListFragment {
 						comments = gson.fromJson(json, listType);
 						if (comments != null && comments.size() > 0) {
 							Log.d("comment list count", comments.size() + "");
-							since_id = comments.get(0).getId();
+							since_id = comments.get(0).getComment_id();
 							totalCount += comments.size();
 						}
 						mHandler.sendEmptyMessage(1);

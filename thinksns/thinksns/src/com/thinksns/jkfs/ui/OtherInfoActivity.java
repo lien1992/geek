@@ -5,6 +5,7 @@ import java.util.HashMap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -88,9 +89,10 @@ public class OtherInfoActivity extends FragmentActivity {
 			fragmentTransaction.replace(R.id.other_page_layout, fragment);
 			fragmentTransaction.commit();
 			progressBar.setVisibility(View.INVISIBLE);
-		} else if (uid != null)
+		} else if (uid != null) {
 			getUserInfo(uid);
-		else
+			Log.d("wj", "otherinfoactivity uid:" + uid);
+		} else
 			mHandler.sendEmptyMessage(2);
 
 	}

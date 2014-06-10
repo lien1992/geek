@@ -1,5 +1,7 @@
 package com.thinksns.jkfs.util;
 
+import com.thinksns.jkfs.ui.OtherInfoActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,7 +40,11 @@ public class MyURLSpan extends URLSpan {
 		} else if (uri.getScheme().startsWith("com.thinksns.jkfs.topic")) {
 
 		} else {
-			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			/*
+			 * Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			 * intent.putExtra("uid", u_id); context.startActivity(intent);
+			 */
+			Intent intent = new Intent(context, OtherInfoActivity.class);
 			intent.putExtra("uid", u_id);
 			context.startActivity(intent);
 		}

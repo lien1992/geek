@@ -1,12 +1,19 @@
 package com.thinksns.jkfs.ui;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.gson.Gson;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.constant.HttpConstant;
+import com.thinksns.jkfs.util.http.HttpMethod;
+import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.View;
 import android.view.Window;
@@ -34,6 +41,26 @@ public class RegistActivity extends Activity {
 	private EditText pwdConfirm;
 	private RadioButton male, female;
 	private RadioGroup sex;
+	private String sexChoice;
+
+	private ProgressDialog sendProgress;
+
+	private Handler mHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 0:
+				sendDialogDismiss();
+				Toast.makeText(RegistActivity.this, "恭喜，注册成功！",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 1:
+				sendDialogDismiss();
+				Toast.makeText(RegistActivity.this, "出现意外，注册失败:(",
+						Toast.LENGTH_SHORT).show();
+				break;
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +87,10 @@ public class RegistActivity extends Activity {
 					public void onCheckedChanged(RadioGroup arg0, int id) {
 						// TODO Auto-generated method stub
 						if (id == male.getId()) {
+							sexChoice = "男";
 
 						} else if (id == female.getId()) {
-
+							sexChoice = "女";
 						}
 
 					}
@@ -74,10 +102,11 @@ public class RegistActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				String reg_email = email.getText().toString().trim();
-				String reg_nick = nick.getText().toString().trim();
-				String reg_pwd = pwd.getText().toString().trim();
-				String reg_pwdConfirm = pwdConfirm.getText().toString().trim();
+				final String reg_email = email.getText().toString().trim();
+				final String reg_nick = nick.getText().toString().trim();
+				final String reg_pwd = pwd.getText().toString().trim();
+				final String reg_pwdConfirm = pwdConfirm.getText().toString()
+						.trim();
 				if (reg_nick.equals("")) {
 					Toast.makeText(RegistActivity.this, "昵称不能为空",
 							Toast.LENGTH_SHORT).show();
@@ -88,7 +117,7 @@ public class RegistActivity extends Activity {
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
-				if (reg_pwd.length()<6) {
+				if (reg_pwd.length() < 6) {
 					Toast.makeText(RegistActivity.this, "密码长度不能小于6位",
 							Toast.LENGTH_SHORT).show();
 					return;
@@ -104,8 +133,30 @@ public class RegistActivity extends Activity {
 					return;
 				}
 				if (LoginActivity.isNetworkAvailable(RegistActivity.this)) {
-					
-					// 暂未能实现注册功能
+					sendDialogShow();
+					new Thread() {
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							Gson gson = new Gson();
+							HashMap<String, String> map = new HashMap<String, String>();
+							map.put("app", "api");
+							map.put("mod", "Oauth");
+							map.put("act", "register");
+							map.put("uname", reg_nick);
+							map.put("sex", sexChoice);
+							map.put("passwd", reg_pwdConfirm);
+							map.put("email", reg_email);
+							String result = HttpUtility.getInstance()
+									.executeNormalTask(HttpMethod.Post,
+											HttpConstant.THINKSNS_URL, map);
+							if (result.equals("1")) {
+								mHandler.sendEmptyMessage(0);
+							} else if (result.equals("0")) {
+								mHandler.sendEmptyMessage(1);
+							}
+						}
+					}.start();
 
 				} else {
 					Toast.makeText(RegistActivity.this, "网络未连接",
@@ -157,6 +208,21 @@ public class RegistActivity extends Activity {
 			tag = false;
 		}
 		return tag;
+	}
+
+	private void sendDialogShow() {
+		if (sendProgress == null) {
+			sendProgress = new ProgressDialog(this);
+			sendProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			sendProgress.setMessage("正在注册..");
+		}
+		sendProgress.show();
+	}
+
+	private void sendDialogDismiss() {
+		if (sendProgress != null && sendProgress.isShowing()) {
+			sendProgress.dismiss();
+		}
 	}
 
 }
