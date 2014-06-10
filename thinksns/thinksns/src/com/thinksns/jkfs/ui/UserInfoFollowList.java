@@ -32,7 +32,7 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * @author 邓思宇 用于在用户界面显示关注对象的LIST
+ *  用于在用户界面显示关注对象的LIST
  * 
  *         还未添加TAG
  * 

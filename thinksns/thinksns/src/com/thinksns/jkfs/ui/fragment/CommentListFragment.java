@@ -209,15 +209,18 @@ public class CommentListFragment extends BaseListFragment {
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Log.d("comment list content", json);
-					Type listType = new TypeToken<LinkedList<CommentBean>>() {
-					}.getType();
-					comments = gson.fromJson(json, listType);
-					if (comments != null && comments.size() > 0) {
-						Log.d("comment list count", comments.size() + "");
-						since_id = comments.get(0).getId();
-						totalCount += comments.size();
+					if (json != null && !"".equals(json)
+							&& json.startsWith("[")) {
+						Type listType = new TypeToken<LinkedList<CommentBean>>() {
+						}.getType();
+						comments = gson.fromJson(json, listType);
+						if (comments != null && comments.size() > 0) {
+							Log.d("comment list count", comments.size() + "");
+							since_id = comments.get(0).getId();
+							totalCount += comments.size();
+						}
+						mHandler.sendEmptyMessage(1);
 					}
-					mHandler.sendEmptyMessage(1);
 				}
 			}.start();
 		} else {
@@ -225,5 +228,4 @@ public class CommentListFragment extends BaseListFragment {
 		}
 
 	}
-
 }

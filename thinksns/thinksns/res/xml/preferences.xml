@@ -9,6 +9,13 @@
             android:title="无图模式" >
         </CheckBoxPreference>
     </PreferenceCategory>
+    <PreferenceCategory android:title="缓存" >
+        <Preference
+            android:key="clear_cache"
+            android:title="清除缓存"
+            android:summary="点击将清除缓存的微博等信息" >
+        </Preference>
+    </PreferenceCategory>
     <PreferenceCategory android:title="关于" >
         <Preference
             android:key="about_us"

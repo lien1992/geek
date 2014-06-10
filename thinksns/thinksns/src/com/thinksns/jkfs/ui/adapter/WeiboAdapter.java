@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.bean.WeiboRepostBean;
+import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.RoundAngleImageView;
 
@@ -35,6 +39,8 @@ public class WeiboAdapter extends BaseAdapter {
 	Activity ctx;
 	PullToRefreshListView lv;
 	LayoutInflater in;
+
+	private boolean isNoImageMode;
 
 	private DisplayImageOptions options;
 
@@ -82,6 +88,9 @@ public class WeiboAdapter extends BaseAdapter {
 		lv = listView;
 		options = new DisplayImageOptions.Builder().showStubImage(
 				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(ctx);
+		isNoImageMode = prefs.getBoolean(BaseConstant.NO_IMAGE_MODE_KEY, false);
 
 	}
 
@@ -145,11 +154,13 @@ public class WeiboAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
 		ImageLoader.getInstance().displayImage(weibo.getAvatar_small(),
 				holder.avatar, options);
 		holder.userName.setText(weibo.getUname());
-		holder.content.setText(weibo.getListViewSpannableString());
+		if (!TextUtils.isEmpty(weibo.getContent()))
+			holder.content.setText(weibo.getListViewSpannableString());
+		else
+			holder.content.setVisibility(View.GONE);
 		holder.time.setText(weibo.getCtime());
 		int where = Integer.parseInt(weibo.getFrom());
 		switch (where) {
@@ -177,13 +188,18 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.weibo_pics.setVisibility(View.GONE);
 			WeiboRepostBean weibo_repost = weibo.getTranspond_data();
 			holder.repost_userName.setText(weibo_repost.getUname());
-			holder.repost_content.setText(weibo_repost
-					.getListViewSpannableString());
+			if (!TextUtils.isEmpty(weibo_repost.getContent()))
+				holder.repost_content.setText(weibo_repost
+						.getListViewSpannableString());
+			else
+				holder.repost_content.setVisibility(View.GONE);
 			if (weibo_repost.getType().equals("postimage")) {
-				ImageLoader.getInstance().displayImage(
-						weibo_repost.getAttach().get(0).getAttach_middle(),
-						holder.repost_weibo_pic, options);
-				holder.repost_pics.setVisibility(View.VISIBLE);
+				if (!isNoImageMode) {
+					ImageLoader.getInstance().displayImage(
+							weibo_repost.getAttach().get(0).getAttach_middle(),
+							holder.repost_weibo_pic, options);
+					holder.repost_pics.setVisibility(View.VISIBLE);
+				}
 			} else {
 				holder.repost_pics.setVisibility(View.GONE);
 			}
@@ -193,7 +209,7 @@ public class WeiboAdapter extends BaseAdapter {
 
 		} else {
 			if (weibo.getType().equals("postimage")) {
-				if (weibo.getAttach().size() > 0) {
+				if (!isNoImageMode && weibo.getAttach().size() > 0) {
 					ImageLoader.getInstance().displayImage(
 							weibo.getAttach().get(0).getAttach_middle(),
 							holder.weibo_pic, options);

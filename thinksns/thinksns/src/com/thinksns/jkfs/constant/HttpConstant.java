@@ -5,7 +5,7 @@ package com.thinksns.jkfs.constant;
  */
 public class HttpConstant implements BaseConstant {
 
-    public static final String THINKSNS_URL = "http://demo.thinksns.com/t3/";
+    public static final String THINKSNS_URL = "http://42.121.113.32/weibo/";
 
     public static final String GET_MESSAGE_LIST=THINKSNS_URL+"index.php";
     public static final String ACT="get_message_list";

@@ -30,9 +30,11 @@
                 android:id="@+id/wb_u_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="用户名"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/wb_time"
@@ -51,7 +53,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:padding="2dp"
-            android:text="微博内容"
             android:textColor="#444444"
             android:textSize="16sp" />
 
@@ -94,7 +95,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="被转发微博内容"
                 android:textColor="#484848"
                 android:textSize="14sp" />
 

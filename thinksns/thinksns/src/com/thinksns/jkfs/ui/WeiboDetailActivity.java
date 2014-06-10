@@ -8,10 +8,13 @@ import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,9 +30,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.bean.WeiboAttachBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.bean.WeiboRepostBean;
+import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.fragment.CommentListFragment;
 import com.thinksns.jkfs.ui.view.RoundAngleImageView;
@@ -80,6 +85,8 @@ public class WeiboDetailActivity extends FragmentActivity implements
 
 	private DisplayImageOptions options;
 
+	private boolean isNoImageMode;
+
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -119,14 +126,16 @@ public class WeiboDetailActivity extends FragmentActivity implements
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 7:
-				// 赞成功
+				int like = Integer.parseInt(like_count.getText().toString());
+				like_count.setText((++like) + "");
 				break;
 			case 8:
 				Toast.makeText(WeiboDetailActivity.this, "出现意外，赞失败了:(",
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 9:
-				// 取消赞成功
+				int dislike = Integer.parseInt(like_count.getText().toString());
+				like_count.setText((--dislike) + "");
 				break;
 			case 10:
 				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消赞失败了:(",
@@ -148,6 +157,10 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		options = new DisplayImageOptions.Builder().showStubImage(
 				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
 
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		isNoImageMode = prefs.getBoolean(BaseConstant.NO_IMAGE_MODE_KEY, false);
+
 		setContentView(R.layout.activity_weibodetail);
 		initViews();
 		initContents();
@@ -162,6 +175,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		favorite = (ImageView) findViewById(R.id.wb_detail_favorite);
 		favorite.setOnClickListener(this);
 		avatar = (RoundAngleImageView) findViewById(R.id.wb_detail_user_img);
+		avatar.setOnClickListener(this);
 		user_name = (TextView) findViewById(R.id.wb_detail_u_name);
 		from = (TextView) findViewById(R.id.wb_detail_from);
 		time = (TextView) findViewById(R.id.wb_detail_time);
@@ -213,21 +227,23 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		}
 		time.setText(weibo.getCtime());
 		content.setText(weibo.getListViewSpannableString());
+		content.setMovementMethod(LinkMovementMethod.getInstance());
 		attaches = weibo.getAttach();
 		if (weibo.getType().equals("repost")) {
 			WeiboRepostBean weibo_repost = weibo.getTranspond_data();
 			re_user_name.setText(weibo_repost.getUname());
 			re_content.setText(weibo_repost.getListViewSpannableString());
-			if (weibo_repost.getType().equals("postimage")) {
+			re_content.setMovementMethod(LinkMovementMethod.getInstance());
+			if (weibo_repost.getType().equals("postimage") && !isNoImageMode) {
 				ImageLoader.getInstance().displayImage(
 						weibo_repost.getAttach().get(0).getAttach_middle(),
 						repost_pic, options);
+				repost_pic.setVisibility(View.VISIBLE);
 			}
 			repost_layout.setVisibility(View.VISIBLE);
-			repost_pic.setVisibility(View.VISIBLE);
 
 		}
-		if (weibo.getType().equals("postimage")) {
+		if (weibo.getType().equals("postimage") && !isNoImageMode) {
 			Log.d("weibo detail attach is null?", (weibo.getAttach() == null)
 					+ "");
 			Log.d("weibo attaches size", attaches.size() + "");
@@ -300,7 +316,8 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "favorite_create");
 							map.put("source_table_name", "feed");
-							map.put("source_id", weibo.getFeed_id()+"");
+							map.put("source_id", weibo.getFeed_id() + "");
+							map.put("source_app", "public");
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -326,7 +343,8 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "favorite_destroy");
 							map.put("source_table_name", "feed");
-							map.put("source_id", weibo.getFeed_id()+"");
+							map.put("source_id", weibo.getFeed_id() + "");
+							map.put("source_app", "public");
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -371,7 +389,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("act", "comment");
 							map.put("content", comment_content.getText()
 									.toString());
-							map.put("row_id", weibo.getFeed_id()+"");
+							map.put("row_id", weibo.getFeed_id() + "");
 							map.put("table_name ", "feed");
 							map.put("to_uid", account.getUid());
 							map.put("oauth_token", account.getOauth_token());
@@ -406,7 +424,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("app", "api");
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "add_digg");
-							// map.put("", weibo.getFeed_id());
+							map.put("feed_id", weibo.getFeed_id());
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -432,7 +450,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 							map.put("app", "api");
 							map.put("mod", "WeiboStatuses");
 							map.put("act", "delete_digg");
-							// map.put("", weibo.getFeed_id());
+							map.put("feed_id", weibo.getFeed_id());
 							map.put("oauth_token", account.getOauth_token());
 							map.put("oauth_token_secret", account
 									.getOauth_token_secret());
@@ -458,11 +476,48 @@ public class WeiboDetailActivity extends FragmentActivity implements
 					.commit();
 			break;
 		case R.id.wb_detail_repost_another:
-			Intent in = new Intent(WeiboDetailActivity.this,
+			Intent in_r = new Intent(WeiboDetailActivity.this,
 					RepostActivity.class);
-			in.putExtra("repost", weibo);
-			startActivity(in);
+			in_r.putExtra("repost", weibo);
+			startActivity(in_r);
 			FaceDialog.release();
+		case R.id.wb_detail_user_img:
+			if (Utility.isConnected(this)) {
+
+				new Thread() {
+					@Override
+					public void run() {
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("act", "show");
+						map.put("user_id", weibo.getUid());
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret", account
+								.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						if (json != null && !"".equals(json)) {
+							UserInfoBean userinfo = gson.fromJson(json,
+									UserInfoBean.class);
+							if (userinfo != null) {
+								Intent in_o = new Intent(
+										WeiboDetailActivity.this,
+										OtherInfoActivity.class);
+								in_o.putExtra("userinfo", userinfo.getUid());
+								in_o.putExtra("following",
+										userinfo.follow_state.getFollowing()
+												+ "");
+								startActivity(in_o);
+							}
+						}
+					}
+				}.start();
+			} else
+				mHandler.sendEmptyMessage(0);
 		}
 	}
 

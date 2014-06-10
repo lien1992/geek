@@ -2,10 +2,12 @@ package com.thinksns.jkfs.ui.fragment;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,9 +36,9 @@ import com.thinksns.jkfs.bean.WeiboRepostAttachBean;
 import com.thinksns.jkfs.bean.WeiboRepostBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.WeiboDetailActivity;
-import com.thinksns.jkfs.ui.WriteWeiboActivity;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
+import com.thinksns.jkfs.util.BackupToTxt;
 import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
@@ -133,9 +135,10 @@ public class WeiboListFragment extends BaseListFragment {
 				}
 				insertToHead(weibos);
 				Log.d("all weibos", weibo_all.size() + "");
-				if (!firstLoad)
-					Toast.makeText(getActivity(), "新增微博" + weibos.size() + "条",
-							Toast.LENGTH_SHORT).show();
+				/*
+				 * if (!firstLoad) Toast.makeText(getActivity(), "新增微博" +
+				 * weibos.size() + "条", Toast.LENGTH_SHORT).show();
+				 */
 				currentPage = totalCount / 20 + 1;
 				break;
 			case 2:
@@ -145,6 +148,22 @@ public class WeiboListFragment extends BaseListFragment {
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
 						.show();
+			case 3:
+				if (firstLoad) {
+					progressBar.setVisibility(View.INVISIBLE);
+				}
+				listView.onRefreshComplete();
+				Toast.makeText(getActivity(), "出现意外，微博加载失败:(",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 4:
+				Toast.makeText(getActivity(), "备份成功", Toast.LENGTH_SHORT)
+						.show();
+				break;
+			case 5:
+				Toast.makeText(getActivity(), "出现意外，微博备份失败:(",
+						Toast.LENGTH_SHORT).show();
+				break;
 			}
 
 		};
@@ -210,13 +229,70 @@ public class WeiboListFragment extends BaseListFragment {
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getActivity(),
-						WriteWeiboActivity.class);
-				startActivity(intent);
+				if (cacheMode) {
+					final BackupToTxt bc = new BackupToTxt(weibos_cache
+							.get(position - 1));
+					AlertDialog.Builder builder = new Builder(getActivity());
+					builder.setTitle("微博备份");
+					builder
+							.setMessage("可以将本条微博导出为txt文件哦, 文件路径为/sdcard/thinksns/用户名-微博发布时间.txt");
+					builder.setPositiveButton("确定",
+							new DialogInterface.OnClickListener() {
+
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+									if (bc.writeTxt())
+										mHandler.sendEmptyMessage(4);
+									else
+										mHandler.sendEmptyMessage(5);
+									dialog.dismiss();
+								}
+							});
+					builder.setNegativeButton("取消",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.cancel();
+								}
+							});
+					builder.create().show();
+
+				} else {
+					final BackupToTxt ba = new BackupToTxt(weibo_all
+							.get(position - 1));
+					AlertDialog.Builder builder = new Builder(getActivity());
+					builder.setTitle("微博备份");
+					builder
+							.setMessage("可以将本条微博导出为txt文件哦, 文件路径为/sdcard/thinksns/用户名-微博发布时间.txt");
+					builder.setPositiveButton("确定",
+							new DialogInterface.OnClickListener() {
+
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+									if (ba.writeTxt())
+										mHandler.sendEmptyMessage(4);
+									else
+										mHandler.sendEmptyMessage(5);
+									dialog.dismiss();
+								}
+							});
+					builder.setNegativeButton("取消",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.cancel();
+								}
+							});
+					builder.create().show();
+				}
+
 				return true;
 			}
 
 		});
+
 		try {
 			weibos_cache = db.findAll(Selector.from(WeiboBean.class).limit(20)
 					.orderBy("id", true));
@@ -302,7 +378,7 @@ public class WeiboListFragment extends BaseListFragment {
 	private void getWeibos() {
 		// TODO Auto-generated method stub
 		if (Utility.isConnected(getActivity())) {
-
+			cacheMode = false;
 			new Thread() {
 				@Override
 				public void run() {
@@ -319,17 +395,21 @@ public class WeiboListFragment extends BaseListFragment {
 							.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
-					}.getType();
-					weibos = gson.fromJson(json, listType); // bug待修复，可能返回string非array
-					if (weibos != null && weibos.size() > 0) {
-						since_id = weibos.get(0).getFeed_id();
-						Log.d("WEIBO SINCE ID", since_id);
-						Log.d("WEIBO SINCE ID CONTENT", weibos.get(0)
-								.getContent());
-						totalCount += weibos.size();
-					}
-					mHandler.sendEmptyMessage(1);
+					if (json != null && !"".equals(json)
+							&& json.startsWith("[")) {
+						Type listType = new TypeToken<LinkedList<WeiboBean>>() {
+						}.getType();
+						weibos = gson.fromJson(json, listType);
+						if (weibos != null && weibos.size() > 0) {
+							since_id = weibos.get(0).getFeed_id();
+							Log.d("WEIBO SINCE ID", since_id);
+							Log.d("WEIBO SINCE ID CONTENT", weibos.get(0)
+									.getContent());
+							totalCount += weibos.size();
+						}
+						mHandler.sendEmptyMessage(1);
+					} else
+						mHandler.sendEmptyMessage(3);
 				}
 			}.start();
 		} else {

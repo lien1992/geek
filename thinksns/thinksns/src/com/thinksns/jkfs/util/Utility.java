@@ -13,6 +13,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -28,6 +30,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -281,21 +285,14 @@ public class Utility {
 	 */
 	public static void addHighLightLinks(WeiboBean bean) {
 
-		bean
-				.setListViewSpannableString(getHighLightLinks(bean
-						.getContent()));
+		bean.setListViewSpannableString(getHighLightLinks(bean.getContent()));
 		if (bean.getTranspond_data() != null) {
-			String name = "";
-			name = bean.getTranspond_data().getUname();
 			SpannableString value;
-
-			if (!TextUtils.isEmpty(name)) {
-				value = getHighLightLinks("@" + name);
+			if (!TextUtils.isEmpty(bean.getTranspond_data().getContent())) {
+				value = getHighLightLinks(bean.getTranspond_data().getContent());
 			} else {
-				value = getHighLightLinks(bean.getTranspond_data()
-						.getContent());
+				value = SpannableString.valueOf("");
 			}
-
 			bean.getTranspond_data().setListViewSpannableString(value);
 		}
 	}
@@ -308,9 +305,7 @@ public class Utility {
 
 	public static void addHighLightLinks(CommentBean bean) {
 
-		bean
-				.setListViewSpannableString(getHighLightLinks(bean
-						.getContent()));
+		bean.setListViewSpannableString(getHighLightLinks(bean.getContent()));
 	}
 
 	public static SpannableString getHighLightLinks(String txt) {
@@ -320,24 +315,57 @@ public class Utility {
 		} else {
 			hackTxt = txt;
 		}
-		SpannableString value;
-		MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
-			public final String transformUrl(final Matcher match, String url) {
-				return match.group(1); // 匹配正则第一个括号
+
+		// 替换a标签为at
+		Pattern AT_URL = Pattern.compile("<[^>]+>([^<]+)<[^>]+>");
+		Matcher m = AT_URL.matcher(hackTxt);
+		ArrayList<String> urls = new ArrayList<String>();
+		while (m.find()) {
+			urls.add(m.group(0));
+			hackTxt = hackTxt.replace(m.group(0), m.group(1));
+		}
+		Log.d("wj", "at pattern after:" + hackTxt);
+
+		Pattern MENTION_URL = Pattern
+				.compile("@[\\w\\p{InCJKUnifiedIdeographs}-]{1,26}");
+
+		Pattern WEB_URL = Pattern
+				.compile("http://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");
+
+		Pattern TOPIC_URL = Pattern
+				.compile("#[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^#]]+#");
+
+		String WEB_SCHEME = "http://";
+		String TOPIC_SCHEME = "com.thinksns.jkfs.topic://";
+		String MENTION_SCHEME = "com.thinksns.jkfs://";
+		SpannableString value = SpannableString.valueOf(hackTxt);
+		Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
+		Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
+		Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
+		URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
+		MyURLSpan weiboSpan = null;
+		Log.d("wj", "urlSpans.length:" + urlSpans.length);
+		if (urlSpans.length > 0)
+			for (int i = 0; i < urlSpans.length; ++i) {
+				if (urls.size() > 0) {
+					String content = urls.get(i);
+					String result = "";
+					String pattern = "uid=([0-9]*)";
+					Pattern p = Pattern.compile(pattern, 2 | Pattern.DOTALL);
+					Matcher matcher = p.matcher(content);
+					if (matcher.find()) {
+						result = matcher.group(1); // 得到url中的uid
+					}
+					weiboSpan = new MyURLSpan(urlSpans[i].getURL(), result);
+				} else {
+					weiboSpan = new MyURLSpan(urlSpans[i].getURL());
+				}
+				int start = value.getSpanStart(urlSpans[i]);
+				int end = value.getSpanEnd(urlSpans[i]);
+				value.removeSpan(urlSpans[i]);
+				value.setSpan(weiboSpan, start, end,
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
-		};
-		// Match @mentions and capture just the username portion of the text.
-		Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)"); // 包括unicode汉字编码
-		String scheme = "com.thinksns.jkfs://"; //uri scheme
-		value = MyLinkify.getJustHighLightLinks(hackTxt, pattern, scheme, null,
-				mentionFilter);
-
-		value = MyLinkify.addJUstHighLightLinks(value, MyLinkify.WEB_URLS);
-
-		Pattern dd = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
-		value = MyLinkify.getJustHighLightLinks(value, dd, scheme, null,
-				mentionFilter);
-
 		addEmotions(value);
 
 		return value;

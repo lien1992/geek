@@ -96,12 +96,6 @@ public class AboutMeFragment extends Fragment {
 		this.follow = Integer.parseInt(following);
 	}
 
-	public AboutMeFragment(String i, UserFollowBean user, String following) {
-		this.FLAG = Integer.parseInt(i);
-		this.uuid = user.getUid();
-		this.follow = Integer.parseInt(following);
-	}
-
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -356,10 +350,11 @@ public class AboutMeFragment extends Fragment {
 	private void openPage() {
 		switch (FLAG) {
 		case 0:
-			if (application.getUser() != null) {
+/*			if (application.getUser() != null) {
 				userinfo = application.getUser();
 				mHandler.sendEmptyMessage(1);
-			} else if (Utility.isConnected(getActivity())) {
+			} else */
+				if (Utility.isConnected(getActivity())) {
 				// 待添加超时判断
 
 				new Thread() {
@@ -379,7 +374,7 @@ public class AboutMeFragment extends Fragment {
 								.executeNormalTask(HttpMethod.Get,
 										HttpConstant.THINKSNS_URL, map);
 
-						if (json != null && !"".equals(json)) {
+						if (json != null && !"".equals(json)&&json.startsWith("{")) {
 
 							userinfo = gson.fromJson(json, UserInfoBean.class);
 							mHandler.sendEmptyMessage(1);

@@ -279,21 +279,27 @@ public class SearchActivity extends BaseActivity {
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
 					// TODO Auto-generated method stub
-					Log.i(TAG, "yonghu点击");
-					TextView tx = (TextView) arg1
-							.findViewById(R.id.people_item_weibo);// 传送数据 USER
-																	// ID
-					TextView ts = (TextView) arg1
-							.findViewById(R.id.people_item_fo);// 传送数据 FOLLOWING
-					String uuid = tx.getText().toString();
-					String fo = ts.getText().toString();
-
+					// Log.i(TAG, "yonghu点击");
+					// TextView tx = (TextView) arg1
+					// .findViewById(R.id.people_item_weibo);// 传送数据 USER
+					// // ID
+					// TextView ts = (TextView) arg1
+					// .findViewById(R.id.people_item_fo);// 传送数据 FOLLOWING
+					// String uuid = tx.getText().toString();
+					// String fo = ts.getText().toString();
+					//
+					// Intent i = new Intent(mContext, OtherInfoActivity.class);
+					// i.putExtra("uuid", uuid);
+					// Log.i(TAG, "__" + uuid + "uuid");
+					// i.putExtra("following", fo);
+					// startActivity(i);
+					UserFollowBean userfollow = userListViewAdapter
+							.getUser(arg2);
+					String fo = "" + userfollow.follow_state.getFollowing();
 					Intent i = new Intent(mContext, OtherInfoActivity.class);
-					i.putExtra("uuid", uuid);
-					Log.i(TAG, "__" + uuid + "uuid");
 					i.putExtra("following", fo);
+					i.putExtra("userinfo", userfollow);
 					startActivity(i);
-
 				}
 
 			});

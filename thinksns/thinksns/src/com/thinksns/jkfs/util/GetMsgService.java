@@ -13,7 +13,6 @@ import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.NotificationBean;
 import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
-import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -32,7 +31,6 @@ public class GetMsgService extends IntentService {
 		super.onCreate();
 		application = (ThinkSNSApplication) getApplicationContext();
 		account = application.getAccount(this);
-		Log.d("wj", "GetMsgService was created");
 	}
 
 	public GetMsgService() {
@@ -52,22 +50,23 @@ public class GetMsgService extends IntentService {
 			map.put("oauth_token_secret", account.getOauth_token_secret());
 			String json = HttpUtility.getInstance().executeNormalTask(
 					HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-			Log.d("wj", "unread json" + json);
-			Type listType = new TypeToken<LinkedList<NotificationBean>>() {
-			}.getType();
-			msgs = gson.fromJson(json, listType);
-			if (msgs == null || msgs.size() == 0) {
-				return;
-			} else {
-				Intent in = new Intent();
-				in.setAction(BaseConstant.UNREAD_MSG_BROADCAST);
-				in.putExtra("system", msgs.get(0));
-				in.putExtra("atme", msgs.get(1));
-				in.putExtra("comment", msgs.get(2));
-				in.putExtra("follower", msgs.get(3));
-				in.putExtra("pm", msgs.get(4));
-				sendBroadcast(in);
-				Log.d("wj", "unread json sendBroadcast");
+			if (json != null && json.startsWith("[")) {
+				Type listType = new TypeToken<LinkedList<NotificationBean>>() {
+				}.getType();
+				msgs = gson.fromJson(json, listType);
+				if (msgs == null || msgs.size() == 0) {
+					return;
+				} else {
+					Intent in = new Intent();
+					in.setAction(BaseConstant.UNREAD_MSG_BROADCAST);
+					in.putExtra("system", msgs.get(0));
+					in.putExtra("atme", msgs.get(1));
+					in.putExtra("comment", msgs.get(2));
+					in.putExtra("follower", msgs.get(3));
+					in.putExtra("pm", msgs.get(4));
+					sendBroadcast(in);
+					Log.d("wj", "unread json sendBroadcast");
+				}
 			}
 		} else {
 			return;

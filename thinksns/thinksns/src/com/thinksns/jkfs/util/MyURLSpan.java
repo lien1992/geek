@@ -1,55 +1,52 @@
 package com.thinksns.jkfs.util;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.Parcel;
-import android.text.ParcelableSpan;
 import android.text.TextPaint;
-import android.text.style.ClickableSpan;
-import android.util.Log;
+import android.text.style.URLSpan;
 import android.view.View;
 
-public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
+public class MyURLSpan extends URLSpan {
 
 	private final String mURL;
 
+	private String u_id;
+
 	public MyURLSpan(String url) {
+		super(url);
 		mURL = url;
 	}
 
-	public MyURLSpan(Parcel src) {
-		mURL = src.readString();
-	}
-
-	public int getSpanTypeId() {
-		return 11;
-	}
-
-	public int describeContents() {
-		return 0;
-	}
-
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(mURL);
+	public MyURLSpan(String url, String uid) {
+		super(url);
+		mURL = url;
+		u_id = uid;
 	}
 
 	public String getURL() {
 		return mURL;
 	}
 
-	public void onClick(View widget) { // 待修复..
+	@Override
+	public void onClick(View widget) {
 		Uri uri = Uri.parse(getURL());
-		Log.d("wj", "URI:" + uri.toString());
 		Context context = widget.getContext();
-		// Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		// intent.putExtra(Browser.EXTRA_APPLICATION_ID,
-		// context.getPackageName());
-		// Intent intent = new Intent(context, UserInfoActivity.class);
-		// context.startActivity(intent);
+		if (uri.getScheme().startsWith("http")) {
+
+		} else if (uri.getScheme().startsWith("com.thinksns.jkfs.topic")) {
+
+		} else {
+			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			intent.putExtra("uid", u_id);
+			context.startActivity(intent);
+		}
 	}
 
 	@Override
 	public void updateDrawState(TextPaint tp) {
-
+		tp.setColor(Color.parseColor("#0066ff"));
 	}
+
 }

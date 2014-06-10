@@ -8,5 +8,6 @@ public interface BaseConstant {
 	//Preference keys
 	public static final String NO_IMAGE_MODE_KEY = "no_image_mode";
 	public static final String ABOUT_US_KEY = "about_us";
+	public static final String CLEAR_CACHE_KEY = "clear_cache";
 
 }

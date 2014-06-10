@@ -85,4 +85,12 @@ public class UserInfoCountBean implements Parcelable {
 		return user_info;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
 }
