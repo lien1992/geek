@@ -101,6 +101,14 @@ public class WeiboListFragment extends BaseListFragment {
 				}
 				adapter.insertToHead(weibos);
 				try {
+					if (application.isClearCache()) {
+						progressBar.setVisibility(View.INVISIBLE);
+						Log.d("wj", "after clear cache, firstLoad is:"
+								+ firstLoad);
+						db = DbUtils.create(getActivity(), "thinksns2.db");
+						db.configDebug(true);
+						application.setClearCache(false);
+					}
 					for (int i = weibos.size() - 1; i >= 0; --i) {
 						WeiboBean wb = weibos.get(i);
 						List<WeiboAttachBean> wabs = wb.getAttach();
@@ -129,10 +137,12 @@ public class WeiboListFragment extends BaseListFragment {
 								db.save(wb);
 						}
 					}
+
 				} catch (DbException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
 				insertToHead(weibos);
 				Log.d("all weibos", weibo_all.size() + "");
 				/*
@@ -142,16 +152,13 @@ public class WeiboListFragment extends BaseListFragment {
 				currentPage = totalCount / 20 + 1;
 				break;
 			case 2:
-				if (firstLoad) {
-					progressBar.setVisibility(View.INVISIBLE);
-				}
+				progressBar.setVisibility(View.INVISIBLE);
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
 						.show();
+				break;
 			case 3:
-				if (firstLoad) {
-					progressBar.setVisibility(View.INVISIBLE);
-				}
+				progressBar.setVisibility(View.INVISIBLE);
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "出现意外，微博加载失败:(",
 						Toast.LENGTH_SHORT).show();

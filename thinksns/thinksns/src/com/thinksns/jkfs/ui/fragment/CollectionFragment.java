@@ -80,6 +80,7 @@ public class CollectionFragment extends BaseListFragment {
 					listView.setLoadMoreEnable(true);
 				}
 				adapter.insertToHead(weibos);
+				weibo_all.addAll(weibos);
 				currentPage = totalCount / 10 + 1;
 				break;
 			case 2:

@@ -26,6 +26,8 @@ public final class ThinkSNSApplication extends Application {
 	private UserInfoBean user;
 
 	private boolean isNoImageMode;// 无图模式
+	
+	private boolean isClearCache;
 
 	@Override
 	public void onCreate() {
@@ -157,5 +159,13 @@ public final class ThinkSNSApplication extends Application {
 
 	public boolean isNoImageMode() {
 		return isNoImageMode;
+	}
+
+	public void setClearCache(boolean isClearCache) {
+		this.isClearCache = isClearCache;
+	}
+
+	public boolean isClearCache() {
+		return isClearCache;
 	}
 }

@@ -29,20 +29,20 @@ public class WeiboAttachBean implements Parcelable {
 	@Foreign(column = "weiboId", foreign = "id")
 	public WeiboBean weibo;
 
-	public String getFile_name() {
+	public String getAttach_name() {
 		return attach_name;
 	}
 
-	public void setFile_name(String fileName) {
-		attach_name = fileName;
+	public void setAttach_name(String attachName) {
+		attach_name = attachName;
 	}
 
-	public String getUrl() {
+	public String getAttach_url() {
 		return attach_url;
 	}
 
-	public void setUrl(String url) {
-		this.attach_url = url;
+	public void setAttach_url(String attachUrl) {
+		attach_url = attachUrl;
 	}
 
 	@Override

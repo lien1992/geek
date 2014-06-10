@@ -4,6 +4,7 @@ import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.DbUtils.DbUpgradeListener;
 import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.constant.BaseConstant;
 
 import android.content.Intent;
@@ -22,12 +23,13 @@ public class SettingActivity extends PreferenceActivity implements
 	private CheckBoxPreference mCheckPreference;
 	private Preference aboutUs;
 	private Preference clearCache;
+	private ThinkSNSApplication application;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		addPreferencesFromResource(R.xml.preferences);
 		initPreferences();
+		application = (ThinkSNSApplication) getApplicationContext();
 	}
 
 	private void initPreferences() {
@@ -70,21 +72,29 @@ public class SettingActivity extends PreferenceActivity implements
 		if (aboutUs == preference)
 			startActivity(new Intent(this, AboutUsActivity.class));
 		if (clearCache == preference) {
-			DbUtils db = DbUtils.create(this, "thinksns2.db", 10, new DbUpgradeListener(){
+			DbUtils db = DbUtils.create(this, "thinksns2.db", 10,
+					new DbUpgradeListener() {
 
-				@Override
-				public void onUpgrade(DbUtils db, int oldVersion, int newVersion) {
-					// TODO Auto-generated method stub
-					try {
-						db.dropDb();
-					} catch (DbException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-				}
-				
-			});
+						@Override
+						public void onUpgrade(DbUtils db, int oldVersion,
+								int newVersion) {
+							// TODO Auto-generated method stub
+							try {
+								if (!application.isClearCache()) {
+									db.dropDb();
+									application.setClearCache(true);
+									Toast.makeText(SettingActivity.this,
+											"缓存已清除", Toast.LENGTH_SHORT).show();
+
+								}
+							} catch (DbException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+						}
+
+					});
 
 		}
 		return super.onPreferenceTreeClick(preferenceScreen, preference);
