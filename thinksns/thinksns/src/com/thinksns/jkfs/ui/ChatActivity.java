@@ -72,7 +72,11 @@ public class ChatActivity extends BaseActivity {
 		}
 		getMessage(id);
 		sendEditText = (EditText) findViewById(R.id.messageInput);
+		
+	    
 	}
+	
+		
 
 	private Handler mHandler = new Handler() {
 
@@ -89,7 +93,8 @@ public class ChatActivity extends BaseActivity {
 							mList.add(MessageBean.JsonToBean(obj));
 						}
 
-					Collections.reverse(mList);
+					Collections.reverse(mList); //接受到的是逆序的信息 所以反转一下
+					
 					listView.setAdapter(getAdapter(mList));
 
 					chatAdapter.notifyDataSetChanged();

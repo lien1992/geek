@@ -111,6 +111,7 @@ public class ChatAdapter extends BaseAdapter {
 				holderRightText = new ViewHolderRightText();
 				convertView = mInflater.inflate(R.layout.list_item_right_text,
 						null);
+				
 				// holderRightText.ivRightIcon = (ImageView) convertView
 				// .findViewById(R.id.iv_icon);
 				ImageLoader.getInstance().displayImage(msg.getFace(),
