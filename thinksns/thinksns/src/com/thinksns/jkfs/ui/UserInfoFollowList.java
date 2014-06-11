@@ -129,10 +129,11 @@ public class UserInfoFollowList extends BaseActivity implements
 				// TODO Auto-generated method stub
 				UserFollowBean userfollow = adapter.getUser(arg2);
 				String fo = "" + userfollow.follow_state.getFollowing();
+				String userinfo = userfollow.getUid();
 				Intent i = new Intent(UserInfoFollowList.this,
 						OtherInfoActivity.class);
 				i.putExtra("following", fo);
-				i.putExtra("userinfo", userfollow);
+				i.putExtra("userinfo", userinfo);
 				startActivity(i);
 
 			}
