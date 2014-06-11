@@ -1,5 +1,7 @@
 package com.thinksns.jkfs.bean;
 
+import java.util.List;
+
 import com.lidroid.xutils.db.annotation.Column;
 import com.lidroid.xutils.db.annotation.Finder;
 import com.lidroid.xutils.db.annotation.Id;
@@ -45,6 +47,8 @@ public class UserInfoBean implements Parcelable {
 	private String avatar_small;
 	@Finder(valueColumn = "id", targetColumn = "userId")
 	private CommentBean comment;
+	@Finder(valueColumn = "id", targetColumn = "medalUserId")
+	private List<UserInfoMedalBean> medals;
 
 	public UserInfoBean() {
 
@@ -97,7 +101,6 @@ public class UserInfoBean implements Parcelable {
 	public void setCity(String city) {
 		this.city = city;
 	}
-
 
 	// public void setCount_info(UserInfoCountBean count_info) {
 	// this.count_info = count_info;
@@ -222,6 +225,14 @@ public class UserInfoBean implements Parcelable {
 
 	public CommentBean getComment() {
 		return comment;
+	}
+
+	public void setMedals(List<UserInfoMedalBean> medals) {
+		this.medals = medals;
+	}
+
+	public List<UserInfoMedalBean> getMedals() {
+		return medals;
 	}
 
 	public static final Parcelable.Creator<UserInfoBean> CREATOR = new Parcelable.Creator<UserInfoBean>() {

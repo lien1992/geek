@@ -2,6 +2,7 @@ package com.thinksns.jkfs.ui.fragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
@@ -10,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -23,9 +23,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,11 +40,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
-import com.thinksns.jkfs.bean.UserFollowBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
+import com.thinksns.jkfs.bean.UserInfoMedalBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.UserInfoFollowList;
-import com.thinksns.jkfs.ui.UserInfoWeiboList;
 import com.thinksns.jkfs.util.Base64;
 import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.common.ImageUtils;
@@ -110,27 +111,33 @@ public class AboutMeFragment extends Fragment {
 				ImageView sex = (ImageView) getActivity().findViewById(
 						R.id.m_sex);
 
-				Button msex = (Button) getActivity().findViewById(R.id.m_sex1);
+				TextView msex = (TextView) getActivity().findViewById(
+						R.id.m_sex1);
 				Button mweibo = (Button) getActivity().findViewById(
 						R.id.m_weibo);
 				Button mfollow = (Button) getActivity().findViewById(
 						R.id.m_follow);
 				Button mfollowme = (Button) getActivity().findViewById(
 						R.id.m_followme);
-				Button muid = (Button) getActivity().findViewById(R.id.m_uid);
-				Button muname = (Button) getActivity().findViewById(
+				TextView muid = (TextView) getActivity().findViewById(
+						R.id.m_uid);
+				TextView muname = (TextView) getActivity().findViewById(
 						R.id.m_uname1);
-				Button memail = (Button) getActivity().findViewById(
+				TextView memail = (TextView) getActivity().findViewById(
 						R.id.m_email);
-				Button maddress = (Button) getActivity().findViewById(
+				TextView maddress = (TextView) getActivity().findViewById(
 						R.id.m_add);
+				LinearLayout medals = (LinearLayout) getActivity()
+						.findViewById(R.id.m_medals);
 
 				uname.setText(userinfo.getUname());
 				address.setText(userinfo.getLocation());
 				msex.setText(userinfo.getSex());
-				mweibo.setText(userinfo.count_info.getWeibo_count());
-				mfollow.setText(userinfo.count_info.getFollowing_count());
-				mfollowme.setText(userinfo.count_info.getFollower_count());
+				if (userinfo.count_info != null) {
+					mweibo.setText(userinfo.count_info.getWeibo_count());
+					mfollow.setText(userinfo.count_info.getFollowing_count());
+					mfollowme.setText(userinfo.count_info.getFollower_count());
+				}
 				muid.setText(userinfo.getUid());
 				muname.setText(userinfo.getUname());
 				memail.setText(userinfo.getEmail());
@@ -164,6 +171,20 @@ public class AboutMeFragment extends Fragment {
 				} else {
 					sex.setBackgroundResource(R.drawable.female);
 				}
+
+				ArrayList<UserInfoMedalBean> ms = (ArrayList<UserInfoMedalBean>) userinfo
+						.getMedals();
+				if (ms != null && ms.size() > 0) {
+					for (UserInfoMedalBean um : ms) {
+						ImageView image = new ImageView(getActivity());
+						image.setLayoutParams(new LayoutParams(80, 80));
+						image.setPadding(5, 5, 5, 5);
+						medals.addView(image);
+						ImageLoader.getInstance().displayImage(um.getSrc(),
+								image, options);
+					}
+				}
+
 				break;
 
 			case 2:
@@ -343,11 +364,11 @@ public class AboutMeFragment extends Fragment {
 	private void openPage() {
 		switch (FLAG) {
 		case 0:
-/*			if (application.getUser() != null) {
-				userinfo = application.getUser();
-				mHandler.sendEmptyMessage(1);
-			} else */
-				if (Utility.isConnected(getActivity())) {
+			/*
+			 * if (application.getUser() != null) { userinfo =
+			 * application.getUser(); mHandler.sendEmptyMessage(1); } else
+			 */
+			if (Utility.isConnected(getActivity())) {
 				// 待添加超时判断
 
 				new Thread() {
@@ -367,7 +388,8 @@ public class AboutMeFragment extends Fragment {
 								.executeNormalTask(HttpMethod.Get,
 										HttpConstant.THINKSNS_URL, map);
 
-						if (json != null && !"".equals(json)&&json.startsWith("{")) {
+						if (json != null && !"".equals(json)
+								&& json.startsWith("{")) {
 
 							userinfo = gson.fromJson(json, UserInfoBean.class);
 							mHandler.sendEmptyMessage(1);
@@ -378,7 +400,7 @@ public class AboutMeFragment extends Fragment {
 			} else {
 				try {
 					userinfo = db.findFirst(Selector.from(UserInfoBean.class)
-							.orderBy("id", true));
+							.where("uid", "=", account.getUid()));
 				} catch (DbException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

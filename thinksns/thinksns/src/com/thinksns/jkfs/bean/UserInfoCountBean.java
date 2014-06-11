@@ -22,7 +22,7 @@ public class UserInfoCountBean implements Parcelable {
 	private String follower_count;
 	@Column
 	private String weibo_count;
-	@Foreign(column = "userInfoId", foreign = "id")
+	@Foreign(column = "countUserId", foreign = "id")
 	private UserInfoBean user_info;
 
 	public UserInfoCountBean() {
