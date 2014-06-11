@@ -54,8 +54,9 @@ public class CommentListFragment extends BaseListFragment {
 					progressBar.setVisibility(View.INVISIBLE);
 				}
 				listView.onRefreshComplete();
-				Toast.makeText(getActivity(), "网络未连接，评论列表加载失败:(",
-						Toast.LENGTH_SHORT).show();
+				if (weibo.getComment_count() > 0)
+					Toast.makeText(getActivity(), "网络未连接，评论列表加载失败:(",
+							Toast.LENGTH_SHORT).show();
 				break;
 			case 1:
 				listView.onRefreshComplete();
@@ -108,7 +109,6 @@ public class CommentListFragment extends BaseListFragment {
 			this.account = bundle.getParcelable("account");
 			this.weibo = bundle.getParcelable("weibo");
 		}
-		Log.d("comments was created", "true");
 	}
 
 	@Override

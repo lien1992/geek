@@ -3,6 +3,7 @@ package com.thinksns.jkfs.ui.fragment;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,9 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseListFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
@@ -48,6 +52,9 @@ public class CommentToMeFragment extends BaseListFragment {
 
 	private boolean firstLoad = true;
 
+	private DbUtils db;
+	private List<CommentBean> comments_cache;
+
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -64,7 +71,7 @@ public class CommentToMeFragment extends BaseListFragment {
 				if (firstLoad) {
 					progressBar.setVisibility(View.INVISIBLE);
 					if (ctm_comments == null || ctm_comments.size() == 0) {
-						Toast.makeText(getActivity(), "出现意外，评论加载失败:(",
+						Toast.makeText(getActivity(), "您还没有收到评论:(",
 								Toast.LENGTH_SHORT).show();
 						break;
 					}
@@ -78,6 +85,24 @@ public class CommentToMeFragment extends BaseListFragment {
 					listView.setLoadMoreEnable(true);
 				}
 				comment_adapter.insertToHead(ctm_comments);
+
+				try {
+					if (application.isClearCache()) {
+						progressBar.setVisibility(View.INVISIBLE);
+						db = DbUtils.create(getActivity(), "thinksns2.db");
+						db.configDebug(true);
+						application.setClearCache(false);
+					}
+					for (int i = ctm_comments.size() - 1; i >= 0; --i) {
+						CommentBean cb = ctm_comments.get(i);
+						cb.setComment_type("to");
+						db.save(cb);
+					}
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 				for (int i = ctm_comments.size() - 1; i >= 0; --i) {
 					ctm_comment_all.addFirst(ctm_comments.get(i));
 				}
@@ -122,6 +147,10 @@ public class CommentToMeFragment extends BaseListFragment {
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
 
+		db = DbUtils.create(getActivity(), "thinksns2.db");
+		// db.configAllowTransaction(true);
+		db.configDebug(true);
+
 		listView.setListener(this);
 		comment_adapter = new CommentAdapter(getActivity(), mInflater, listView);
 		listView.setAdapter(comment_adapter);
@@ -135,8 +164,20 @@ public class CommentToMeFragment extends BaseListFragment {
 			}
 
 		});
-		if (ctm_totalCount == 0)
-			getCommentsToMe();
+
+		try {
+			comments_cache = db.findAll(Selector.from(CommentBean.class).where(
+					"comment_type", "=", "to").limit(10).orderBy("id", true));
+			if (comments_cache != null && comments_cache.size() > 0) {
+				comment_adapter.insertToHead(comments_cache);
+				progressBar.setVisibility(View.INVISIBLE);
+			} else {
+				getCommentsToMe();
+			}
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

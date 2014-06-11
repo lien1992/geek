@@ -243,7 +243,7 @@ public class WriteWeiboActivity extends BaseActivity implements
 								map
 										.put("content", content.getText()
 												.toString());
-								map.put("from", "3");
+								map.put("from", "2");
 
 								map
 										.put("oauth_token", account
@@ -277,7 +277,7 @@ public class WriteWeiboActivity extends BaseActivity implements
 								map
 										.put("content", content.getText()
 												.toString());
-								map.put("from", "3");
+								map.put("from", "2");
 								map
 										.put("oauth_token", account
 												.getOauth_token());
