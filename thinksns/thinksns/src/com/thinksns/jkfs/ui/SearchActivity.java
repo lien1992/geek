@@ -60,6 +60,7 @@ public class SearchActivity extends BaseActivity {
 	static private String OAUTH_TOKEN_SECRECT;
 
 	static private int onLoadMoreFlag = 0; // 1代表加载更多
+	static private int onSearchFlag = 0; // 1代表加载更多
 	static private int page = 0;// 0是没有使用
 
 	// handler
@@ -131,6 +132,7 @@ public class SearchActivity extends BaseActivity {
 						mListView.setSelection(0);
 						mListView.setVisibility(View.VISIBLE);
 					}
+					onSearchFlag = 0;
 					break;
 				case CONNECT_WRONG:
 					Toast.makeText(mContext, "网络故障", Toast.LENGTH_SHORT).show();
@@ -147,11 +149,14 @@ public class SearchActivity extends BaseActivity {
 						mListView.setSelection(0);
 						mListView.setVisibility(View.VISIBLE);
 					}
+					onSearchFlag = 0;
 					break;
 				case LOAD_MORE_USER:
 					if (((LinkedList<UserFollowBean>) msg.obj).size() == 0) {
 						mListView.onLoadMoreComplete();
 						Log.i(TAG, "没更多了");
+						Toast.makeText(mContext, "没有更多结果", Toast.LENGTH_SHORT)
+								.show();
 					} else {
 						userList = append(userList,
 								(LinkedList<UserFollowBean>) msg.obj);
@@ -166,6 +171,8 @@ public class SearchActivity extends BaseActivity {
 					if (((LinkedList<WeiboBean>) msg.obj).size() == 0) {
 						mListView.onLoadMoreComplete();
 						Log.i(TAG, "没更多了");
+						Toast.makeText(mContext, "没有更多结果", Toast.LENGTH_SHORT)
+								.show();
 					} else {
 						weiboList = append(weiboList,
 								(LinkedList<WeiboBean>) msg.obj);
@@ -233,6 +240,7 @@ public class SearchActivity extends BaseActivity {
 							.show();
 					return;
 				} else {
+					onSearchFlag = 1;
 					page = 1;
 					switch (search_witch) {
 					case SEARCH_WEIBO:
@@ -365,11 +373,12 @@ public class SearchActivity extends BaseActivity {
 				Log.i(TAG, "获取用户");
 				jsonData = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				if (onLoadMoreFlag == 0) {
+				if (onSearchFlag == 1) {
 					// 将json转化成bean列表，handler出去
 					handler.obtainMessage(SearchActivity.GET_USERS,
 							JSONToUsers(jsonData)).sendToTarget();
-				} else {
+				}
+				if (onLoadMoreFlag == 1) {
 					handler.obtainMessage(SearchActivity.LOAD_MORE_USER,
 							JSONToUsers(jsonData)).sendToTarget();
 				}
@@ -385,7 +394,7 @@ public class SearchActivity extends BaseActivity {
 			}.getType();
 			list = new Gson().fromJson(jsonData, listType);
 
-			if (list!=null && list.size() != 0) {
+			if (list != null && list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
 			}
 		} catch (JsonSyntaxException e) {
@@ -417,11 +426,13 @@ public class SearchActivity extends BaseActivity {
 				Log.i(TAG, "获取微博");
 				jsonData = HttpUtility.getInstance().executeNormalTask(
 						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				if (onLoadMoreFlag == 0) {
+				if (onSearchFlag == 1) {
 					// 将json转化成bean列表，handler出去
 					handler.obtainMessage(SearchActivity.GET_WEIBOS,
 							JSONToWeibos(jsonData)).sendToTarget();
-				} else {
+				}
+				if (onLoadMoreFlag == 1) {
+
 					Log.i(TAG, "微博加载更多。。。");
 					handler.obtainMessage(SearchActivity.LOAD_MORE_WEIBO,
 							JSONToWeibos(jsonData)).sendToTarget();
@@ -438,7 +449,7 @@ public class SearchActivity extends BaseActivity {
 			}.getType();
 			list = new Gson().fromJson(jsonData, listType);
 
-			if (list!=null && list.size() != 0) {
+			if (list != null && list.size() != 0) {
 				Log.i(TAG, list.get(0).getUname());
 			}
 		} catch (JsonSyntaxException e) {
