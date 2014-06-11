@@ -5,22 +5,34 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/chat_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white_for_title" >
 
         <ImageView
             android:id="@+id/menu_icon"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:layout_alignParentLeft="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0dip"
+            android:paddingBottom="1dip"
             android:src="@drawable/navigation" />
 
-        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:background="@color/grey" />
 
-        
-
-        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/menu_icon"
+            android:text="聊天"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <ListView

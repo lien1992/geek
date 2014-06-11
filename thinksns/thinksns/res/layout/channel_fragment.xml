@@ -35,6 +35,12 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/droplist" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:background="@color/grey" />
     </RelativeLayout>
 
     <com.thinksns.jkfs.ui.view.PullToRefreshListView

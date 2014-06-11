@@ -1,6 +1,5 @@
 package com.thinksns.jkfs.ui;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,19 +11,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
@@ -37,14 +33,10 @@ import com.thinksns.jkfs.ui.adapter.Message;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
-
-
-
 /**
  * Created by mosl on 14-5-24.
  */
 public class ChatActivity extends BaseActivity {
-
 
 	public static final String TAG = "ChatActivity";
 
@@ -55,7 +47,9 @@ public class ChatActivity extends BaseActivity {
 	private String mJsonData;
 	private AccountBean mAccountBean;
 	private ThinkSNSApplication mApplication;
-	
+
+	private ImageView back;
+
 	private String id; // 获得的对话list_id
 	private List<MessageBean> mList = new LinkedList<MessageBean>();
 	private String messageID;
@@ -64,6 +58,16 @@ public class ChatActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat_activity_layout);
 		listView = (ListView) findViewById(R.id.chat_list);
+		back = (ImageView) findViewById(R.id.chatting_menu_icon);
+		back.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+
+		});
 		mApplication = (ThinkSNSApplication) this.getApplicationContext();
 		mAccountBean = mApplication.getAccount(this);
 		Bundle extras = getIntent().getExtras();
@@ -72,11 +76,8 @@ public class ChatActivity extends BaseActivity {
 		}
 		getMessage(id);
 		sendEditText = (EditText) findViewById(R.id.messageInput);
-		
-	    
+
 	}
-	
-		
 
 	private Handler mHandler = new Handler() {
 
@@ -93,8 +94,8 @@ public class ChatActivity extends BaseActivity {
 							mList.add(MessageBean.JsonToBean(obj));
 						}
 
-					Collections.reverse(mList); //接受到的是逆序的信息 所以反转一下
-					
+					Collections.reverse(mList); // 接受到的是逆序的信息 所以反转一下
+
 					listView.setAdapter(getAdapter(mList));
 
 					chatAdapter.notifyDataSetChanged();
@@ -136,7 +137,7 @@ public class ChatActivity extends BaseActivity {
 		Message msg = new Message();
 		msg.setValue(input);
 		msg.setType(ChatAdapter.VALUE_RIGHT_TEXT);
-		sendMessage(id,input);
+		sendMessage(id, input);
 		chatAdapter.addMessage(msg);
 		sendEditText.setText("");
 	}
@@ -153,8 +154,8 @@ public class ChatActivity extends BaseActivity {
 					map.put("act", "get_message_detail");
 					map.put("id", id);
 					map.put("oauth_token", mAccountBean.getOauth_token());
-					map.put("oauth_token_secret",
-							mAccountBean.getOauth_token_secret());
+					map.put("oauth_token_secret", mAccountBean
+							.getOauth_token_secret());
 					map.put("format", "json");
 					mJsonData = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
@@ -163,7 +164,7 @@ public class ChatActivity extends BaseActivity {
 				}
 			}).start();
 		} else {
-			Toast.makeText(this, "没有联网", 1000).show();
+			Toast.makeText(this, "网络未连接", 1000).show();
 		}
 	}
 
@@ -180,14 +181,14 @@ public class ChatActivity extends BaseActivity {
 					map.put("id", id);
 					map.put("content", content);
 					map.put("oauth_token", mAccountBean.getOauth_token());
-					map.put("oauth_token_secret",
-							mAccountBean.getOauth_token_secret());
+					map.put("oauth_token_secret", mAccountBean
+							.getOauth_token_secret());
 					messageID = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
 				}
 			}).start();
 		} else {
-			Toast.makeText(this, "没有联网", 1000).show();
+			Toast.makeText(this, "网络未连接", 1000).show();
 		}
 	}
 

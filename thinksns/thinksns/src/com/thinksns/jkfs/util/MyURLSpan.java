@@ -1,6 +1,7 @@
 package com.thinksns.jkfs.util;
 
 import com.thinksns.jkfs.ui.OtherInfoActivity;
+import com.thinksns.jkfs.ui.WeiboTopicActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,8 @@ public class MyURLSpan extends URLSpan {
 
 	private String u_id;
 
+	private String topic;
+
 	public MyURLSpan(String url) {
 		super(url);
 		mURL = url;
@@ -27,6 +30,13 @@ public class MyURLSpan extends URLSpan {
 		u_id = uid;
 	}
 
+	public MyURLSpan(String url, String uid, String t) {
+		super(url);
+		mURL = url;
+		u_id = uid;
+		topic = t;
+	}
+
 	public String getURL() {
 		return mURL;
 	}
@@ -36,9 +46,13 @@ public class MyURLSpan extends URLSpan {
 		Uri uri = Uri.parse(getURL());
 		Context context = widget.getContext();
 		if (uri.getScheme().startsWith("http")) {
-
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(uri);
+			context.startActivity(i);
 		} else if (uri.getScheme().startsWith("com.thinksns.jkfs.topic")) {
-
+			Intent i = new Intent(context, WeiboTopicActivity.class);
+			i.putExtra("topic", topic);
+			context.startActivity(i);
 		} else {
 			/*
 			 * Intent intent = new Intent(Intent.ACTION_VIEW, uri);

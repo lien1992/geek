@@ -21,11 +21,19 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
+import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseListFragment;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.CommentBean;
+import com.thinksns.jkfs.bean.WeiboAttachBean;
 import com.thinksns.jkfs.bean.WeiboBean;
+import com.thinksns.jkfs.bean.WeiboRepostAttachBean;
+import com.thinksns.jkfs.bean.WeiboRepostBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.WeiboDetailActivity;
@@ -49,6 +57,9 @@ public class CollectionFragment extends BaseListFragment {
 	private int totalCount;
 	private String since_id = "";
 	private boolean firstLoad = true;
+
+	private DbUtils db;
+	private List<WeiboBean> weibos_cache;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -80,6 +91,48 @@ public class CollectionFragment extends BaseListFragment {
 					listView.setLoadMoreEnable(true);
 				}
 				adapter.insertToHead(weibos);
+
+				try {
+					if (application.isClearCache()) {
+						progressBar.setVisibility(View.INVISIBLE);
+						db = DbUtils.create(getActivity(), "thinksns2.db");
+						db.configDebug(true);
+						application.setClearCache(false);
+					}
+					for (int i = weibos.size() - 1; i >= 0; --i) {
+						WeiboBean wb = weibos.get(i);
+						wb.setIsFavorite("t");
+						List<WeiboAttachBean> wabs = wb.getAttach();
+						if (wabs != null)
+							for (int j = 0; j < wabs.size(); ++j) {
+								WeiboAttachBean wab = wabs.get(j);
+								wab.weibo = wb;
+								db.save(wab);
+							}
+						else {
+							WeiboRepostBean wrb = wb.getTranspond_data();
+							if (wrb != null) {
+								wrb.weibo = wb;
+								List<WeiboRepostAttachBean> wrabs = wrb
+										.getAttach();
+								if (wrabs != null)
+									for (int j = 0; j < wrabs.size(); ++j) {
+										WeiboRepostAttachBean wrab = wrabs
+												.get(j);
+										wrab.repost = wrb;
+										db.save(wrab);
+									}
+								else
+									db.save(wrb);
+							} else
+								db.save(wb);
+						}
+					}
+
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				weibo_all.addAll(weibos);
 				currentPage = totalCount / 10 + 1;
 				break;
@@ -93,7 +146,7 @@ public class CollectionFragment extends BaseListFragment {
 				}
 				adapter.append(weibos);
 				weibo_all.addAll(weibos);
-				currentPage = totalCount / 20 + 1;
+				currentPage = totalCount / 10 + 1;
 				break;
 			}
 		}
@@ -122,6 +175,9 @@ public class CollectionFragment extends BaseListFragment {
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
 
+		db = DbUtils.create(getActivity(), "thinksns2.db");
+		db.configDebug(true);
+
 		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -147,9 +203,29 @@ public class CollectionFragment extends BaseListFragment {
 			}
 
 		});
-
-		if (totalCount == 0)
-			getWeibos();
+		
+		try {
+			weibos_cache = db.findAll(Selector.from(WeiboBean.class).where(
+					"isFavorite", "=", "t").limit(10).orderBy("id", true));
+			if (weibos_cache != null && weibos_cache.size() > 0) {
+				for (int i = 0; i < weibos_cache.size(); ++i) {
+					WeiboBean wb = weibos_cache.get(i);
+					if (wb.getType().equals("repost")) {
+						WeiboRepostBean wrb = db.findFirst(Selector.from(
+								WeiboRepostBean.class).where("originId", "=",
+								wb.getId()));
+						wb.setTranspond_data(wrb);
+					}
+				}
+				adapter.insertToHead(weibos_cache);
+				progressBar.setVisibility(View.INVISIBLE);
+			} else {
+				getWeibos();
+			}
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void getWeibos() {
@@ -230,12 +306,4 @@ public class CollectionFragment extends BaseListFragment {
 		getWeibos();
 	}
 
-	public void insertToHead(List<WeiboBean> lists) {
-		if (lists == null) {
-			return;
-		}
-		for (int i = lists.size() - 1; i >= 0; --i) {
-			weibo_all.addFirst(lists.get(i));
-		}
-	}
 }

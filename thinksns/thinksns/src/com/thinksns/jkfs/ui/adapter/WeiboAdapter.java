@@ -168,10 +168,10 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.from.setText("来自 手机版");
 			break;
 		case 2:
-			holder.from.setText("来自 iPhone客户端");
+			holder.from.setText("来自 Android客户端");
 			break;
 		case 3:
-			holder.from.setText("来自 Android客户端");
+			holder.from.setText("来自 iPhone客户端");
 			break;
 		case 4:
 			holder.from.setText("来自 ipad客户端");

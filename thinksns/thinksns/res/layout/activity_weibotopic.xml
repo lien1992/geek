@@ -5,14 +5,14 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:id="@+id/wb_at_users_header"
+        android:id="@+id/wb_topic_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:background="@color/white_for_title" >
 
         <ImageView
-            android:id="@+id/wb_at_users_back"
+            android:id="@+id/wb_topic_back"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
@@ -27,11 +27,21 @@
             android:src="@color/grey" />
 
         <TextView
+            android:id="@+id/wb_topic_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/wb_at_users_back"
-            android:text="请选择"
+            android:layout_toRightOf="@+id/wb_topic_back"
+            android:text="微博话题："
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/wb_topic_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/wb_topic_txt"
             android:textColor="@color/black"
             android:textSize="18sp" />
     </RelativeLayout>
@@ -39,12 +49,12 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/wb_at_users_bottom"
-        android:layout_below="@+id/wb_at_users_header" >
+        android:layout_below="@+id/wb_topic_header"
+        android:background="@color/pure_white" >
 
         <com.thinksns.jkfs.ui.view.PullToRefreshListView
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/wb_at_users_list_view"
+            android:id="@+id/wb_topic_list_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@color/white"
@@ -52,27 +62,10 @@
             android:divider="@drawable/lv_divider" />
 
         <ProgressBar
-            android:id="@+id/wb_at_users_progressbar"
+            android:id="@+id/wb_topic_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
     </FrameLayout>
-
-    <RelativeLayout
-        android:id="@+id/wb_at_users_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white_for_title"
-        android:gravity="center" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="没有你要\@的用户？点击返回"
-            android:textColor="@color/grey"
-            android:textSize="18sp" />
-    </RelativeLayout>
 
 </RelativeLayout>

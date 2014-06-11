@@ -71,7 +71,9 @@
         <activity android:name=".ui.OtherInfoActivity" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <data android:scheme="com.thinksns.jkfs" />
             </intent-filter>
         </activity>
@@ -91,10 +93,10 @@
         </activity>
         <activity android:name=".ui.AboutUsActivity" >
         </activity>
-        <activity android:name=".test.TestActivity" />
         <activity android:name=".ui.ChatActivity" />
         <activity android:name=".ui.SearchActivity" />
         <activity android:name=".ui.BrowseImageActivity" />
+        <activity android:name=".ui.WeiboTopicActivity" />
 
         <service android:name=".util.GetMsgService" />
 

@@ -33,7 +33,7 @@ public class UserInfoBean implements Parcelable {
 	private String city;
 	@Column
 	private String location;
-	@Finder(valueColumn = "id", targetColumn = "userInfoId")
+	@Finder(valueColumn = "id", targetColumn = "countUserId")
 	public UserInfoCountBean count_info;
 	@Transient
 	public UserFollowStateBean follow_state;
@@ -45,7 +45,7 @@ public class UserInfoBean implements Parcelable {
 	private String avatar_middle;
 	@Column
 	private String avatar_small;
-	@Finder(valueColumn = "id", targetColumn = "userId")
+	@Finder(valueColumn = "id", targetColumn = "countUserId")
 	private CommentBean comment;
 	@Finder(valueColumn = "id", targetColumn = "medalUserId")
 	private List<UserInfoMedalBean> medals;

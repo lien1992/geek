@@ -43,7 +43,7 @@
                 android:layout_marginTop="8dp"
                 android:singleLine="true"
                 android:text="微博用户名"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -65,7 +65,7 @@
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="首页"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -96,7 +96,7 @@
                     android:paddingLeft="8.0dip"
                     android:paddingRight="8.0dip"
                     android:text="与我有关"
-                    android:textColor="@color/white"
+                    android:textColor="@color/pure_white"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -134,7 +134,7 @@
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="收藏"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -161,7 +161,7 @@
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="聊天"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -188,7 +188,7 @@
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="频道"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -215,7 +215,7 @@
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="微吧"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -242,7 +242,7 @@
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="设置"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_white"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -269,7 +269,7 @@
                 android:paddingLeft="8.0dip"
                 android:paddingRight="8.0dip"
                 android:text="注销"
-                android:textColor="#FF6666"
+                android:textColor="@color/pure_white"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>

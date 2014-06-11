@@ -32,7 +32,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -351,12 +350,16 @@ public class Utility {
 			for (int i = 0; i < urlSpans.length; ++i) {
 				String scheme = Uri.parse(urlSpans[i].getURL()).getScheme();
 				Log.d("wj", "urlSpans scheme:" + scheme);
-				if (scheme.startsWith("http")
-						|| scheme.startsWith("com.thinksns.jkfs.topic")) {
+				if (scheme.startsWith("http")) {
 					weiboSpan = new MyURLSpan(urlSpans[i].getURL());
+				} else if (scheme.startsWith("com.thinksns.jkfs.topic")) {
+					int length = urlSpans[i].getURL().length();
+					String topic = urlSpans[i].getURL().substring(27,
+							length - 1);
+					weiboSpan = new MyURLSpan(urlSpans[i].getURL(), "", topic);
 				} else {
 					Log.d("wj", "it goes to here -- contains at");
-					if (urls.size()>0) { //为何size为0？待定
+					if (urls.size() > 0) { // 为何size为0？待定
 						String content = urls.get(at_count++);
 						String result = "";
 						String pattern = "uid=([0-9]*)";

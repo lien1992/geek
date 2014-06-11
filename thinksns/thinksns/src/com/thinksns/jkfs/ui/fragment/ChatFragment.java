@@ -1,9 +1,7 @@
 package com.thinksns.jkfs.ui.fragment;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -23,9 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +44,6 @@ public class ChatFragment extends Fragment {
     public static final int HANDLER_GET_JSON_REFRESH=3;
     public static final int CHANGE_ADAPTER=4;
 
-    private static final String[] m={"全部分组","B型","O型","AB型","其他"};
     private String mJsonData;
     private AccountBean mAccountBean;
     private ListView chat_listview;
@@ -57,8 +52,6 @@ public class ChatFragment extends Fragment {
     private LayoutInflater mInflater;
     private View mMenuSlide;
     private ThinkSNSApplication mApplication;
-    private ArrayAdapter<String> mAdapter;
-    private Spinner mSpinner;
     private String messageID;
     private Handler mHandler = new Handler(){
 

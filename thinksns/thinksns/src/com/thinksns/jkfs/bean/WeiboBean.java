@@ -53,10 +53,15 @@ public class WeiboBean implements Parcelable {
 	private int digg_count; // 赞数
 	@Finder(valueColumn = "id", targetColumn = "weiboId")
 	private List<WeiboAttachBean> attach;
-	@Transient//@Finder(valueColumn = "id", targetColumn = "originId")
+	@Transient
+	// @Finder(valueColumn = "id", targetColumn = "originId")
 	private WeiboRepostBean transpond_data; // 被转发微博
 	@Transient
 	private SpannableString listViewSpannableString;
+	@Column(column = "isFavorite")
+	private String isFavorite;
+	@Column(column = "containsAt")
+	private String containsAt;
 
 	public WeiboBean(String feed_id, String type, String content, String ctime,
 			String from, String uid, String uname, String avatar_big,
@@ -272,6 +277,22 @@ public class WeiboBean implements Parcelable {
 
 	public int getId() {
 		return id;
+	}
+
+	public void setIsFavorite(String isFavorite) {
+		this.isFavorite = isFavorite;
+	}
+
+	public String getIsFavorite() {
+		return isFavorite;
+	}
+
+	public void setContainsAt(String containsAt) {
+		this.containsAt = containsAt;
+	}
+
+	public String getContainsAt() {
+		return containsAt;
 	}
 
 	public static final Parcelable.Creator<WeiboBean> CREATOR = new Parcelable.Creator<WeiboBean>() {

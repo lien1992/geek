@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseListFragment;
@@ -44,7 +45,7 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 微博列表，后期改为用户关注的微博，目前暂显示公共微博 待完成的部分（新微博提醒、url等的显示）
+ * 微博列表(公共微博）
  * 
  * @author wangjia
  * 
@@ -301,8 +302,9 @@ public class WeiboListFragment extends BaseListFragment {
 		});
 
 		try {
-			weibos_cache = db.findAll(Selector.from(WeiboBean.class).limit(20)
-					.orderBy("id", true));
+			weibos_cache = db.findAll(Selector.from(WeiboBean.class).where(
+					WhereBuilder.b("isFavorite", "=", null).and("containsAt",
+							"=", null)).limit(20).orderBy("id", true));
 			if (weibos_cache != null && weibos_cache.size() > 0) {
 				Log.d("wj", "weibos_cache.size():" + weibos_cache.size());
 				for (int i = 0; i < weibos_cache.size(); ++i) {

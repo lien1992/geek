@@ -1,61 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/chatting_header"
         android:layout_width="match_parent"
-        android:layout_height="45dip"
-        android:orientation="horizontal">
+        android:layout_height="50dp"
+        android:background="@color/white_for_title" >
 
         <ImageView
-            android:id="@+id/menu_icon"
-            android:layout_width="45dip"
-            android:layout_height="45dip"
-            android:src="@drawable/navigation"
-            />
+            android:id="@+id/chatting_menu_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0dip"
+            android:paddingBottom="1dip"
+            android:src="@drawable/back" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:background="@color/grey" />
+
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="聊天中"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            />
-
-    </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/chatting_menu_icon"
+            android:text="聊天中..."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/chat_list"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
+        android:background="@color/pure_white"
+        android:dividerHeight="0dp"
         android:scrollbars="none"
-        android:transcriptMode="alwaysScroll">
+        android:transcriptMode="alwaysScroll" >
     </ListView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@color/green" />
 
-    <LinearLayout android:id="@+id/listFooter"
+    <LinearLayout
+        android:id="@+id/listFooter"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/white"
+        android:orientation="horizontal" >
 
         <EditText
             android:id="@+id/messageInput"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="2dp"
             android:layout_weight="1"
-             />
+            android:background="@drawable/edit_bg" />
 
         <Button
             android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="40dp"
-            android:background="@android:drawable/ic_menu_send"
-            android:onClick="sendButton"
-            />
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/send"
+            android:onClick="sendButton" />
     </LinearLayout>
 
 </LinearLayout>
