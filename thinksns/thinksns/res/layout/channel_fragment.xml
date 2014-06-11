@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/channel_fragment_title_setting_img"
-            android:text="官方发言"
+            android:text="频道"
             android:textColor="@color/black"
             android:textSize="18sp" />
 

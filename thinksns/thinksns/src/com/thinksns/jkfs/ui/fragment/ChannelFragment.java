@@ -226,6 +226,9 @@ public class ChannelFragment extends Fragment {
 						// 标题
 						Log.i(TAG, "即将更改的标题ahi" + channelTitle);
 						titleName.setText(channelTitle);
+					} else {
+						Toast.makeText(mContext, "该频道还没有微博", Toast.LENGTH_SHORT)
+								.show();
 					}
 					break;
 				case GETTED_REFRESH_CHANNEL_WEIBO_LIST:
@@ -265,8 +268,7 @@ public class ChannelFragment extends Fragment {
 
 		// 先初始化handler再初始化init
 		init();
-		// 菜单按钮默认
-		setDropDefault();
+
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -280,20 +282,7 @@ public class ChannelFragment extends Fragment {
 			}
 
 		});
-		// 写微博长按
-		// mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
-		//
-		// @Override
-		// public boolean onItemLongClick(AdapterView<?> parent, View view,
-		// int position, long id) {
-		// // TODO Auto-generated method stub
-		// Intent intent = new Intent(getActivity(),
-		// WriteWeiboActivity.class);
-		// startActivity(intent);
-		// return true;
-		// }
-		//
-		// });
+
 		mListView.setListener(new RefreshAndLoadMoreListener() {
 
 			@Override
@@ -350,7 +339,18 @@ public class ChannelFragment extends Fragment {
 		if (!isCacheFolderExist(CacheConstant.imageCachePath)) {
 			createSDDir(CacheConstant.imageCachePath);
 		}
+		// 加载菜单
+		if (IS_INIT_CHANNEL_IMG == 0) {
+			IS_INIT_CHANNEL_IMG = 1;
+			if (channelList != null && channelList.size() != 0) {
 
+				handler.obtainMessage(
+						ChannelFragment.GETTED_CHANNEL_LIST_WITHOUT_IMAGE,
+						channelList).sendToTarget();
+			} else {
+				setDropDefault();
+			}
+		}
 	}
 
 	/**
@@ -365,7 +365,7 @@ public class ChannelFragment extends Fragment {
 	}
 
 	/**
-	 * 初始化微博列表，默认官方发言,最好能让用户自己选择，存到本地，每次自动加载
+	 * 初始化微博列表
 	 * 
 	 * @param isNull
 	 *            本地加载失败，channel_category_id的值是 ""
