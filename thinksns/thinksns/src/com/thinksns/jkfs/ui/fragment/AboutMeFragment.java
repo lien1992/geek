@@ -2,15 +2,20 @@ package com.thinksns.jkfs.ui.fragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -44,6 +49,7 @@ import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.bean.UserInfoMedalBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.UserInfoFollowList;
+import com.thinksns.jkfs.ui.WriteWeiboActivity;
 import com.thinksns.jkfs.util.Base64;
 import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.common.ImageUtils;
@@ -72,6 +78,8 @@ public class AboutMeFragment extends Fragment {
 
 	private ImageView faceImage;
 
+	private Uri imageFileUri;
+
 	private String[] items = new String[] { "选择本地图片", "拍照" };
 	/* 头像名称 */
 	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
@@ -80,6 +88,7 @@ public class AboutMeFragment extends Fragment {
 	private static final int IMAGE_REQUEST_CODE = 0;
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int RESULT_REQUEST_CODE = 2;
+	private static final int RESULT_CAMERA_CODE = 3;
 
 	private String picPath = "";
 
@@ -503,21 +512,23 @@ public class AboutMeFragment extends Fragment {
 									IMAGE_REQUEST_CODE);
 							break;
 						case 1:
-
-							Intent intentFromCapture = new Intent(
-									MediaStore.ACTION_IMAGE_CAPTURE);
-							// 判断存储卡是否可以用，可用进行存储
-							if (hasSdcard()) {
-
-								intentFromCapture.putExtra(
-										MediaStore.EXTRA_OUTPUT,
-										Uri.fromFile(new File(Environment
-												.getExternalStorageDirectory(),
-												IMAGE_FILE_NAME)));
+							imageFileUri = getActivity()
+									.getContentResolver()
+									.insert(
+											MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+											new ContentValues());
+							if (imageFileUri != null) {
+								Intent i = new Intent(
+										android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+								i
+										.putExtra(
+												android.provider.MediaStore.EXTRA_OUTPUT,
+												imageFileUri);
+								startActivityForResult(i, CAMERA_REQUEST_CODE);
+							} else {
+								Toast.makeText(getActivity(), "出现了点小意外",
+										Toast.LENGTH_SHORT).show();
 							}
-
-							startActivityForResult(intentFromCapture,
-									CAMERA_REQUEST_CODE);
 							break;
 						}
 					}
@@ -542,16 +553,14 @@ public class AboutMeFragment extends Fragment {
 				startPhotoZoom(data.getData());
 				break;
 			case CAMERA_REQUEST_CODE:
-				if (hasSdcard()) {
-					File tempFile = new File(Environment
-							.getExternalStorageDirectory()
-							+ IMAGE_FILE_NAME);
-					startPhotoZoom(Uri.fromFile(tempFile));
-				} else {
-					Toast.makeText(getActivity(), "未找到存储卡，无法存储照片！",
-							Toast.LENGTH_LONG).show();
-				}
-
+				/*
+				 * if (hasSdcard()) { File tempFile = new File(Environment
+				 * .getExternalStorageDirectory() + IMAGE_FILE_NAME);
+				 * startPhotoZoom(Uri.fromFile(tempFile)); } else {
+				 * Toast.makeText(getActivity(), "未找到存储卡，无法存储照片！",
+				 * Toast.LENGTH_LONG).show(); }
+				 */
+				startCameraZoom(imageFileUri);
 				break;
 			case RESULT_REQUEST_CODE:
 				if (data != null) {
@@ -559,6 +568,10 @@ public class AboutMeFragment extends Fragment {
 					// picPath = getPicPathFromUri(imageFileUri);
 					// changeHead(picPath);
 					//
+					getImageToView(data);
+				}
+			case RESULT_CAMERA_CODE:
+				if (data != null) {
 					getImageToView(data);
 				}
 				break;
@@ -588,6 +601,22 @@ public class AboutMeFragment extends Fragment {
 		startActivityForResult(intent, 2);
 	}
 
+	public void startCameraZoom(Uri uri) {
+
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		// 设置裁剪
+		intent.putExtra("crop", "true");
+		// aspectX aspectY 是宽高的比例
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		// outputX outputY 是裁剪图片宽高
+		intent.putExtra("outputX", 320);
+		intent.putExtra("outputY", 320);
+		intent.putExtra("return-data", true);
+		startActivityForResult(intent, RESULT_CAMERA_CODE);
+	}
+
 	/**
 	 * 保存裁剪之后的图片数据
 	 * 
@@ -609,13 +638,23 @@ public class AboutMeFragment extends Fragment {
 			Log.d("uri is null？", (imageFileUri == null) + "");
 
 			String picPath = getPicPathFromUri(imageFileUri);
-
+			InputStream fis;
+			try {
+				fis = new FileInputStream(picPath);
+				BitmapFactory.Options opts = new BitmapFactory.Options();
+				opts.inTempStorage = new byte[100 * 1024];// 100kb缓存
+				opts.inPreferredConfig = Bitmap.Config.RGB_565;
+				opts.inPurgeable = true;// 可被回收
+				opts.inSampleSize = 4;
+				opts.inInputShareable = true;
+				Bitmap btp = BitmapFactory.decodeStream(fis, null, opts);
+				faceImage = (ImageView) getActivity().findViewById(R.id.m_head);
+				faceImage.setImageBitmap(btp);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			changeHead(picPath);
-
-			// String head = BitMapToString(photo);
-
-			faceImage = (ImageView) getActivity().findViewById(R.id.m_head);
-			faceImage.setImageDrawable(drawable);
 		}
 	}
 
