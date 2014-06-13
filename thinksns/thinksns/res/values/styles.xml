@@ -67,5 +67,8 @@
         <item name="android:backgroundDimEnabled">false</item>
         <!-- 模糊 -->
     </style>
-
+    <style name="PopUpMenuStyle" parent="android:Animation">
+       <item name="android:windowEnterAnimation">@anim/popup_menu_in</item>  
+       <item name="android:windowExitAnimation">@anim/popup_menu_out</item>  
+    </style>
 </resources>

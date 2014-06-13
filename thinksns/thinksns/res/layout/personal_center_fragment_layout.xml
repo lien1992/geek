@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.thinksns.jkfs"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/weiba_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:padding="2dp" >
+
+        <ImageView
+            android:id="@+id/weiba_center_navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/navigation" />
+
+        <TextView
+            android:id="@+id/weiba_center_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/weiba_center_navigation"
+            android:gravity="center_vertical"
+            android:text="我的微吧中心"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/pure_white"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/posteds"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="发布的帖子"
+            android:textColor="@color/green"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:background="@color/grey" />
+
+        <TextView
+            android:id="@+id/commenteds"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="评论的帖子"
+            android:textColor="@color/grey"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:background="@color/grey" />
+
+        <TextView
+            android:id="@+id/favorite_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="收藏的帖子"
+            android:textColor="@color/grey"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <com.thinksns.jkfs.ui.view.UnderlinePageIndicator
+        android:id="@+id/weiba_center_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        app:selectedColor="@color/green"
+        android:background="@color/pure_white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center_vertical"
+        android:background="@color/green" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/weiba_center_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/pure_white" />
+
+</LinearLayout>
