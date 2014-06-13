@@ -22,6 +22,6 @@
         android:text="签到失败！"
         android:singleLine="true"
         android:textSize="24sp" 
-        android:textColor="@color/common_dark"/>
+        android:textColor="@color/blue"/>
 
 </LinearLayout>
