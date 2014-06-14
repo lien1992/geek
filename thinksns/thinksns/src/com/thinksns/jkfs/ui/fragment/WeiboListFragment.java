@@ -45,7 +45,7 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 微博列表(公共微博）
+ * 微博列表(公共微博)
  * 
  * @author wangjia
  * 

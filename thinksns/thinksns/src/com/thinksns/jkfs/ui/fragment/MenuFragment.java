@@ -43,8 +43,8 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	public static final String TAG = "MenuFragment";
 
 	private final int HTTP_GET_OK = 9;
-	private RoundAngleImageView avatar;
-	private TextView nick;
+	private static RoundAngleImageView avatar;
+	private static TextView nick;
 	private ImageView at_new;
 	private LinearLayout home;
 	private LinearLayout at;
@@ -56,11 +56,11 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private LinearLayout logout;
 	private ThinkSNSApplication application;
 	private AccountBean account;
-	private UserInfoBean userinfo;
+	private static UserInfoBean userinfo;
 	private String json;
 	private NotificationBean comment_unread, at_unread;
-	private DbUtils db;
-	private DisplayImageOptions options;
+	private static DbUtils db;
+	private static DisplayImageOptions options;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -256,6 +256,12 @@ public class MenuFragment extends Fragment implements OnClickListener {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							application.quitAccount(getActivity());
+							try {
+								db.dropTable(UserInfoBean.class);
+							} catch (DbException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							getActivity().finish();
 						}
 					}).setNegativeButton("取消",
@@ -327,4 +333,22 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			at_new.setVisibility(View.VISIBLE);
 		}
 	}
+
+	public static void setUserInfo(UserInfoBean user) {
+		userinfo = user;
+		ImageLoader.getInstance().displayImage(userinfo.getAvatar_original(),
+				avatar, options);
+		nick.setText(userinfo.getUname());
+		try {
+			UserInfoCountBean userInfoCount = userinfo.count_info;
+			if (userInfoCount != null) {
+				userInfoCount.setUser_info(userinfo);
+				db.save(userInfoCount);
+			}
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }

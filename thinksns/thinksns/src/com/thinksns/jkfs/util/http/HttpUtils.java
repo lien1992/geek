@@ -270,6 +270,7 @@ public class HttpUtils {
 
 			urlConnection.setConnectTimeout(5000);
 			urlConnection.setReadTimeout(5000);
+			//urlConnection.setChunkedStreamingMode(128 * 1024);
 			urlConnection.setDoInput(true);
 			urlConnection.setDoOutput(true);
 			urlConnection.setRequestMethod("POST");
@@ -351,6 +352,7 @@ public class HttpUtils {
 			int status = urlConnection.getResponseCode();
 			if (status != HttpURLConnection.HTTP_OK) {
 				String error = handleError(urlConnection);
+				return false;
 			}
 
 		} catch (IOException e) {

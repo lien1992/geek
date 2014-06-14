@@ -27,7 +27,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 	private SlidingMenu sm;
 	private AlarmManager alarm;
 	private NewMsgReceiver receiver;
-	private static MenuFragment menu;
+	private static MenuFragment menu = new MenuFragment();;
 	private String TAG = "MainFragmentActivity";
 
 	@Override
@@ -60,7 +60,6 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 					WeiboMainFragment.class.getName());
 			transaction.commit();
 
-			menu = new MenuFragment();
 			FragmentTransaction menuTransation = getSupportFragmentManager()
 					.beginTransaction();
 			menuTransation.replace(R.id.menu_frame, menu, MenuFragment.class
@@ -83,8 +82,8 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		super.onResume();
 		alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(this, GetMsgService.class);
-		PendingIntent pendingIntent = PendingIntent.getService(this, 2014, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 2014,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		long triggerAtTime = SystemClock.elapsedRealtime();
 		// 每30s请求一次服务器获取未读消息数目
 		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, triggerAtTime,
@@ -97,8 +96,8 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 
 		alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(this, GetMsgService.class);
-		PendingIntent pendingIntent = PendingIntent.getService(this, 2014, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 2014,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.cancel(pendingIntent);
 	}
 
@@ -136,7 +135,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			Log
 					.d("wj", "NotificationBean at count"
 							+ comment_unread.getCount());
-			//menu.setUnread(comment_unread, at_unread);
+			menu.setUnread(comment_unread, at_unread);
 		}
 
 	}

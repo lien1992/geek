@@ -193,6 +193,7 @@ public class AboutMeFragment extends Fragment {
 								image, options);
 					}
 				}
+				MenuFragment.setUserInfo(userinfo);
 
 				break;
 
@@ -373,11 +374,11 @@ public class AboutMeFragment extends Fragment {
 	private void openPage() {
 		switch (FLAG) {
 		case 0:
-			/*
-			 * if (application.getUser() != null) { userinfo =
-			 * application.getUser(); mHandler.sendEmptyMessage(1); } else
-			 */
-			if (Utility.isConnected(getActivity())) {
+
+			if (application.getUser() != null) {
+				userinfo = application.getUser();
+				mHandler.sendEmptyMessage(1);
+			} else if (Utility.isConnected(getActivity())) {
 				// 待添加超时判断
 
 				new Thread() {

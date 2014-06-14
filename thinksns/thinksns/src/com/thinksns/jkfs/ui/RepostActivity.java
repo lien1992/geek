@@ -36,7 +36,7 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 /**
- * 转发微博，尚未完成（at用户）
+ * 转发微博
  * 
  * @author wangjia
  * 

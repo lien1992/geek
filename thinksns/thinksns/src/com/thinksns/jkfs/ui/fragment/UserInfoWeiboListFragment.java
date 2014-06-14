@@ -168,19 +168,19 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 				if (userInfo.getUid().equals(account.getUid())) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							getActivity()).setTitle("删除此微博")
-							.setPositiveButton("确定", new OnClickListener() {
+							getActivity()).setTitle("删除此微博").setPositiveButton(
+							"确定", new OnClickListener() {
 
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
 									// TODO Auto-generated method stub
 									String id = weibo_all.get(position - 1)
-											.getFeed_id();					
+											.getFeed_id();
 									delWeibo(id);
-									
+
 									weibo_all.remove(position - 1);
-									
+
 								}
 							}).setNegativeButton("取消", null);
 
@@ -215,8 +215,8 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 					map.put("user_id", userInfo.getUid());
 					map.put("page", currentPage + "");
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
@@ -246,35 +246,37 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 	private void getWeibos() {
 		// TODO Auto-generated method stub
 		if (Utility.isConnected(getActivity())) {
+			if (userInfo != null)
 
-			new Thread() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					Gson gson = new Gson();
-					HashMap<String, String> map = new HashMap<String, String>();
-					map.put("app", "api");
-					map.put("mod", "WeiboStatuses");
-					map.put("act", "user_timeline");
-					map.put("user_id", userInfo.getUid());
-					Log.d("wj", "userInfo.getUid()" + userInfo.getUid());
-					if (!since_id.equals(""))
-						map.put("since_id", since_id);
-					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
-					String json = HttpUtility.getInstance().executeNormalTask(
-							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
-					}.getType();
-					weibos = gson.fromJson(json, listType);
-					if (weibos != null && weibos.size() > 0) {
-						since_id = weibos.get(0).getFeed_id();
-						totalCount += weibos.size();
+				new Thread() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "WeiboStatuses");
+						map.put("act", "user_timeline");
+						map.put("user_id", userInfo.getUid());
+						Log.d("wj", "userInfo.getUid()" + userInfo.getUid());
+						if (!since_id.equals(""))
+							map.put("since_id", since_id);
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret", account
+								.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						Type listType = new TypeToken<LinkedList<WeiboBean>>() {
+						}.getType();
+						weibos = gson.fromJson(json, listType);
+						if (weibos != null && weibos.size() > 0) {
+							since_id = weibos.get(0).getFeed_id();
+							totalCount += weibos.size();
+						}
+						mHandler.sendEmptyMessage(1);
 					}
-					mHandler.sendEmptyMessage(1);
-				}
-			}.start();
+				}.start();
 		} else {
 			mHandler.sendEmptyMessage(2);
 		}
@@ -303,8 +305,8 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 					map.put("act", "destroy");
 					map.put("id", id);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
 					mHandler.sendEmptyMessage(3);

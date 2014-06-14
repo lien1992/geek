@@ -63,8 +63,8 @@
 
             <ImageView
                 android:id="@+id/write_weibo_content_pic"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="right|bottom"
                 android:layout_marginBottom="20dp"
                 android:layout_marginRight="20dp"

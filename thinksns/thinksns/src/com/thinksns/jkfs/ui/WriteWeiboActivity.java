@@ -1,7 +1,5 @@
 package com.thinksns.jkfs.ui;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -30,8 +28,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -199,35 +195,34 @@ public class WriteWeiboActivity extends BaseActivity implements
 				}
 				break;
 			case 1002:
-				startPhotoZoom(intent.getData());
-				break;
-			case 1003:
 				// 本地图片
 				if (TextUtils.isEmpty(content.getText().toString())) {
 					content.setText("分享图片");
 					content.setSelection(content.getText().toString().length());
 				}
-				Bundle extras = intent.getExtras();
-				if (extras != null) {
-					Bitmap photo = extras.getParcelable("data");
-					Uri imageFileUri = null;
-					if (intent.getData() != null) {
-						imageFileUri = intent.getData();
-					} else {
-						imageFileUri = Uri.parse(MediaStore.Images.Media
-								.insertImage(this.getContentResolver(), photo,
-										null, null));
-					}
-					picPath = getPicPathFromUri(imageFileUri);
+				Uri imageFileUri = intent.getData();
+				picPath = getPicPathFromUri(imageFileUri);
+				InputStream lfis;
+				try {
+					lfis = new FileInputStream(picPath);
+					BitmapFactory.Options opts = new BitmapFactory.Options();
+					opts.inTempStorage = new byte[100 * 1024];// 100kb缓存
+					opts.inPreferredConfig = Bitmap.Config.RGB_565;
+					opts.inPurgeable = true;// 可被回收
+					opts.inSampleSize = 4;// 缩放为1/4
+					opts.inInputShareable = true;
+					Bitmap btp = BitmapFactory.decodeStream(lfis, null, opts);
+					pic.setImageBitmap(btp);
+					pic.setVisibility(View.VISIBLE);
+					hasImage = true;
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				Bitmap local = BitmapFactory.decodeFile(picPath);
-				pic.setImageBitmap(local);
-				pic.setVisibility(View.VISIBLE);
-				hasImage = true;
 				break;
-			}
 		}
 	}
+}
 
 	@Override
 	public void onClick(View v) {
@@ -472,27 +467,6 @@ public class WriteWeiboActivity extends BaseActivity implements
 	public void onFaceSelect(SpannableString spannableString) {
 		// TODO Auto-generated method stub
 		content.append(spannableString);
-	}
-
-	/**
-	 * 裁剪本地图片
-	 * 
-	 * @param uri
-	 */
-	public void startPhotoZoom(Uri uri) {
-
-		Intent intent = new Intent("com.android.camera.action.CROP");
-		intent.setDataAndType(uri, "image/*");
-		// 设置裁剪
-		intent.putExtra("crop", "true");
-		// aspectX aspectY 是宽高的比例
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
-		// outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 500);
-		intent.putExtra("outputY", 500);
-		intent.putExtra("return-data", true);
-		startActivityForResult(intent, 1003);
 	}
 
 }
