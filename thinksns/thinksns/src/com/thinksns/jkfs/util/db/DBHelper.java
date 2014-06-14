@@ -17,7 +17,37 @@ public class DBHelper extends SQLiteOpenHelper {
 	static final String CREATE_ACCOUNT_TABLE_SQL = "create table "
 			+ AccountOperator.TABLE_NAME + "(" + AccountOperator.UID
 			+ " text primary key," + AccountOperator.OAUTH_TOKEN + " text,"
-			+ AccountOperator.OAUTH_TOKEN_SECRET + " text," + ");";
+			+ AccountOperator.OAUTH_TOKEN_SECRET + " text" + ");";
+	
+	static final String CREATE_WEIBA_TABLE_SQL = "create table "
+			+ WeibaOperator.TABLE_NAME + "(" + WeibaOperator.WEIBA_ID
+			+ " text primary key," + WeibaOperator.WEIBA_NAME + " text,"
+			+ WeibaOperator.INTRO + " text," + WeibaOperator.FOLLOWER_COUNT
+			+ " text," + WeibaOperator.THREAD_COUNT + " text,"
+			+ WeibaOperator.NOTIFY + " text," + WeibaOperator.LOGO_URL
+			+ " text," + WeibaOperator.FOLLOW_STATE + " integer,"
+			+ WeibaOperator.POST_STATUS + " integer" + ");";
+
+	static final String CREATE_POST_TABLE_SQL = "(" + PostOperator.POST_ID
+			+ " text primary key," + PostOperator.WEIBA_ID + " text,"
+			+ PostOperator.POST_UID + " text," + PostOperator.UNAME + " text,"
+			+ PostOperator.TITLE + " text," + PostOperator.CONTENT + " text,"
+			+ PostOperator.POST_TIME + " text," + PostOperator.REPLY_COUNT
+			+ " text," + PostOperator.READ_COUNT + " text," + PostOperator.TOP
+			+ " text," + PostOperator.RECOMMEND + " text,"
+			+ PostOperator.AVATAR_TINY + " text," + PostOperator.FAVORITE
+			+ " integer" + ");";
+
+	static final String CREATE_POST_COMMENT_TABLE_SQL = "create table "
+			+ PostCommentOperator.TABLE_NAME + "("
+			+ PostCommentOperator.REPLY_ID + " text primary key,"
+			+ PostCommentOperator.POST_ID + " text," + PostCommentOperator.UID
+			+ " text," + PostCommentOperator.UNAME + " text,"
+			+ PostCommentOperator.AVATAR_TINY + " text,"
+			+ PostCommentOperator.TO_REPLY_ID + " text,"
+			+ PostCommentOperator.TO_UID + " text," + PostCommentOperator.CTIME
+			+ " text," + PostCommentOperator.CONTENT + " text,"
+			+ PostCommentOperator.STOREY + " text" + ");";
 
 	public DBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -35,6 +65,13 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 		db.execSQL(CREATE_ACCOUNT_TABLE_SQL);
+		db.execSQL(CREATE_WEIBA_TABLE_SQL);
+		db.execSQL(CREATE_POST_COMMENT_TABLE_SQL);
+		for (int i = 0; i < 4; i++) {
+			String temp = "create table " + PostOperator.getTableName(i)
+					+ CREATE_POST_TABLE_SQL;
+			db.execSQL(temp);
+		}
 	}
 
 	@Override

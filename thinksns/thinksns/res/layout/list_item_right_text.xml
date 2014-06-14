@@ -24,7 +24,7 @@
         android:textColor="#404040"
         android:textSize="16dip"
         android:gravity="center"
-        android:background="@drawable/chatto_bg_normal"
+        android:background="@drawable/chatto_bg_1"
         />
 
 </RelativeLayout>

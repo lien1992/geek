@@ -14,8 +14,10 @@ import com.thinksns.jkfs.ui.view.SatelliteMenu;
 import com.thinksns.jkfs.ui.view.SatelliteMenuItem;
 import com.thinksns.jkfs.ui.view.UnderlinePageIndicator;
 import com.thinksns.jkfs.ui.view.SatelliteMenu.SateliteClickedListener;
+import com.thinksns.jkfs.util.WeiboCheckHelper;
 
 import android.app.ActionBar.LayoutParams;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 /**
  * 主微博Fragment,承载WeiboListFragment和AboutMeFragment
@@ -97,7 +101,7 @@ public class WeiboMainFragment extends Fragment {
 		indicator.setOnPageChangeListener(new MyPageChangeListener());
 		List<SatelliteMenuItem> items = new ArrayList<SatelliteMenuItem>();
 		items.add(new SatelliteMenuItem(3, R.drawable.circle_ico_green_3_w));
-		items.add(new SatelliteMenuItem(2, R.drawable.circle_ico_green_qiandao));
+		items.add(new SatelliteMenuItem(2, R.drawable.circle_ico_green_check));
 		items.add(new SatelliteMenuItem(1, R.drawable.circle_ico_green_1_w));
 		menu.addItems(items);
 		menu.setOnItemClickedListener(new SateliteClickedListener() {
@@ -108,7 +112,10 @@ public class WeiboMainFragment extends Fragment {
 							WriteWeiboActivity.class));
 					break;
 				case 2:
-					//签到
+					Context arg1=getActivity();
+					Toast arg2=new Toast(arg1);
+					arg2.setGravity(Gravity.CENTER, 0, 0);
+					new Thread(new WeiboCheckHelper(arg1,arg2)).start();
 					break;
 				case 3:
 					startActivity(new Intent(getActivity(),

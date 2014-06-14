@@ -177,9 +177,14 @@ public class Utility {
 	public static boolean isConnected(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+		/*NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
-		return networkInfo != null && networkInfo.isConnected();
+		return networkInfo != null && networkInfo.isConnected();*/
+		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+		if(networkInfo!= null) {  
+	        return networkInfo.isAvailable();  
+	    }  
+		return false;
 	}
 
 	public static boolean isWifi(Context context) {
