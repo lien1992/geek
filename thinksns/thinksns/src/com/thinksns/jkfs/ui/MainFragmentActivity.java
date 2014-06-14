@@ -27,7 +27,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 	private SlidingMenu sm;
 	private AlarmManager alarm;
 	private NewMsgReceiver receiver;
-	private static MenuFragment menu = new MenuFragment();;
+	private static MenuFragment menu;
 	private String TAG = "MainFragmentActivity";
 
 	@Override
@@ -59,7 +59,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			transaction.replace(R.id.content_frame, weiboMain,
 					WeiboMainFragment.class.getName());
 			transaction.commit();
-
+			menu = new MenuFragment();
 			FragmentTransaction menuTransation = getSupportFragmentManager()
 					.beginTransaction();
 			menuTransation.replace(R.id.menu_frame, menu, MenuFragment.class

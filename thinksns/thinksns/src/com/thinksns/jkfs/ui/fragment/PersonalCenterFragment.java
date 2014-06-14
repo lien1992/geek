@@ -54,7 +54,7 @@ public class PersonalCenterFragment extends Fragment {
 			@Override
 			public void onPageSelected(int arg0) {
 				// TODO Auto-generated method stub
-				int index=(int) posteds.getTag();
+				int index=(Integer) posteds.getTag();
 				switch(arg0){
 					case 0:posteds.setTextColor(getResources().getColor(R.color.green));break;
 					case 1:commenteds.setTextColor(getResources().getColor(R.color.green));break;

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.R.interpolator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,9 +15,12 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -46,7 +50,7 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 	private ThinkSNSApplication application;
 	private LinkedList<WeiboBean> weibos = new LinkedList<WeiboBean>();
 	private LinkedList<WeiboBean> weibo_all = new LinkedList<WeiboBean>();
-	private ProgressBar progressBar;
+	private ImageView loadImage;
 	private WeiboAdapter adapter;
 	private AccountBean account;
 	private int currentPage;
@@ -70,7 +74,8 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 				break;
 			case 1:
 				if (firstLoad) {
-					progressBar.setVisibility(View.INVISIBLE);
+					loadImage.setAnimation(null);
+					loadImage.setVisibility(View.GONE);
 				}
 				listView.onRefreshComplete();
 				if (weibos == null || weibos.size() == 0) {
@@ -89,7 +94,8 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 				currentPage = totalCount / 10 + 1;
 				break;
 			case 2:
-				progressBar.setVisibility(View.INVISIBLE);
+				loadImage.setAnimation(null);
+				loadImage.setVisibility(View.GONE);
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
 						.show();
@@ -107,8 +113,15 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 		View view = mInflater.inflate(R.layout.main_weibo_list_fragment, null);
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.main_weibo_list_view);
-		progressBar = (ProgressBar) view
-				.findViewById(R.id.main_weibo_progressbar);
+		loadImage = (ImageView) view
+				.findViewById(R.id.main_weibo_list_load_img);
+		RotateAnimation rotateAnimation = new RotateAnimation(0.0f, +360.0f,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		rotateAnimation.setRepeatCount(Animation.INFINITE);
+		rotateAnimation.setInterpolator(getActivity(), interpolator.linear);
+		rotateAnimation.setDuration(500);
+		loadImage.startAnimation(rotateAnimation);
 		return view;
 	}
 
@@ -136,7 +149,6 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 			}
 
 		});
-		
 
 		if (totalCount == 0)
 			getWeibos();
@@ -159,8 +171,8 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 					map.put("count", "10");
 					map.put("page", currentPage + "");
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
@@ -205,8 +217,8 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 					if (!since_id.equals(""))
 						map.put("since_id", since_id);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
 					Type listType = new TypeToken<LinkedList<WeiboBean>>() {
@@ -232,5 +244,5 @@ public class WeiboListOfMineFragment extends BaseListFragment {
 			weibo_all.addFirst(lists.get(i));
 		}
 	}
-	
+
 }

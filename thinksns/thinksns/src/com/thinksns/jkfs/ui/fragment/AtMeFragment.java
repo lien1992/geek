@@ -5,14 +5,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.R.interpolator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -47,7 +50,7 @@ public class AtMeFragment extends BaseListFragment {
 	private ThinkSNSApplication application;
 	private AccountBean account;
 	private WeiboAdapter at_adapter;
-	private ProgressBar progressBar;
+	private ImageView loadImage;
 	private int at_currentPage;
 	private int at_totalCount;
 	private String at_since_id = "";
@@ -63,7 +66,8 @@ public class AtMeFragment extends BaseListFragment {
 			switch (msg.what) {
 			case 0:
 				if (firstLoad) {
-					progressBar.setVisibility(View.INVISIBLE);
+					loadImage.setAnimation(null);
+					loadImage.setVisibility(View.GONE);
 				}
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
@@ -72,7 +76,8 @@ public class AtMeFragment extends BaseListFragment {
 			case 1:
 				listView.onRefreshComplete();
 				if (firstLoad) {
-					progressBar.setVisibility(View.INVISIBLE);
+					loadImage.setAnimation(null);
+					loadImage.setVisibility(View.GONE);
 				}
 				if (at_weibos == null || at_weibos.size() == 0) {
 					Toast.makeText(getActivity(), "暂时没有新@你的微博:)",
@@ -86,7 +91,8 @@ public class AtMeFragment extends BaseListFragment {
 
 				try {
 					if (application.isClearCache()) {
-						progressBar.setVisibility(View.INVISIBLE);
+						loadImage.setAnimation(null);
+						loadImage.setVisibility(View.GONE);
 						db = DbUtils.create(getActivity(), "thinksns2.db");
 						db.configDebug(true);
 						application.setClearCache(false);
@@ -155,8 +161,15 @@ public class AtMeFragment extends BaseListFragment {
 		View view = mInflater.inflate(R.layout.main_weibo_list_fragment, null);
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.main_weibo_list_view);
-		progressBar = (ProgressBar) view
-				.findViewById(R.id.main_weibo_progressbar);
+		loadImage = (ImageView) view
+				.findViewById(R.id.main_weibo_list_load_img);
+		RotateAnimation rotateAnimation = new RotateAnimation(0.0f, +360.0f,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		rotateAnimation.setRepeatCount(Animation.INFINITE);
+		rotateAnimation.setInterpolator(getActivity(), interpolator.linear);
+		rotateAnimation.setDuration(500);
+		loadImage.startAnimation(rotateAnimation);
 		return view;
 	}
 
@@ -201,7 +214,8 @@ public class AtMeFragment extends BaseListFragment {
 					}
 				}
 				at_adapter.insertToHead(weibos_cache);
-				progressBar.setVisibility(View.INVISIBLE);
+				loadImage.setAnimation(null);
+				loadImage.setVisibility(View.GONE);
 			} else {
 				getAtToMe();
 			}

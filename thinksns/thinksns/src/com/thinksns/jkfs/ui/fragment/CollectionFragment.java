@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.R.interpolator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,9 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -50,7 +52,7 @@ public class CollectionFragment extends BaseListFragment {
 	private ImageView back;
 	private LinkedList<WeiboBean> weibos = new LinkedList<WeiboBean>();
 	private LinkedList<WeiboBean> weibo_all = new LinkedList<WeiboBean>();
-	private ProgressBar progressBar;
+	private ImageView loadImage;
 	private WeiboAdapter adapter;
 	private AccountBean account;
 	private int currentPage;
@@ -66,7 +68,8 @@ public class CollectionFragment extends BaseListFragment {
 			switch (msg.what) {
 			case 0:
 				if (firstLoad) {
-					progressBar.setVisibility(View.INVISIBLE);
+					loadImage.setAnimation(null);
+					loadImage.setVisibility(View.GONE);
 				}
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
@@ -75,7 +78,8 @@ public class CollectionFragment extends BaseListFragment {
 			case 1:
 				listView.onRefreshComplete();
 				if (firstLoad) {
-					progressBar.setVisibility(View.INVISIBLE);
+					loadImage.setAnimation(null);
+					loadImage.setVisibility(View.GONE);
 					if (weibos == null || weibos.size() == 0) {
 						Toast.makeText(getActivity(), "亲还未收藏过微博:(",
 								Toast.LENGTH_SHORT).show();
@@ -94,7 +98,8 @@ public class CollectionFragment extends BaseListFragment {
 
 				try {
 					if (application.isClearCache()) {
-						progressBar.setVisibility(View.INVISIBLE);
+						loadImage.setAnimation(null);
+						loadImage.setVisibility(View.GONE);
 						db = DbUtils.create(getActivity(), "thinksns2.db");
 						db.configDebug(true);
 						application.setClearCache(false);
@@ -162,7 +167,14 @@ public class CollectionFragment extends BaseListFragment {
 		back = (ImageView) view.findViewById(R.id.wb_fav_back);
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.fav_main_list_view);
-		progressBar = (ProgressBar) view.findViewById(R.id.fav_progressbar);
+		loadImage = (ImageView) view.findViewById(R.id.fav_load_img);
+		RotateAnimation rotateAnimation = new RotateAnimation(0.0f, +360.0f,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		rotateAnimation.setRepeatCount(Animation.INFINITE);
+		rotateAnimation.setInterpolator(getActivity(), interpolator.linear);
+		rotateAnimation.setDuration(500);
+		loadImage.startAnimation(rotateAnimation);
 
 		return view;
 	}
@@ -203,7 +215,7 @@ public class CollectionFragment extends BaseListFragment {
 			}
 
 		});
-		
+
 		try {
 			weibos_cache = db.findAll(Selector.from(WeiboBean.class).where(
 					"isFavorite", "=", "t").limit(10).orderBy("id", true));
@@ -218,7 +230,8 @@ public class CollectionFragment extends BaseListFragment {
 					}
 				}
 				adapter.insertToHead(weibos_cache);
-				progressBar.setVisibility(View.INVISIBLE);
+				loadImage.setAnimation(null);
+				loadImage.setVisibility(View.GONE);
 			} else {
 				getWeibos();
 			}

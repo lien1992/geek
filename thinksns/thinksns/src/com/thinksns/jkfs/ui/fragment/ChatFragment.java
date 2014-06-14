@@ -111,7 +111,7 @@ public class ChatFragment extends Fragment {
             }).start();
         }
         else{
-            Toast.makeText(getActivity(), "没有联网", 1000).show();
+            Toast.makeText(getActivity(), "网络未连接", 1000).show();
         }
 
         return view;

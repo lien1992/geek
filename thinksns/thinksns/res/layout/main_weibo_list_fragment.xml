@@ -13,10 +13,12 @@
         android:divider="@drawable/lv_divider"
         android:fastScrollEnabled="true" />
 
-    <ProgressBar
-        android:id="@+id/main_weibo_progressbar"
+      <ImageView
+        android:id="@+id/main_weibo_list_load_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        android:src="@drawable/load_64" />
 
 </FrameLayout>

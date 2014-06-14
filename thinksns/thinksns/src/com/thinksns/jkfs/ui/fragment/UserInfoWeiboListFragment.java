@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.R.interpolator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,8 +16,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -44,7 +47,7 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 	private LinkedList<WeiboBean> weibo_all = new LinkedList<WeiboBean>();
 	private WeiboAdapter adapter;
 	private AccountBean account;
-	private ProgressBar progressBar;
+	private ImageView loadImage;
 	private int currentPage;
 	private int totalCount;
 	private String since_id = "";
@@ -68,7 +71,8 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 			case 1:
 				listView.onRefreshComplete();
 				if (firstLoad) {
-					progressBar.setVisibility(View.INVISIBLE);
+					loadImage.setAnimation(null);
+					loadImage.setVisibility(View.GONE);
 					if (weibos == null || weibos.size() == 0) {
 						Toast.makeText(getActivity(), "出现意外，微博加载失败:(",
 								Toast.LENGTH_SHORT).show();
@@ -93,7 +97,8 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 				break;
 			case 2:
 				if (firstLoad) {
-					progressBar.setVisibility(View.INVISIBLE);
+					loadImage.setAnimation(null);
+					loadImage.setVisibility(View.GONE);
 				}
 				listView.onRefreshComplete();
 				Toast.makeText(getActivity(), "网络未连接", Toast.LENGTH_SHORT)
@@ -129,8 +134,15 @@ public class UserInfoWeiboListFragment extends BaseListFragment {
 		View view = mInflater.inflate(R.layout.main_weibo_list_fragment, null);
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.main_weibo_list_view);
-		progressBar = (ProgressBar) view
-				.findViewById(R.id.main_weibo_progressbar);
+		loadImage = (ImageView) view
+				.findViewById(R.id.main_weibo_list_load_img);
+		RotateAnimation rotateAnimation = new RotateAnimation(0.0f, +360.0f,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		rotateAnimation.setRepeatCount(Animation.INFINITE);
+		rotateAnimation.setInterpolator(getActivity(), interpolator.linear);
+		rotateAnimation.setDuration(500);
+		loadImage.startAnimation(rotateAnimation);
 
 		return view;
 	}

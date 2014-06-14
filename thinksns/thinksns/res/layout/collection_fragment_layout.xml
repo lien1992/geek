@@ -8,7 +8,7 @@
         android:id="@+id/wb_fav_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white_for_title"  >
+        android:background="@color/white_for_title" >
 
         <ImageView
             android:id="@+id/wb_fav_back"
@@ -46,13 +46,15 @@
             android:background="@color/white"
             android:cacheColorHint="#0000"
             android:divider="@drawable/lv_divider"
-            android:fastScrollEnabled="true"  />
+            android:fastScrollEnabled="true" />
 
-        <ProgressBar
-            android:id="@+id/fav_progressbar"
+        <ImageView
+            android:id="@+id/fav_load_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/load_64" />
     </FrameLayout>
 
 </LinearLayout>
