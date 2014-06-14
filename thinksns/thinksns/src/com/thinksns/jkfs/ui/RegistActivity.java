@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.gson.Gson;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.constant.HttpConstant;
@@ -12,9 +15,11 @@ import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -55,7 +60,7 @@ public class RegistActivity extends Activity {
 				break;
 			case 1:
 				sendDialogDismiss();
-				Toast.makeText(RegistActivity.this, "出现意外，注册失败:(",
+				Toast.makeText(RegistActivity.this, "[注册失败]" + msg.obj,
 						Toast.LENGTH_SHORT).show();
 				break;
 			}
@@ -87,10 +92,10 @@ public class RegistActivity extends Activity {
 					public void onCheckedChanged(RadioGroup arg0, int id) {
 						// TODO Auto-generated method stub
 						if (id == male.getId()) {
-							sexChoice = "男";
+							sexChoice = "1";
 
 						} else if (id == female.getId()) {
-							sexChoice = "女";
+							sexChoice = "2";
 						}
 
 					}
@@ -145,15 +150,28 @@ public class RegistActivity extends Activity {
 							map.put("act", "register");
 							map.put("uname", reg_nick);
 							map.put("sex", sexChoice);
-							map.put("passwd", reg_pwdConfirm);
+							map.put("password", reg_pwdConfirm);
 							map.put("email", reg_email);
 							String result = HttpUtility.getInstance()
 									.executeNormalTask(HttpMethod.Post,
 											HttpConstant.THINKSNS_URL, map);
-							if (result.equals("1")) {
-								mHandler.sendEmptyMessage(0);
-							} else if (result.equals("0")) {
-								mHandler.sendEmptyMessage(1);
+							try {
+								if (result != null && result.startsWith("{")) {
+									JSONObject response = new JSONObject(result);
+									String code = response.optString("status");
+									String message = response.optString("msg");
+									if (code.equals("1")) {
+										mHandler.sendEmptyMessage(0);
+									} else if (code.equals("0")) {
+										Message msg = new Message();
+										msg.what = 1;
+										msg.obj = message;
+										mHandler.sendMessage(msg);
+									}
+								}
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
 						}
 					}.start();

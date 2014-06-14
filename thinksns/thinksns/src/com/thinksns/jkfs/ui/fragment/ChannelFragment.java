@@ -131,7 +131,7 @@ public class ChannelFragment extends Fragment {
 	// 防止没加载微博，还原用
 	private LinkedList<WeiboBean> weiboList_before;
 	private WeiboAdapter listViewAdapter;
-	private String channelTitle = "官方发言";
+	private String channelTitle = "频道";
 	private String channel_category_id = "";
 	private String weibo_max_id = "";
 	private String weibo_since_id = "";
@@ -203,7 +203,7 @@ public class ChannelFragment extends Fragment {
 
 					break;
 				case CONNECT_WRONG:
-					Toast.makeText(mContext, "网络故障", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "网络未连接", Toast.LENGTH_SHORT).show();
 					break;
 				case DOWNLOAD_IMAGE_FINISHI:
 					// 下载完频道图片了开始布局了，重新布局，把频道图片加上去

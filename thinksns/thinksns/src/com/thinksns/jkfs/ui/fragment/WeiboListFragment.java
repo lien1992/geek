@@ -315,6 +315,13 @@ public class WeiboListFragment extends BaseListFragment {
 
 		});
 
+		if (application.isClearCache()) {
+			loadImage.setAnimation(null);
+			loadImage.setVisibility(View.GONE);
+			application.setClearCache(false);
+			return;
+		}
+
 		try {
 			weibos_cache = db.findAll(Selector.from(WeiboBean.class).where(
 					WhereBuilder.b("isFavorite", "=", null).and("containsAt",
