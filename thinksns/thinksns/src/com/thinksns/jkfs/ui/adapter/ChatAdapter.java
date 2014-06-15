@@ -84,10 +84,10 @@ public class ChatAdapter extends BaseAdapter {
 				holderLeftText = new ViewHolderLeftText();
 				convertView = mInflater.inflate(R.layout.list_item_left_text,
 						null);
-				// holderLeftText.ivLeftIcon = (ImageView) convertView
-				// .findViewById(R.id.iv_icon);
-				ImageLoader.getInstance().displayImage(msg.getFace(),
-						holderLeftText.ivLeftIcon);
+				 holderLeftText.ivLeftIcon = (ImageView) convertView
+				 .findViewById(R.id.iv_icon);
+//				ImageLoader.getInstance().displayImage(msg.getFace(),
+//						holderLeftText.ivLeftIcon);
 				holderLeftText.btnLeftText = (Button) convertView
 						.findViewById(R.id.btn_left_text);
 				holderLeftText.btnLeftText.setText(msg.getValue());
@@ -112,10 +112,10 @@ public class ChatAdapter extends BaseAdapter {
 				convertView = mInflater.inflate(R.layout.list_item_right_text,
 						null);
 				
-				// holderRightText.ivRightIcon = (ImageView) convertView
-				// .findViewById(R.id.iv_icon);
-				ImageLoader.getInstance().displayImage(msg.getFace(),
-						holderRightText.ivRightIcon);
+				 holderRightText.ivRightIcon = (ImageView) convertView
+				 .findViewById(R.id.iv_icon);
+//				ImageLoader.getInstance().displayImage(msg.getFace(),
+//						holderRightText.ivRightIcon);
 				holderRightText.btnRightText = (Button) convertView
 						.findViewById(R.id.btn_right_text);
 				holderRightText.btnRightText.setText(msg.getValue());
