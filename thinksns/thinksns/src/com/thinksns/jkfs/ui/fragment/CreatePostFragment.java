@@ -104,9 +104,11 @@ public class CreatePostFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				int index=content.getSelectionStart();  
-				content.append("##", index, index+2);
-				content.setSelection(index+1);
+				String origin = content.getText().toString();
+				String topicTag = "##";
+				content.setText(origin + topicTag);
+				content.setSelection(content.getText().toString().length() - 1);
+
 			}
 		});
 		create_post_send.setOnClickListener(new OnClickListener() {
