@@ -10,10 +10,9 @@ import com.thinksns.jkfs.ui.SearchActivity;
 import com.thinksns.jkfs.ui.WriteWeiboActivity;
 import com.thinksns.jkfs.ui.adapter.MainFragmentPagerAdapter;
 import com.thinksns.jkfs.ui.adapter.MainFragmentPagerAdapter.SwitchGroupListener;
-import com.thinksns.jkfs.ui.view.SatelliteMenu;
+import com.thinksns.jkfs.ui.view.ArcMenu;
 import com.thinksns.jkfs.ui.view.SatelliteMenuItem;
 import com.thinksns.jkfs.ui.view.UnderlinePageIndicator;
-import com.thinksns.jkfs.ui.view.SatelliteMenu.SateliteClickedListener;
 import com.thinksns.jkfs.util.WeiboCheckHelper;
 
 import android.app.ActionBar.LayoutParams;
@@ -61,8 +60,12 @@ public class WeiboMainFragment extends Fragment {
 	private LayoutInflater in;
 	private TextView weiboList, aboutMe;
 	private ImageView navi;
-	private SatelliteMenu menu;
+	private ArcMenu menu;
 	private SwitchGroupListener switchListener;
+
+	private static final int[] ITEM_DRAWABLES = {
+			R.drawable.circle_ico_green_1_w, R.drawable.circle_ico_green_check,
+			R.drawable.circle_ico_green_3_w };
 
 	public void setSwitchGroupListener(SwitchGroupListener switchListener) {
 		this.switchListener = switchListener;
@@ -82,7 +85,7 @@ public class WeiboMainFragment extends Fragment {
 		indicator = (UnderlinePageIndicator) view
 				.findViewById(R.id.main_weibo_indicator);
 		pager = (ViewPager) view.findViewById(R.id.main_weibo_pager);
-		menu = (SatelliteMenu) view.findViewById(R.id.sat_menu);
+		menu = (ArcMenu) view.findViewById(R.id.main_arc_menu);
 		return view;
 
 	}
@@ -99,31 +102,9 @@ public class WeiboMainFragment extends Fragment {
 		indicator.setSelectedColor(getResources().getColor(R.color.green));
 		indicator.setFadeLength(500);
 		indicator.setOnPageChangeListener(new MyPageChangeListener());
-		List<SatelliteMenuItem> items = new ArrayList<SatelliteMenuItem>();
-		items.add(new SatelliteMenuItem(3, R.drawable.circle_ico_green_3_w));
-		items.add(new SatelliteMenuItem(2, R.drawable.circle_ico_green_check));
-		items.add(new SatelliteMenuItem(1, R.drawable.circle_ico_green_1_w));
-		menu.addItems(items);
-		menu.setOnItemClickedListener(new SateliteClickedListener() {
-			public void eventOccured(int id) {
-				switch (id) {
-				case 1:
-					startActivity(new Intent(getActivity(),
-							WriteWeiboActivity.class));
-					break;
-				case 2:
-					Context arg1=getActivity();
-					Toast arg2=new Toast(arg1);
-					arg2.setGravity(Gravity.CENTER, 0, 0);
-					new Thread(new WeiboCheckHelper(arg1,arg2)).start();
-					break;
-				case 3:
-					startActivity(new Intent(getActivity(),
-							SearchActivity.class));
-					break;
-				}
-			}
-		});
+
+		initArcMenu(menu, ITEM_DRAWABLES);
+
 		navi.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -141,6 +122,37 @@ public class WeiboMainFragment extends Fragment {
 				showWindow(v);
 			}
 		});
+	}
+
+	private void initArcMenu(ArcMenu menu, int[] itemDrawables) {
+		final int itemCount = itemDrawables.length;
+		for (int i = 0; i < itemCount; i++) {
+			ImageView item = new ImageView(getActivity());
+			item.setImageResource(itemDrawables[i]);
+
+			final int position = i;
+			menu.addItem(item, new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					switch (position) {
+					case 0:
+						startActivity(new Intent(getActivity(),
+								WriteWeiboActivity.class));
+						break;
+					case 1:
+						Context arg1 = getActivity();
+						Toast arg2 = new Toast(arg1);
+						arg2.setGravity(Gravity.CENTER, 0, 0);
+						new Thread(new WeiboCheckHelper(arg1, arg2)).start();
+						break;
+					case 2:
+						startActivity(new Intent(getActivity(),
+								SearchActivity.class));
+						break;
+					}
+				}
+			});
+		}
 	}
 
 	@Override

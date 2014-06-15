@@ -218,10 +218,10 @@ public class WeiboDetailActivity extends FragmentActivity implements
 			from.setText("来自 手机版");
 			break;
 		case 2:
-			from.setText("来自 iPhone客户端");
+			from.setText("来自 Android客户端");
 			break;
 		case 3:
-			from.setText("来自 Android客户端");
+			from.setText("来自 iPhone客户端");
 			break;
 		case 4:
 			from.setText("来自 ipad客户端");

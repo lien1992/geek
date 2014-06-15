@@ -94,7 +94,9 @@ public class PostDetailFragment extends Fragment {
 						inputView.setText("");
 						Toast.makeText(mContext,"发布成功", Toast.LENGTH_SHORT)
 								.show();
-						post_comment_list.refresh();
+						if(post_comment_list!=null){
+							post_comment_list.refresh();
+						}
 					} else {
 						Toast.makeText(mContext, "发布失败", Toast.LENGTH_SHORT)
 								.show();

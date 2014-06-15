@@ -5,7 +5,13 @@ import com.lidroid.xutils.DbUtils.DbUpgradeListener;
 import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
+import com.thinksns.jkfs.bean.CommentBean;
+import com.thinksns.jkfs.bean.WeiboAttachBean;
+import com.thinksns.jkfs.bean.WeiboBean;
+import com.thinksns.jkfs.bean.WeiboRepostAttachBean;
+import com.thinksns.jkfs.bean.WeiboRepostBean;
 import com.thinksns.jkfs.constant.BaseConstant;
+import com.thinksns.jkfs.util.db.DBHelper;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,6 +78,7 @@ public class SettingActivity extends PreferenceActivity implements
 		if (aboutUs == preference)
 			startActivity(new Intent(this, AboutUsActivity.class));
 		if (clearCache == preference) {
+			DBHelper.getInstance().deleteTableData();
 			DbUtils db = DbUtils.create(this, "thinksns2.db", 10,
 					new DbUpgradeListener() {
 
@@ -81,7 +88,11 @@ public class SettingActivity extends PreferenceActivity implements
 							// TODO Auto-generated method stub
 							try {
 								if (!application.isClearCache()) {
-									db.dropDb();
+									db.dropTable(WeiboAttachBean.class);
+									db.dropTable(WeiboRepostAttachBean.class);
+									db.dropTable(WeiboRepostBean.class);
+									db.dropTable(WeiboBean.class);
+									db.dropTable(CommentBean.class);
 									application.setClearCache(true);
 									Toast.makeText(SettingActivity.this,
 											"缓存已清除", Toast.LENGTH_SHORT).show();

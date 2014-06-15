@@ -105,9 +105,6 @@ public class CommentByMeFragment extends BaseListFragment {
 				for (int i = cbm_comments.size() - 1; i >= 0; --i) {
 					cbm_comment_all.addFirst(cbm_comments.get(i));
 				}
-				Toast.makeText(getActivity(),
-						"新增评论" + cbm_comments.size() + "条", Toast.LENGTH_SHORT)
-						.show();
 				cbm_currentPage = cbm_totalCount / 10 + 1;
 				break;
 			case 2:
@@ -167,6 +164,13 @@ public class CommentByMeFragment extends BaseListFragment {
 			}
 
 		});
+
+		if (application.isClearCache()) {
+			loadImage.setAnimation(null);
+			loadImage.setVisibility(View.GONE);
+			application.setClearCache(false);
+			return;
+		}
 
 		try {
 			comments_cache = db.findAll(Selector.from(CommentBean.class).where(

@@ -78,5 +78,13 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
 	}
+	
+	public void deleteTableData(){
+		for (int i = 0; i < 4; i++) {
+			PostOperator.getInstance(i).deleteAll();
+		}
+		PostCommentOperator.getInstance().deleteAll();
+		WeibaOperator.getInstance().deleteAll();
+	}
 
 }

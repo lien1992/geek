@@ -86,8 +86,6 @@ public class ChatAdapter extends BaseAdapter {
 						null);
 				 holderLeftText.ivLeftIcon = (ImageView) convertView
 				 .findViewById(R.id.iv_icon);
-//				ImageLoader.getInstance().displayImage(msg.getFace(),
-//						holderLeftText.ivLeftIcon);
 				holderLeftText.btnLeftText = (Button) convertView
 						.findViewById(R.id.btn_left_text);
 				holderLeftText.btnLeftText.setText(msg.getValue());
@@ -114,8 +112,6 @@ public class ChatAdapter extends BaseAdapter {
 				
 				 holderRightText.ivRightIcon = (ImageView) convertView
 				 .findViewById(R.id.iv_icon);
-//				ImageLoader.getInstance().displayImage(msg.getFace(),
-//						holderRightText.ivRightIcon);
 				holderRightText.btnRightText = (Button) convertView
 						.findViewById(R.id.btn_right_text);
 				holderRightText.btnRightText.setText(msg.getValue());

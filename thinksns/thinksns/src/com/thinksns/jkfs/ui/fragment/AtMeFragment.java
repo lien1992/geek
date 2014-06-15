@@ -134,9 +134,6 @@ public class AtMeFragment extends BaseListFragment {
 				for (int i = at_weibos.size() - 1; i >= 0; --i) {
 					at_weibo_all.addFirst(at_weibos.get(i));
 				}
-				Toast.makeText(getActivity(),
-						"新增@你的微博" + at_weibos.size() + "条", Toast.LENGTH_SHORT)
-						.show();
 				at_currentPage = at_totalCount / 10 + 1;
 				break;
 			case 2:
@@ -199,6 +196,13 @@ public class AtMeFragment extends BaseListFragment {
 			}
 
 		});
+		
+		if (application.isClearCache()) {
+			loadImage.setAnimation(null);
+			loadImage.setVisibility(View.GONE);
+			application.setClearCache(false);
+			return;
+		}
 
 		try {
 			weibos_cache = db.findAll(Selector.from(WeiboBean.class).where(

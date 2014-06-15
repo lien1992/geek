@@ -215,6 +215,13 @@ public class CollectionFragment extends BaseListFragment {
 			}
 
 		});
+		
+		if (application.isClearCache()) {
+			loadImage.setAnimation(null);
+			loadImage.setVisibility(View.GONE);
+			application.setClearCache(false);
+			return;
+		}
 
 		try {
 			weibos_cache = db.findAll(Selector.from(WeiboBean.class).where(
