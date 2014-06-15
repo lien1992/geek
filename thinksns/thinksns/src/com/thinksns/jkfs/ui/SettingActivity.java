@@ -11,6 +11,7 @@ import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.bean.WeiboRepostAttachBean;
 import com.thinksns.jkfs.bean.WeiboRepostBean;
 import com.thinksns.jkfs.constant.BaseConstant;
+import com.thinksns.jkfs.util.db.DBHelper;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -77,6 +78,7 @@ public class SettingActivity extends PreferenceActivity implements
 		if (aboutUs == preference)
 			startActivity(new Intent(this, AboutUsActivity.class));
 		if (clearCache == preference) {
+			DBHelper.getInstance().deleteTableData();
 			DbUtils db = DbUtils.create(this, "thinksns2.db", 10,
 					new DbUpgradeListener() {
 
