@@ -59,6 +59,7 @@ public class CollectionFragment extends BaseListFragment {
 	private int totalCount;
 	private String since_id = "";
 	private boolean firstLoad = true;
+	private boolean cacheMode = true;
 
 	private DbUtils db;
 	private List<WeiboBean> weibos_cache;
@@ -207,11 +208,21 @@ public class CollectionFragment extends BaseListFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getActivity(),
-						WeiboDetailActivity.class);
-				Log.d("listview item pos", position + "");
-				intent.putExtra("weibo_detail", weibo_all.get(position - 1));
-				startActivity(intent);
+				if (cacheMode) {
+					Intent intent = new Intent(getActivity(),
+							WeiboDetailActivity.class);
+					intent.putExtra("weibo_detail", weibos_cache
+							.get(position - 1));
+					startActivity(intent);
+
+				} else {
+					Intent intent = new Intent(getActivity(),
+							WeiboDetailActivity.class);
+					intent
+							.putExtra("weibo_detail", weibo_all
+									.get(position - 1));
+					startActivity(intent);
+				}
 			}
 
 		});
@@ -241,6 +252,7 @@ public class CollectionFragment extends BaseListFragment {
 				loadImage.setVisibility(View.GONE);
 			} else {
 				getWeibos();
+				cacheMode = false;
 			}
 		} catch (DbException e) {
 			// TODO Auto-generated catch block
@@ -251,7 +263,7 @@ public class CollectionFragment extends BaseListFragment {
 	private void getWeibos() {
 		// TODO Auto-generated method stub
 		if (Utility.isConnected(getActivity())) {
-
+			cacheMode = false;
 			new Thread() {
 				@Override
 				public void run() {
