@@ -32,6 +32,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -44,6 +45,24 @@ import com.thinksns.jkfs.bean.CommentBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 
 public class Utility {
+	static String[] emotions = new String[] { "aoman", "baiyan", "bishi",
+			"bizui", "cahan", "caidao", "chajin", "cheer", "chong", "ciya",
+			"da", "dabian", "dabing", "dajiao", "daku", "dangao", "danu",
+			"dao", "deyi", "diaoxie", "e", "fadai", "fadou", "fan", "fanu",
+			"feiwen", "fendou", "gangga", "geili", "gouyin", "guzhang", "haha",
+			"haixiu", "haqian", "hua", "huaixiao", "hufen", "huishou",
+			"huitou", "jidong", "jingkong", "jingya", "kafei", "keai",
+			"kelian", "ketou", "kiss", "ku", "kuaikule", "kulou", "kun",
+			"lanqiu", "lenghan", "liuhan", "liulei", "liwu", "love", "ma",
+			"meng", "nanguo", "no", "ok", "peifu", "pijiu", "pingpang",
+			"pizui", "qiang", "qinqin", "qioudale", "qiu", "quantou", "ruo",
+			"se", "shandian", "shengli", "shenma", "shuai", "shuijiao",
+			"taiyang", "tiao", "tiaopi", "tiaosheng", "tiaowu", "touxiao",
+			"tu", "tuzi", "wabi", "weiqu", "weixiao", "wen", "woshou", "xia",
+			"xianwen", "xigua", "xinsui", "xu", "yinxian", "yongbao",
+			"youhengheng", "youtaiji", "yueliang", "yun", "zaijian", "zhadan",
+			"zhemo", "zhuakuang", "zhuanquan", "zhutou", "zuohengheng",
+			"zuotaiji", "zuqiu" };
 
 	private Utility() {
 		// Forbidden being instantiated.
@@ -177,13 +196,15 @@ public class Utility {
 	public static boolean isConnected(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		/*NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-
-		return networkInfo != null && networkInfo.isConnected();*/
+		/*
+		 * NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+		 * 
+		 * return networkInfo != null && networkInfo.isConnected();
+		 */
 		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-		if(networkInfo!= null) {  
-	        return networkInfo.isAvailable();  
-	    }  
+		if (networkInfo != null) {
+			return networkInfo.isAvailable();
+		}
 		return false;
 	}
 
@@ -398,27 +419,28 @@ public class Utility {
 			int k = localMatcher.start();
 			int m = localMatcher.end();
 			Bitmap bitmap;
-			try {
-				bitmap = BitmapFactory.decodeResource(ThinkSNSApplication
-						.getInstance().getResources(), R.drawable.class
-						.getField(string).getInt(R.drawable.class));
-				if (bitmap != null) {
-					ImageSpan localImageSpan = new ImageSpan(
-							ThinkSNSApplication.getInstance(), bitmap,
-							ImageSpan.ALIGN_BASELINE);
-					value.setSpan(localImageSpan, k, m,
-							Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			if (Arrays.asList(emotions).contains(string)) // 防止解析特殊字符影响反射
+				try {
+					bitmap = BitmapFactory.decodeResource(ThinkSNSApplication
+							.getInstance().getResources(), R.drawable.class
+							.getField(string).getInt(R.drawable.class));
+					if (bitmap != null) {
+						ImageSpan localImageSpan = new ImageSpan(
+								ThinkSNSApplication.getInstance(), bitmap,
+								ImageSpan.ALIGN_BASELINE);
+						value.setSpan(localImageSpan, k, m,
+								Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchFieldException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
 		}
 	}

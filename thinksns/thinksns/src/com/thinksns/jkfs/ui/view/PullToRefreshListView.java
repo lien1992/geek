@@ -27,7 +27,7 @@ import android.widget.AbsListView.OnScrollListener;
 /**
  * ListView, 顶部:下拉刷新 + 底部:加载更多
  * 
- * 【使用】实现RefreshAndLoadMoreListener接口，并调用setListener()进行绑定; 
+ * 【使用】实现RefreshAndLoadMoreListener接口，并调用setListener()进行绑定;
  * 默认情况下只有下拉刷新；需要加载更多需再多调用setLoadMoreEnable(true);；
  * 下拉刷新完成，调用onRefreshComplete()；底部加载更多完成，调用onLoadMoreComplete()。
  * 
@@ -332,7 +332,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 	 */
 	public void onRefreshComplete() {
 		state = DONE;
-		lastUpdatedTextView.setText("最近更新:" + new Date().toLocaleString().substring(8));
+		lastUpdatedTextView.setText("最近更新:"
+				+ new Date().toLocaleString().substring(7));
 		changeHeaderViewByState();
 	}
 
@@ -354,7 +355,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
 	@Override
 	public void setAdapter(ListAdapter adapter) {
-		lastUpdatedTextView.setText("最近更新:" + new Date().toLocaleString());
+		lastUpdatedTextView.setText("最近更新:"
+				+ new Date().toLocaleString().substring(7));
 		super.setAdapter(adapter);
 	}
 
