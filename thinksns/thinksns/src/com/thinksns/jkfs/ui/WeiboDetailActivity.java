@@ -1,8 +1,13 @@
 package com.thinksns.jkfs.ui;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
+import android.R.interpolator;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
@@ -11,32 +16,41 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.CommentBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.bean.WeiboAttachBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.bean.WeiboRepostBean;
 import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
+import com.thinksns.jkfs.ui.adapter.CommentAdapter;
 import com.thinksns.jkfs.ui.fragment.CommentListFragment;
+import com.thinksns.jkfs.ui.view.LinearLayoutForListView;
 import com.thinksns.jkfs.ui.view.RoundAngleImageView;
 import com.thinksns.jkfs.util.FaceDialog;
 import com.thinksns.jkfs.util.Utility;
@@ -50,8 +64,8 @@ import com.thinksns.jkfs.util.http.HttpUtility;
  * @author wangjia
  * 
  */
-public class WeiboDetailActivity extends FragmentActivity implements
-		OnClickListener, FaceSelect {
+public class WeiboDetailActivity extends Activity implements OnClickListener,
+		FaceSelect {
 	private ImageView back;
 	private EditText comment_content;
 	private ImageView repost;
@@ -59,7 +73,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 	private ImageView emotion;
 	private ImageView send;
 	private ImageView like;
-	private ImageView comments;
+	private ImageView comment;
 	private ImageView repost_another;
 	private TextView like_count;
 	private TextView comment_count;
@@ -74,16 +88,32 @@ public class WeiboDetailActivity extends FragmentActivity implements
 	private ImageView repost_pic;
 	private TextView re_user_name;
 	private TextView re_content;
-	private RelativeLayout bottom;
+	private View bottom;
+	private LinearLayout header;
+	private LinearLayout sticky_header;
+	private ScrollView sv;
+	private LinearLayoutForListView commentList;
 	private List<WeiboAttachBean> attaches;
+	private CommentAdapter adapter;
+	private LinkedList<CommentBean> comments = new LinkedList<CommentBean>();
+	private LinkedList<CommentBean> comment_all = new LinkedList<CommentBean>();
+	private int currentPage;
+	private int totalCount;
+	private String since_id = "";
 	private AccountBean account;
 	private ThinkSNSApplication application;
 	private WeiboBean weibo;
 	private boolean isFavorite;
 	private boolean isLike;
 	private ProgressDialog sendProgress;
+	private LinearLayout loadingComment;
+	private ImageView loadImage;
+	private TextView loadText;
 
 	private DisplayImageOptions options;
+
+	int[] location = new int[2];
+	int[] location2 = new int[2];
 
 	private boolean isNoImageMode;
 
@@ -99,10 +129,11 @@ public class WeiboDetailActivity extends FragmentActivity implements
 				comment_content.setText("");
 				Toast.makeText(WeiboDetailActivity.this, "评论成功",
 						Toast.LENGTH_SHORT).show();
-				WeiboDetailActivity.this.getSupportFragmentManager()
-						.beginTransaction().replace(
-								R.id.wb_detail_comment_layout,
-								newCommentListFragment()).commit();
+				/*
+				 * WeiboDetailActivity.this.getSupportFragmentManager()
+				 * .beginTransaction().replace( R.id.wb_detail_comment_layout,
+				 * newCommentListFragment()).commit();
+				 */
 				break;
 			case 2:
 				sendDialogDismiss();
@@ -141,6 +172,43 @@ public class WeiboDetailActivity extends FragmentActivity implements
 				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消赞失败了:(",
 						Toast.LENGTH_SHORT).show();
 				break;
+			case 11:
+				loadImage.setAnimation(null);
+				if (weibo.getComment_count() > 0) {
+					loadImage.setVisibility(View.GONE);
+					loadText.setText("网络未连接，评论列表加载失败:(");
+				} else
+					loadingComment.setVisibility(View.GONE);
+				break;
+			case 12:
+				if (comments == null || comments.size() == 0) {
+					Toast.makeText(WeiboDetailActivity.this, "没有新评论",
+							Toast.LENGTH_SHORT).show();
+					break;
+				}
+				adapter.append(comments);
+				comment_all.addAll(comments);
+				currentPage = totalCount / 10 + 1;
+				break;
+			case 13:
+				if (comments == null || comments.size() == 0) {
+					loadImage.setAnimation(null);
+					loadImage.setVisibility(View.GONE);
+					loadText.setText("该微博还没有评论哦~");
+					break;
+				}
+				loadingComment.setVisibility(View.GONE);
+				commentList.setVisibility(View.VISIBLE);
+				if (totalCount == 10) {
+					// listView.setLoadMoreEnable(true); 待修复：底部加载更多
+				}
+				adapter.insertToHead(comments);
+				commentList.bindLinearLayout();
+				for (int i = comments.size() - 1; i >= 0; --i) {
+					comment_all.addFirst(comments.get(i));
+				}
+				currentPage = totalCount / 10 + 1;
+				break;
 
 			}
 		}
@@ -164,6 +232,43 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_weibodetail);
 		initViews();
 		initContents();
+		sv.setOnTouchListener(new OnTouchListener() {
+			private int lastY = 0;
+			private int touchEventId = -9983761;
+			@SuppressLint("HandlerLeak")
+			Handler handler = new Handler() {
+				public void handleMessage(Message msg) {
+					super.handleMessage(msg);
+					if (msg.what == touchEventId) {
+						if (lastY != sv.getScrollY()) {
+							handler.sendMessageDelayed(handler.obtainMessage(
+									touchEventId, sv), 5);
+							lastY = sv.getScrollY();
+							header.getLocationOnScreen(location);
+							sticky_header.getLocationOnScreen(location2);
+							if (location[1] <= location2[1]) {
+								sticky_header.setVisibility(View.VISIBLE);
+							} else {
+								sticky_header.setVisibility(View.GONE);
+							}
+						}
+					}
+				}
+			};
+
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_MOVE) {
+					handler.sendMessageDelayed(handler.obtainMessage(
+							touchEventId, v), 5);
+				}
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					handler.sendMessageDelayed(handler.obtainMessage(
+							touchEventId, v), 5);
+				}
+				return false;
+			}
+		});
+
 	}
 
 	private void initViews() {
@@ -177,6 +282,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		avatar = (RoundAngleImageView) findViewById(R.id.wb_detail_user_img);
 		avatar.setOnClickListener(this);
 		user_name = (TextView) findViewById(R.id.wb_detail_u_name);
+		user_name.setOnClickListener(this);
 		from = (TextView) findViewById(R.id.wb_detail_from);
 		time = (TextView) findViewById(R.id.wb_detail_time);
 		content = (TextView) findViewById(R.id.wb_detail_text);
@@ -186,6 +292,7 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		repost_pic = (ImageView) findViewById(R.id.re_detail_wb_pic1);
 		repost_pic.setOnClickListener(this);
 		re_user_name = (TextView) findViewById(R.id.re_detail_user_name);
+		re_user_name.setOnClickListener(this);
 		re_content = (TextView) findViewById(R.id.re_detail_wb_text);
 		like_count = (TextView) findViewById(R.id.wb_detail_like_count);
 		repost_count = (TextView) findViewById(R.id.wb_detail_repost_count);
@@ -196,12 +303,29 @@ public class WeiboDetailActivity extends FragmentActivity implements
 		send.setOnClickListener(this);
 		like = (ImageView) findViewById(R.id.wb_detail_like);
 		like.setOnClickListener(this);
-		comments = (ImageView) findViewById(R.id.wb_detail_comment_list);
-		comments.setOnClickListener(this);
+		comment = (ImageView) findViewById(R.id.wb_detail_comment_list);
+		comment.setOnClickListener(this);
 		repost_another = (ImageView) findViewById(R.id.wb_detail_repost_another);
 		repost_another.setOnClickListener(this);
 		comment_content = (EditText) findViewById(R.id.wb_detail_edit_comment);
-		bottom = (RelativeLayout) findViewById(R.id.wb_detail_bottom_layout);
+		bottom = (View) findViewById(R.id.wb_detail_bottom_layout_view);
+		header = (LinearLayout) findViewById(R.id.wb_detail_comment_desc);
+		sticky_header = (LinearLayout) findViewById(R.id.wb_detail_comment_desc_header);
+		sv = (ScrollView) findViewById(R.id.wb_detail_scroll);
+		commentList = (LinearLayoutForListView) findViewById(R.id.wb_detail_comment_list_view);
+		adapter = new CommentAdapter(this, this.getLayoutInflater());
+		commentList.setAdapter(adapter);
+		loadingComment = (LinearLayout) findViewById(R.id.wb_detail_comment_loading);
+		loadImage = (ImageView) findViewById(R.id.wb_detail_comment_load_img);
+		RotateAnimation rotateAnimation = new RotateAnimation(0.0f, +360.0f,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		rotateAnimation.setRepeatCount(Animation.INFINITE);
+		rotateAnimation.setInterpolator(this, interpolator.linear);
+		rotateAnimation.setDuration(500);
+		loadImage.startAnimation(rotateAnimation);
+		loadText = (TextView) findViewById(R.id.wb_detail_comment_load_text);
+
 	}
 
 	private void initContents() {
@@ -264,9 +388,13 @@ public class WeiboDetailActivity extends FragmentActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		this.getSupportFragmentManager().beginTransaction().replace(
-				R.id.wb_detail_comment_layout, newCommentListFragment())
-				.commit();
+		/*
+		 * this.getSupportFragmentManager().beginTransaction().replace(
+		 * R.id.wb_detail_comment_layout, newCommentListFragment()) .commit();
+		 */
+		if (totalCount == 0)
+			getComments();
+
 	}
 
 	@Override
@@ -475,9 +603,11 @@ public class WeiboDetailActivity extends FragmentActivity implements
 			}
 			break;
 		case R.id.wb_detail_comment_list:
-			this.getSupportFragmentManager().beginTransaction().replace(
-					R.id.wb_detail_comment_layout, newCommentListFragment())
-					.commit();
+			/*
+			 * this.getSupportFragmentManager().beginTransaction().replace(
+			 * R.id.wb_detail_comment_layout, newCommentListFragment())
+			 * .commit();
+			 */
 			break;
 		case R.id.wb_detail_repost_another:
 			Intent in_r = new Intent(WeiboDetailActivity.this,
@@ -524,6 +654,46 @@ public class WeiboDetailActivity extends FragmentActivity implements
 			} else
 				mHandler.sendEmptyMessage(0);
 			break;
+		case R.id.wb_detail_u_name:
+			if (Utility.isConnected(this)) {
+
+				new Thread() {
+					@Override
+					public void run() {
+						Gson gson = new Gson();
+						HashMap<String, String> map = new HashMap<String, String>();
+						map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("act", "show");
+						map.put("user_id", weibo.getUid());
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret", account
+								.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						if (json != null && !"".equals(json)) {
+							UserInfoBean userinfo = gson.fromJson(json,
+									UserInfoBean.class);
+							if (userinfo != null) {
+								Intent in_o = new Intent(
+										WeiboDetailActivity.this,
+										OtherInfoActivity.class);
+								in_o.putExtra("userinfo", userinfo.getUid());
+								in_o.putExtra("following",
+										userinfo.follow_state.getFollowing()
+												+ "");
+								startActivity(in_o);
+							}
+						}
+					}
+				}.start();
+			} else
+				mHandler.sendEmptyMessage(0);
+			break;
+		case R.id.re_detail_user_name:
+			break;
 		case R.id.wb_detail_pic1:
 			Intent in_browse = new Intent(WeiboDetailActivity.this,
 					BrowseImageActivity.class);
@@ -544,6 +714,49 @@ public class WeiboDetailActivity extends FragmentActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		FaceDialog.release();
+	}
+
+	private void getComments() {
+		// TODO Auto-generated method stub
+		if (Utility.isConnected(this)) {
+			// 待添加超时判断
+			new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "WeiboStatuses");
+					map.put("act", "comments");
+					map.put("id", weibo.getFeed_id());
+					if (!since_id.equals(""))
+						map.put("since_id", since_id);
+					map.put("count", "10");
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					Log.d("comment list content", json);
+					if (json != null && !"".equals(json)
+							&& json.startsWith("[")) {
+						Type listType = new TypeToken<LinkedList<CommentBean>>() {
+						}.getType();
+						comments = gson.fromJson(json, listType);
+						if (comments != null && comments.size() > 0) {
+							Log.d("wj", "comment list count" + comments.size());
+							since_id = comments.get(0).getComment_id();
+							totalCount += comments.size();
+						}
+						mHandler.sendEmptyMessage(13);
+					}
+				}
+			}.start();
+		} else {
+			mHandler.sendEmptyMessage(11);
+		}
+
 	}
 
 	private CommentListFragment newCommentListFragment() {
