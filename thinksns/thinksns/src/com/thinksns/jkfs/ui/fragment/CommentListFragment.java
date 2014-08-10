@@ -139,7 +139,7 @@ public class CommentListFragment extends BaseListFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		listView.setListener(this);
-		adapter = new CommentAdapter(getActivity(), mInflater, listView);
+		adapter = new CommentAdapter(getActivity(), mInflater);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 

@@ -7,7 +7,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.CommentBean;
-import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.RoundAngleImageView;
 
 import android.app.Activity;
@@ -28,9 +27,8 @@ public class CommentAdapter extends BaseAdapter {
 	LinkedList<CommentBean> cList = new LinkedList<CommentBean>();
 
 	Activity ctx;
-	PullToRefreshListView lv;
 	LayoutInflater in;
-	
+
 	private DisplayImageOptions options;
 
 	public void append(List<CommentBean> lists) {
@@ -56,12 +54,10 @@ public class CommentAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
-	public CommentAdapter(Activity context, LayoutInflater inflater,
-			PullToRefreshListView listView) {
+	public CommentAdapter(Activity context, LayoutInflater inflater) {
 		ctx = context;
 		in = inflater;
-		lv = listView;
-		
+
 		options = new DisplayImageOptions.Builder().showStubImage(
 				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
 	}
@@ -109,8 +105,9 @@ public class CommentAdapter extends BaseAdapter {
 		Log.d("comment.getUser().getAvatar_small()", comment.getUser_info()
 				.getAvatar_small());
 
-		ImageLoader.getInstance().displayImage(comment.getUser_info().getAvatar_small(),
-				holder.avatar, options);
+		ImageLoader.getInstance().displayImage(
+				comment.getUser_info().getAvatar_small(), holder.avatar,
+				options);
 		holder.userName.setText(comment.getUser_info().getUname());
 		holder.content.setText(comment.getListViewSpannableString());
 		holder.time.setText(comment.getCtime());
