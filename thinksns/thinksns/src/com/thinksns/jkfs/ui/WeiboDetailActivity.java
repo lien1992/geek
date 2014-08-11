@@ -109,6 +109,8 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 	private LinearLayout loadingComment;
 	private ImageView loadImage;
 	private TextView loadText;
+	private LinearLayout loadMore;
+	private TextView loadMoreText;
 
 	private DisplayImageOptions options;
 
@@ -162,7 +164,7 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				break;
 			case 8:
 				Toast.makeText(WeiboDetailActivity.this, "出现意外，赞失败了:(",
-						Toast.LENGTH_SHORT).show();
+						Toast.LENGTH_SHORT).show(); // 存bug，待修复
 				break;
 			case 9:
 				int dislike = Integer.parseInt(like_count.getText().toString());
@@ -177,16 +179,24 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				if (weibo.getComment_count() > 0) {
 					loadImage.setVisibility(View.GONE);
 					loadText.setText("网络未连接，评论列表加载失败:(");
-				} else
-					loadingComment.setVisibility(View.GONE);
+				} else if (weibo.getComment_count() == 0) {
+					loadImage.setVisibility(View.GONE);
+					loadText.setText("该微博还没有评论哦~");
+				}
 				break;
 			case 12:
 				if (comments == null || comments.size() == 0) {
-					Toast.makeText(WeiboDetailActivity.this, "没有新评论",
-							Toast.LENGTH_SHORT).show();
+					loadMoreText.setText("没有更多评论了 :)");
+					loadMore.setClickable(false);
 					break;
 				}
 				adapter.append(comments);
+				commentList.bindLinearLayout();
+				if (comments.size() != 10) {
+					loadMoreText.setText("没有更多评论了 :)");
+					loadMore.setClickable(false);
+				} else
+					loadMoreText.setText("加载更多");
 				comment_all.addAll(comments);
 				currentPage = totalCount / 10 + 1;
 				break;
@@ -200,7 +210,7 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				loadingComment.setVisibility(View.GONE);
 				commentList.setVisibility(View.VISIBLE);
 				if (totalCount == 10) {
-					// listView.setLoadMoreEnable(true); 待修复：底部加载更多
+					loadMore.setVisibility(View.VISIBLE);
 				}
 				adapter.insertToHead(comments);
 				commentList.bindLinearLayout();
@@ -325,6 +335,9 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 		rotateAnimation.setDuration(500);
 		loadImage.startAnimation(rotateAnimation);
 		loadText = (TextView) findViewById(R.id.wb_detail_comment_load_text);
+		loadMore = (LinearLayout) findViewById(R.id.wb_detail_comment_load_more);
+		loadMore.setOnClickListener(this);
+		loadMoreText = (TextView) findViewById(R.id.wb_detail_comment_load_more_text);
 
 	}
 
@@ -500,7 +513,6 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 		case R.id.wb_detail_emotions:
 			Utility.hideSoftInput(this);
 			FaceDialog.showFaceDialog(this, bottom, bottom.getHeight(), this);
-
 			break;
 		case R.id.wb_detail_comment_send:
 			if (comment_content.getText().toString().trim().length() == 0) {
@@ -608,6 +620,9 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 			 * R.id.wb_detail_comment_layout, newCommentListFragment())
 			 * .commit();
 			 */
+			break;
+		case R.id.wb_detail_comment_load_more:
+			loadMoreComments();
 			break;
 		case R.id.wb_detail_repost_another:
 			Intent in_r = new Intent(WeiboDetailActivity.this,
@@ -757,6 +772,42 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 			mHandler.sendEmptyMessage(11);
 		}
 
+	}
+
+	public void loadMoreComments() {
+		// TODO Auto-generated method stub
+		loadMoreText.setText("正在加载，请稍候..");
+		if (Utility.isConnected(this)) {
+			// 待添加超时判断
+			new Thread() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					Gson gson = new Gson();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("app", "api");
+					map.put("mod", "WeiboStatuses");
+					map.put("act", "comments");
+					map.put("id", weibo.getFeed_id());
+					map.put("count", "10");
+					map.put("page", currentPage + "");
+					map.put("oauth_token", account.getOauth_token());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
+					String json = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					Type listType = new TypeToken<LinkedList<CommentBean>>() {
+					}.getType();
+					comments = gson.fromJson(json, listType);
+					if (comments != null && comments.size() > 0) {
+						totalCount += comments.size();
+					}
+					mHandler.sendEmptyMessage(12);
+				}
+			}.start();
+		} else {
+			loadMoreText.setText("网络未连接，单击重试");
+		}
 	}
 
 	private CommentListFragment newCommentListFragment() {

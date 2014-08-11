@@ -316,6 +316,35 @@
                 android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/wb_detail_comment_load_more"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wb_detail_comment_list_view"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/grey" />
+
+                <TextView
+                    android:id="@+id/wb_detail_comment_load_more_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:layout_marginTop="5dip"
+                    android:text="加载更多"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/wb_detail_comment_loading"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -338,9 +367,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
                     android:layout_marginTop="5dip"
-                    android:text="评论加载中,请稍候.."
                     android:textColor="@color/grey"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
@@ -402,7 +430,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/wb_detail_header"
-        android:background="@color/green"
+        android:background="@color/common_white"
         android:orientation="horizontal"
         android:visibility="gone" >
 
@@ -413,7 +441,7 @@
             android:paddingLeft="12dp"
             android:paddingRight="8dp"
             android:text="评论列表"
-            android:textColor="@color/common_white"
+            android:textColor="@color/green"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -423,7 +451,7 @@
             android:layout_height="1dp"
             android:layout_gravity="center"
             android:layout_marginRight="12dp"
-            android:background="@color/common_white" />
+            android:background="@color/green" />
     </LinearLayout>
 
 </RelativeLayout>
