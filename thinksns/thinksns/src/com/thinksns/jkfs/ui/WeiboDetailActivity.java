@@ -209,11 +209,14 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				}
 				loadingComment.setVisibility(View.GONE);
 				commentList.setVisibility(View.VISIBLE);
-				if (totalCount == 10) {
-					loadMore.setVisibility(View.VISIBLE);
-				}
 				adapter.insertToHead(comments);
 				commentList.bindLinearLayout();
+				if (comments.size() < 10) {
+					loadMoreText.setText("The End");
+					loadMore.setClickable(false);
+				} else if (comments.size() == 10) {
+					loadMoreText.setText("加载更多");
+				}
 				for (int i = comments.size() - 1; i >= 0; --i) {
 					comment_all.addFirst(comments.get(i));
 				}

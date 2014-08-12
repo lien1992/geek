@@ -33,7 +33,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="用户名"
-                android:textColor="@color/black"
+                android:textColor="#0066ff"
                 android:textSize="17sp" />
 
             <TextView
@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="被转发用户名"
-                android:textColor="#383838"
+                android:textColor="#0066ff"
                 android:textSize="15sp" />
 
             <TextView

@@ -8,12 +8,21 @@
             android:summary="不显示微博、头像等图片，更省流量:)"
             android:title="无图模式" >
         </CheckBoxPreference>
+
+        <ListPreference
+            android:dialogTitle="请选择"
+            android:entries="@array/image_quality_name"
+            android:entryValues="@array/image_quality_value"
+            android:key="update_image_quality"
+            android:negativeButtonText="取消"
+            android:summary="选择微博中上传的图片质量"
+            android:title="图片质量" />
     </PreferenceCategory>
     <PreferenceCategory android:title="缓存" >
         <Preference
             android:key="clear_cache"
-            android:title="清除缓存"
-            android:summary="点击将清除缓存的微博等信息" >
+            android:summary="点击将清除缓存的微博等信息"
+            android:title="清除缓存" >
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="关于" >

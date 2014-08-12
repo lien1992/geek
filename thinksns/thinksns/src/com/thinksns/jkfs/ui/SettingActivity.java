@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 public class SettingActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener, OnPreferenceClickListener {
 	private CheckBoxPreference mCheckPreference;
+	private ListPreference imageQuality;
 	private Preference aboutUs;
 	private Preference clearCache;
 	private ThinkSNSApplication application;
@@ -40,8 +42,10 @@ public class SettingActivity extends PreferenceActivity implements
 
 	private void initPreferences() {
 		mCheckPreference = (CheckBoxPreference) findPreference(BaseConstant.NO_IMAGE_MODE_KEY);
+		imageQuality = (ListPreference) findPreference(BaseConstant.IMAGE_QUALITY_KEY);
 		aboutUs = findPreference(BaseConstant.ABOUT_US_KEY);
 		clearCache = findPreference(BaseConstant.CLEAR_CACHE_KEY);
+
 	}
 
 	protected void onResume() {
