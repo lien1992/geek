@@ -104,7 +104,7 @@ public class WeiboListFragment extends BaseListFragment {
 				if (!listView.getLoadMoreStatus() && totalCount == 20) {
 					listView.setLoadMoreEnable(true);
 				}
-				adapter.insertToHead(weibos);
+				adapter.update(weibos);
 				try {
 					if (application.isClearCache()) {
 						loadImage.setAnimation(null);
@@ -237,6 +237,8 @@ public class WeiboListFragment extends BaseListFragment {
 				} else {
 					Intent intent = new Intent(getActivity(),
 							WeiboDetailActivity.class);
+					Log.d("wj", "click position:" + (position - 1)
+							+ ", weibo_all size:" + weibo_all.size());
 					intent
 							.putExtra("weibo_detail", weibo_all
 									.get(position - 1));
@@ -329,9 +331,9 @@ public class WeiboListFragment extends BaseListFragment {
 			if (weibos_cache != null && weibos_cache.size() > 0) {
 				Log.d("wj", "weibos_cache.size():" + weibos_cache.size());
 				for (int i = 0; i < weibos_cache.size(); ++i) {
-//					Log.d("wj", "attach.size(): "
-//							+ weibos_cache.get(i).getAttach().size()
-//							+ " weibo.type:" + weibos_cache.get(i).getType());
+					// Log.d("wj", "attach.size(): "
+					// + weibos_cache.get(i).getAttach().size()
+					// + " weibo.type:" + weibos_cache.get(i).getType());
 					WeiboBean wb = weibos_cache.get(i);
 					if (wb.getType().equals("repost")) {
 						Log.d("wj", "weibo");
@@ -342,12 +344,12 @@ public class WeiboListFragment extends BaseListFragment {
 					}
 
 				}
-//				Log.d("wj", "weibo attach table size:"
-//						+ db.findAll(Selector.from(WeiboAttachBean.class))
-//								.size());
-//				Log.d("wj", "weibo repost table size:"
-//						+ db.findAll(Selector.from(WeiboRepostBean.class))
-//								.size());
+				// Log.d("wj", "weibo attach table size:"
+				// + db.findAll(Selector.from(WeiboAttachBean.class))
+				// .size());
+				// Log.d("wj", "weibo repost table size:"
+				// + db.findAll(Selector.from(WeiboRepostBean.class))
+				// .size());
 				adapter.insertToHead(weibos_cache);
 				loadImage.setAnimation(null);
 				loadImage.setVisibility(View.GONE);

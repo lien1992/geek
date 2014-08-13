@@ -95,7 +95,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="用户名"
-                            android:textColor="#0066ff"
+                            android:textColor="@color/green"
                             android:textSize="18sp" />
 
                         <LinearLayout
@@ -184,7 +184,7 @@
                         android:id="@+id/re_detail_user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#0066ff"
+                        android:textColor="@color/green"
                         android:textSize="16sp" />
 
                     <TextView
