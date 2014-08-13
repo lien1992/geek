@@ -101,12 +101,12 @@ public class FaceDialog {
 			});
 			popupWindow.setContentView(view);
 		}
-		WindowManager wm = (WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE);
-		int height = wm.getDefaultDisplay().getHeight();
-		Log.d("screen height", height + "");// 888
-		Log.d("y height", y + "");// 75
-		popupWindow.showAtLocation(parent, Gravity.TOP, 0, height - y - 160);
+		/*
+		 * WindowManager wm = (WindowManager) context
+		 * .getSystemService(Context.WINDOW_SERVICE); int height =
+		 * wm.getDefaultDisplay().getHeight(); Log.d("screen height", height +
+		 * "");// 888 Log.d("y height", y + "");// 75
+		 */popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, y + 150);
 	}
 
 	public static void close() {

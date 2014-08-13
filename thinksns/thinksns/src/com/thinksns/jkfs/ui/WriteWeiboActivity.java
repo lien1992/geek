@@ -141,8 +141,10 @@ public class WriteWeiboActivity extends BaseActivity implements
 				int number = s.length();
 				count.setText(String.valueOf(number));
 				selectionStart = content.getSelectionStart();
-				selectionEnd = count.getSelectionEnd();
+				selectionEnd = content.getSelectionEnd();
 				if (temp.length() > 140) {
+					Toast.makeText(WriteWeiboActivity.this, "字数超限，最多输入140字 :)",
+							Toast.LENGTH_SHORT).show();
 					s.delete(selectionStart - 1, selectionEnd);
 					int tempSelection = selectionEnd;
 					content.setText(s);
@@ -220,9 +222,9 @@ public class WriteWeiboActivity extends BaseActivity implements
 					e.printStackTrace();
 				}
 				break;
+			}
 		}
 	}
-}
 
 	@Override
 	public void onClick(View v) {

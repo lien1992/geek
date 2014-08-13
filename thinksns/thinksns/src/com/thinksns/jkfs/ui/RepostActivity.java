@@ -142,9 +142,11 @@ public class RepostActivity extends BaseActivity implements OnClickListener,
 				int number = s.length();
 				count.setText(String.valueOf(number));
 				selectionStart = content.getSelectionStart();
-				selectionEnd = count.getSelectionEnd();
+				selectionEnd = content.getSelectionEnd();
 				if (temp.length() > 140) {
-					s.delete(selectionStart - 1, selectionEnd); // 字数超过140，跳转到转发出bug
+					Toast.makeText(RepostActivity.this, "字数超限，最多输入140字 :)",
+							Toast.LENGTH_SHORT).show();
+					s.delete(selectionStart - 1, selectionEnd);
 					int tempSelection = selectionEnd;
 					content.setText(s);
 					content.setSelection(tempSelection);
@@ -159,7 +161,14 @@ public class RepostActivity extends BaseActivity implements OnClickListener,
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case 1000:
-				// AT..
+				// at用户
+				String name = intent.getStringExtra("at_name");
+				String origin = content.getText().toString();
+				int index = content.getSelectionStart();
+				StringBuilder stringBuilder = new StringBuilder(origin);
+				stringBuilder.insert(index, name);
+				content.setText(stringBuilder.toString());
+				content.setSelection(index + name.length());
 				break;
 			}
 		}
@@ -238,8 +247,8 @@ public class RepostActivity extends BaseActivity implements OnClickListener,
 			}
 			break;
 		case R.id.write_weibo_at:
-			// startActivityForResult(new Intent(WriteWeiboActivity.this,
-			// AtUserActivity.class), 1000);
+			startActivityForResult(new Intent(RepostActivity.this,
+					AtUserActivity.class), 1000);
 			break;
 		case R.id.write_weibo_add_topic:
 			String origin = content.getText().toString();
