@@ -25,6 +25,7 @@
 
                 <ImageView
                     android:id="@+id/m_head"
+                     android:background="@drawable/ic_launcher" 
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent" />
                 <!-- image corner -->
