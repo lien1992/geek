@@ -60,7 +60,7 @@ public class ArcLayout extends ViewGroup {
 
     private float mToDegrees = DEFAULT_TO_DEGREES;
 
-    private static final int MIN_RADIUS = 150;
+    private static final int MIN_RADIUS = 180;
 
     /* the distance between the layout's center and any child's center */
     private int mRadius;

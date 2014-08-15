@@ -53,7 +53,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
-                        android:textSize="15dp" />
+                        android:textColor="@color/green"
+                        android:textSize="17dp" />
 
                     <ImageView
                         android:id="@+id/m_sex"
@@ -67,6 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
+                    android:textColor="@color/grey"
                     android:textSize="15dp" />
             </LinearLayout>
 
@@ -105,7 +107,7 @@
                     android:drawableBottom="@drawable/weibowds"
                     android:padding="2dp"
                     android:text="@string/myweibonum"
-                    android:textColor="@color/common_blue"
+                    android:textColor="@color/green"
                     android:textSize="16sp" />
 
                 <Button
@@ -117,7 +119,7 @@
                     android:drawableBottom="@drawable/followwds"
                     android:padding="2dp"
                     android:text="@string/myfollownum"
-                    android:textColor="@color/common_blue"
+                    android:textColor="@color/green"
                     android:textSize="16sp" />
 
                 <Button
@@ -129,7 +131,7 @@
                     android:drawableBottom="@drawable/followerswds"
                     android:padding="2dp"
                     android:text="@string/followmenum"
-                    android:textColor="@color/common_blue"
+                    android:textColor="@color/green"
                     android:textSize="16sp" />
             </LinearLayout>
 

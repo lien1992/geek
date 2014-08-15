@@ -95,7 +95,7 @@ public class CollectionFragment extends BaseListFragment {
 				if (!listView.getLoadMoreStatus() && totalCount == 10) {
 					listView.setLoadMoreEnable(true);
 				}
-				adapter.insertToHead(weibos);
+				adapter.update(weibos);
 
 				try {
 					if (application.isClearCache()) {

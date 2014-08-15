@@ -15,6 +15,7 @@
         app:roundWidth="5dp" />
 
     <RelativeLayout
+        android:id="@+id/wb_cmt_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="12dp"
@@ -26,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="用户名"
-            android:textColor="@color/black"
+            android:textColor="@color/green"
             android:textSize="15sp" />
 
         <TextView
@@ -50,5 +51,15 @@
             android:textColor="@color/grey"
             android:textSize="12sp" />
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/wb_cmt_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/lv_divider" />
 
 </RelativeLayout>

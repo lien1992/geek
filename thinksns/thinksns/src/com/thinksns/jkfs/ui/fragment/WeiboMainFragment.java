@@ -11,7 +11,6 @@ import com.thinksns.jkfs.ui.WriteWeiboActivity;
 import com.thinksns.jkfs.ui.adapter.MainFragmentPagerAdapter;
 import com.thinksns.jkfs.ui.adapter.MainFragmentPagerAdapter.SwitchGroupListener;
 import com.thinksns.jkfs.ui.view.ArcMenu;
-import com.thinksns.jkfs.ui.view.SatelliteMenuItem;
 import com.thinksns.jkfs.ui.view.UnderlinePageIndicator;
 import com.thinksns.jkfs.util.WeiboCheckHelper;
 
@@ -120,6 +119,23 @@ public class WeiboMainFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				showWindow(v);
+			}
+		});
+		weiboList.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				pager.setCurrentItem(0);
+			}
+		});
+
+		aboutMe.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				pager.setCurrentItem(1);
 			}
 		});
 	}
