@@ -6,8 +6,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="16" />
+        android:minSdkVersion="16"
+        android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".base.ThinkSNSApplication"
+        android:name="com.thinksns.jkfs.base.ThinkSNSApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -45,13 +45,13 @@
             android:name="com.thinksns.jkfs.ui.RegistActivity"
             android:label="@string/title_activity_regist" >
         </activity>
-        <activity android:name=".ui.WriteWeiboActivity" >
+        <activity android:name="com.thinksns.jkfs.ui.WriteWeiboActivity" >
         </activity>
         <activity
-            android:name=".ui.WeiboDetailActivity"
+            android:name="com.thinksns.jkfs.ui.WeiboDetailActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>
-        <activity android:name=".ui.RepostActivity" >
+        <activity android:name="com.thinksns.jkfs.ui.RepostActivity" >
         </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
@@ -70,7 +70,7 @@
                 <data android:scheme="tencent101073421" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.OtherInfoActivity" >
+        <activity android:name="com.thinksns.jkfs.ui.OtherInfoActivity" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -79,31 +79,35 @@
                 <data android:scheme="com.thinksns.jkfs" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.UserInfoActivity" >
+        <activity android:name="com.thinksns.jkfs.ui.UserInfoActivity" >
         </activity>
-        <activity android:name=".ui.ChangeUserInfo" >
+        <activity android:name="com.thinksns.jkfs.ui.ChangeUserInfo" >
         </activity>
-        <activity android:name=".ui.UserInfoWeiboList" >
+        <activity android:name="com.thinksns.jkfs.ui.UserInfoWeiboList" >
         </activity>
-        <activity android:name=".ui.UserInfoFanList" >
+        <activity android:name="com.thinksns.jkfs.ui.UserInfoFanList" >
         </activity>
-        <activity android:name=".ui.UserInfoFollowList" >
+        <activity android:name="com.thinksns.jkfs.ui.UserInfoFollowList" >
         </activity>
-        <activity android:name=".ui.AtUserActivity" >
+        <activity android:name="com.thinksns.jkfs.ui.AtUserActivity" >
         </activity>
-        <activity android:name=".ui.SettingActivity" >
+        <activity android:name="com.thinksns.jkfs.ui.SettingActivity" >
         </activity>
-        <activity android:name=".ui.AboutUsActivity" >
+        <activity android:name="com.thinksns.jkfs.ui.AboutUsActivity" >
         </activity>
-        <activity android:name=".ui.ChatActivity" />
-        <activity android:name=".ui.SearchActivity" />
-        <activity android:name=".ui.BrowseImageActivity" />
-        <activity android:name=".ui.WeiboTopicActivity" />
+        <activity android:name="com.thinksns.jkfs.ui.ChatActivity" />
+        <activity android:name="com.thinksns.jkfs.ui.SearchActivity" />
+        <activity android:name="com.thinksns.jkfs.ui.BrowseImageActivity" />
+        <activity android:name="com.thinksns.jkfs.ui.WeiboTopicActivity" />
+        <activity
+            android:name="com.thinksns.jkfs.ui.DraftActivity"
+            android:label="@string/title_activity_draft" >
+        </activity>
 
-        <service android:name=".util.GetMsgService" />
+        <service android:name="com.thinksns.jkfs.util.GetMsgService" />
 
         <receiver
-            android:name=".ui.MainFragmentActivity$NewMsgReceiver"
+            android:name="com.thinksns.jkfs.ui.MainFragmentActivity$NewMsgReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.thinksns.jkfs.unread_msg" />

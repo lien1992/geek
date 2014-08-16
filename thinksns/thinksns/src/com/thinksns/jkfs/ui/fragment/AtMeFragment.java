@@ -87,7 +87,7 @@ public class AtMeFragment extends BaseListFragment {
 				if (!listView.getLoadMoreStatus() && at_totalCount == 10) {
 					listView.setLoadMoreEnable(true);
 				}
-				at_adapter.insertToHead(at_weibos);
+				at_adapter.update(at_weibos);
 
 				try {
 					if (application.isClearCache()) {

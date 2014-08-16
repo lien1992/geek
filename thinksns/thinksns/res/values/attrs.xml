@@ -123,21 +123,23 @@
         <attr name="satelliteDistance" format="dimension" />
         <attr name="mainImage" format="reference" />
     </declare-styleable>
-    
+
     <attr name="fromDegrees" format="float|reference" />
     <attr name="toDegrees" format="float|reference" />
     <attr name="childSize" format="dimension|reference" />
 
-	<declare-styleable name="ArcLayout">
-        <attr name="fromDegrees"/>
-        <attr name="toDegrees"/>
-        <attr name="childSize"/>
-	</declare-styleable>
-
-    <declare-styleable name="ArcMenu">
-        <attr name="fromDegrees"/>
-        <attr name="toDegrees"/>
-        <attr name="childSize"/>
+    <declare-styleable name="ArcLayout">
+        <attr name="fromDegrees" />
+        <attr name="toDegrees" />
+        <attr name="childSize" />
     </declare-styleable>
-   
+    <declare-styleable name="ArcMenu">
+        <attr name="fromDegrees" />
+        <attr name="toDegrees" />
+        <attr name="childSize" />
+    </declare-styleable>
+    <declare-styleable name="ShimmerView">
+        <attr name="reflectionColor" format="color" />
+    </declare-styleable>
+
 </resources>
