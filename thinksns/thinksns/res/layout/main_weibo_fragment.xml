@@ -112,7 +112,23 @@
                 android:translationY="50dp"
                 app:childSize="40dp"
                 app:fromDegrees="-90"
-                app:toDegrees="0" />
+                app:toDegrees="0" >
+            </com.thinksns.jkfs.ui.view.ArcMenu>
+
+            <TextView
+                android:id="@+id/draft_box_notice_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:layout_marginBottom="30dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/textview_style"
+                android:clickable="true"
+                android:padding="5dp"
+                android:text="草稿箱(0)"
+                android:textColor="@color/common_white"
+                android:textSize="17sp"
+                android:visibility="gone" />
         </FrameLayout>
     </LinearLayout>
 

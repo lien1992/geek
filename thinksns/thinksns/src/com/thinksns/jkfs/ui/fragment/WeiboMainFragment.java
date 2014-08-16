@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.bean.DraftBean;
+import com.thinksns.jkfs.ui.DraftActivity;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.SearchActivity;
 import com.thinksns.jkfs.ui.WriteWeiboActivity;
@@ -31,6 +36,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -55,12 +61,15 @@ public class WeiboMainFragment extends Fragment {
 	private ViewPager pager;
 	private UnderlinePageIndicator indicator;
 	private MainFragmentPagerAdapter adapter;
-	private View view;
+	private FrameLayout view;
 	private LayoutInflater in;
 	private TextView weiboList, aboutMe;
+	private TextView draft;
 	private ImageView navi;
 	private ArcMenu menu;
 	private SwitchGroupListener switchListener;
+
+	private DbUtils db;
 
 	private static final int[] ITEM_DRAWABLES = {
 			R.drawable.circle_ico_green_1_w, R.drawable.circle_ico_green_check,
@@ -76,9 +85,10 @@ public class WeiboMainFragment extends Fragment {
 		Log.d(TAG, "onCreateView");
 		super.onCreateView(inflater, container, savedInstanceState);
 		in = inflater;
-		view = in.inflate(R.layout.main_weibo_fragment, null);
+		view = (FrameLayout) in.inflate(R.layout.main_weibo_fragment, null);
 		weiboList = (TextView) view.findViewById(R.id.tab_main_weibo_fragment);
 		aboutMe = (TextView) view.findViewById(R.id.tab_about_me_fragment);
+		draft = (TextView) view.findViewById(R.id.draft_box_notice_txt);
 		navi = (ImageView) view.findViewById(R.id.app_navi);
 		group = (TextView) view.findViewById(R.id.weibo_main_group);
 		indicator = (UnderlinePageIndicator) view
@@ -136,6 +146,31 @@ public class WeiboMainFragment extends Fragment {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				pager.setCurrentItem(1);
+			}
+		});
+
+		db = DbUtils.create(getActivity(), "thinksns2.db");
+		db.configDebug(true);
+		try {
+			List<DraftBean> drafts = db.findAll(Selector.from(DraftBean.class));
+			if (drafts != null) {
+				draft.setText("草稿箱(" + drafts.size() + ")");
+				draft.setVisibility(View.VISIBLE);
+			} else {
+				draft.setVisibility(View.GONE);
+			}
+
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		draft.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(getActivity(), DraftActivity.class);
+				getActivity().startActivity(intent);
 			}
 		});
 	}
@@ -196,6 +231,7 @@ public class WeiboMainFragment extends Fragment {
 				aboutMe.setTextColor(getResources().getColor(R.color.grey));
 				group.setVisibility(View.VISIBLE);
 				menu.setVisibility(View.VISIBLE);
+				draft.setVisibility(View.VISIBLE);
 				((MainFragmentActivity) getActivity()).getSlidingMenu()
 						.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 			} else if (arg == 1) {
@@ -203,6 +239,7 @@ public class WeiboMainFragment extends Fragment {
 				weiboList.setTextColor(getResources().getColor(R.color.grey));
 				group.setVisibility(View.GONE);
 				menu.setVisibility(View.GONE);
+				draft.setVisibility(View.GONE);
 				((MainFragmentActivity) getActivity()).getSlidingMenu()
 						.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 			}

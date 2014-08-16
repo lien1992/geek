@@ -5,11 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import com.google.gson.Gson;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.exception.DbException;
 
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.DraftBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.util.FaceDialog;
 import com.thinksns.jkfs.util.Utility;
@@ -71,6 +74,8 @@ public class WriteWeiboActivity extends BaseActivity implements
 	private Uri imageFileUri;
 	private String picPath = "";
 
+	private DbUtils db;
+
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -100,7 +105,16 @@ public class WriteWeiboActivity extends BaseActivity implements
 		setContentView(R.layout.activity_writeweibo);
 		application = (ThinkSNSApplication) getApplicationContext();
 		account = application.getAccount(this);
+		Intent intent = getIntent();
+		String draft = intent.getStringExtra("draft");
+
 		initViews();
+
+		if (!TextUtils.isEmpty(draft))
+			content.setText(draft);
+
+		db = DbUtils.create(this, "thinksns2.db");
+		db.configDebug(true);
 
 	}
 
@@ -410,7 +424,7 @@ public class WriteWeiboActivity extends BaseActivity implements
 				AlertDialog.Builder builder = new Builder(this);
 				builder.setTitle("提示");
 				builder.setMessage("取消发送微博？");
-				builder.setPositiveButton("确定",
+				builder.setPositiveButton("取消发送",
 						new DialogInterface.OnClickListener() {
 
 							public void onClick(DialogInterface dialog,
@@ -419,11 +433,20 @@ public class WriteWeiboActivity extends BaseActivity implements
 								finish();
 							}
 						});
-				builder.setNegativeButton("取消",
+				builder.setNegativeButton("存入草稿箱",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-								dialog.cancel();
+								DraftBean draft = new DraftBean();
+								draft.setContent(content.getText().toString());
+								try {
+									db.save(draft);
+								} catch (DbException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								dialog.dismiss();
+								finish();
 							}
 						});
 				builder.create().show();
