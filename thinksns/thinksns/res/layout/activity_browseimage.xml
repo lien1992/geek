@@ -5,10 +5,10 @@
     android:background="#000"
     android:gravity="center" >
 
-    <ImageView
+    <com.thinksns.jkfs.ui.view.DragImageView
         android:id="@+id/browse_big_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitXY" />
 
 </LinearLayout>
