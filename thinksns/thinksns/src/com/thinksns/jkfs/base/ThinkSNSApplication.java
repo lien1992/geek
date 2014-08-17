@@ -31,8 +31,10 @@ public final class ThinkSNSApplication extends Application {
 	private UserInfoBean user;
 
 	private boolean isNoImageMode;// 无图模式
-	
+
 	private boolean isClearCache;
+
+	private int image_quality;
 
 	@Override
 	public void onCreate() {
@@ -47,15 +49,14 @@ public final class ThinkSNSApplication extends Application {
 				false));
 		File cacheDir = StorageUtils.getCacheDirectory(getApplicationContext());
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-				getApplicationContext())
-				.threadPoolSize(3)
-				.threadPriority(Thread.NORM_PRIORITY - 2)
-				// 设置线程的优先级
+				getApplicationContext()).threadPoolSize(3).threadPriority(
+				Thread.NORM_PRIORITY - 2)
+		// 设置线程的优先级
 				.denyCacheImageMultipleSizesInMemory()
 				// 当同一个Uri获取不同大小的图片，缓存到内存时，只缓存一个。默认会缓存多个不同的大小的相同图片
-				.memoryCache(new LruMemoryCache(2 * 1024 * 1024))
-				.diskCache(new UnlimitedDiscCache(cacheDir))
-				.tasksProcessingOrder(QueueProcessingType.LIFO)// 设置图片下载和显示的工作队列排序
+				.memoryCache(new LruMemoryCache(2 * 1024 * 1024)).diskCache(
+						new UnlimitedDiscCache(cacheDir)).tasksProcessingOrder(
+						QueueProcessingType.LIFO)// 设置图片下载和显示的工作队列排序
 				.writeDebugLogs().build();
 
 		// Initialize ImageLoader with configuration
@@ -174,5 +175,13 @@ public final class ThinkSNSApplication extends Application {
 
 	public boolean isClearCache() {
 		return isClearCache;
+	}
+
+	public void setImage_quality(int image_quality) {
+		this.image_quality = image_quality;
+	}
+
+	public int getImage_quality() {
+		return image_quality;
 	}
 }

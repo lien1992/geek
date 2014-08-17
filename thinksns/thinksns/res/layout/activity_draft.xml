@@ -44,7 +44,8 @@
         android:layout_height="match_parent"
         android:background="@color/common_white"
         android:cacheColorHint="#0000"
-        android:divider="@drawable/lv_divider" >
+        android:divider="@drawable/lv_divider"
+        android:listSelector="@color/green_1" >
     </ListView>
 
 </LinearLayout>

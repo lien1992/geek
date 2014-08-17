@@ -4,14 +4,12 @@
     <string-array name="image_quality_name">
         <item>压缩为25%</item>
         <item>压缩为50%</item>
-        <item>压缩为75%</item>
         <item>原图</item>
     </string-array>
     <string-array name="image_quality_value">
-        <item>0.25</item>
-        <item>0.5</item>
-        <item>0.75</item>
-        <item>1.0</item>
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
     </string-array>
 
 </resources>

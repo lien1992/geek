@@ -8,9 +8,15 @@ import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.bean.DraftBean;
+import com.thinksns.jkfs.constant.BaseConstant;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -29,6 +35,21 @@ public class DraftActivity extends Activity {
 	private List<DraftBean> drafts = new LinkedList<DraftBean>();
 
 	private DbUtils db;
+
+	private Handler mHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 0:
+				adapter.notifyDataSetChanged();
+				Intent in = new Intent();
+				in.setAction(BaseConstant.DRAFT_BROADCAST);
+				DraftActivity.this.sendBroadcast(in);
+				if (drafts.size() == 0)
+					DraftActivity.this.finish();
+				break;
+			}
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,24 +85,53 @@ public class DraftActivity extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
+				int draft_id = drafts.get(arg2).getId();
 				String draft_content = drafts.get(arg2).getContent();
 				Intent intent = new Intent(DraftActivity.this,
 						WriteWeiboActivity.class);
+				intent.putExtra("id", draft_id);
 				intent.putExtra("draft", draft_content);
 				DraftActivity.this.startActivity(intent);
 				finish();
 			}
 		});
-		listView.setOnItemLongClickListener(new OnItemLongClickListener(){
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+					final int arg2, long arg3) {
 				// TODO Auto-generated method stub
-				
-				return false;
+				AlertDialog.Builder builder = new Builder(DraftActivity.this);
+				builder.setTitle("删除");
+				builder.setMessage("确定要删除这条草稿吗？");
+				builder.setPositiveButton("确定",
+						new DialogInterface.OnClickListener() {
+
+							public void onClick(DialogInterface dialog,
+									int which) {
+								try {
+									db.delete(drafts.get(arg2));
+								} catch (DbException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								drafts.remove(arg2);
+								mHandler.sendEmptyMessage(0);
+								dialog.dismiss();
+							}
+						});
+				builder.setNegativeButton("取消",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.cancel();
+							}
+						});
+				builder.create().show();
+
+				return true;
 			}
-			
+
 		});
 
 	}

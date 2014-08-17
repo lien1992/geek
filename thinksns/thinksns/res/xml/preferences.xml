@@ -10,6 +10,7 @@
         </CheckBoxPreference>
 
         <ListPreference
+            android:defaultValue="1"
             android:dialogTitle="请选择"
             android:entries="@array/image_quality_name"
             android:entryValues="@array/image_quality_value"
