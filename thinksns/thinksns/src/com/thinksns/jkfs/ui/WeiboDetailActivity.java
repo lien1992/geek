@@ -150,8 +150,8 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 4:
-				Toast.makeText(WeiboDetailActivity.this, "出现意外，收藏微博失败:(",
-						Toast.LENGTH_SHORT).show();
+/*				Toast.makeText(WeiboDetailActivity.this, "出现意外，收藏微博失败:(",
+						Toast.LENGTH_SHORT).show();*/
 				break;
 			case 5:
 				favorite.setImageDrawable(getResources().getDrawable(
@@ -161,8 +161,8 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 6:
-				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消收藏失败:(",
-						Toast.LENGTH_SHORT).show();
+/*				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消收藏失败:(",
+						Toast.LENGTH_SHORT).show();*/
 				break;
 			case 7:
 				int like_n = Integer.parseInt(like_count.getText().toString());
@@ -172,9 +172,9 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				like.invalidate();
 				break;
 			case 8:
-				Toast.makeText(WeiboDetailActivity.this, "出现意外，赞失败了:(",
+/*				Toast.makeText(WeiboDetailActivity.this, "出现意外，赞失败了:(",
 						Toast.LENGTH_SHORT).show(); // 存bug，待修复
-				break;
+*/				break;
 			case 9:
 				int dislike = Integer.parseInt(like_count.getText().toString());
 				like_count.setText((--dislike) + "");
@@ -183,8 +183,8 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				like.invalidate();
 				break;
 			case 10:
-				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消赞失败了:(",
-						Toast.LENGTH_SHORT).show();
+/*				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消赞失败了:(",
+						Toast.LENGTH_SHORT).show();*/
 				break;
 			case 11:
 				loadImage.setAnimation(null);
