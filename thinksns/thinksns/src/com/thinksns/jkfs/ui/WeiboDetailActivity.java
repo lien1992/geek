@@ -105,6 +105,7 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 	private WeiboBean weibo;
 	private boolean isFavorite;
 	private boolean isLike;
+	private RotateAnimation rotateAnimation;
 	private ProgressDialog sendProgress;
 	private LinearLayout loadingComment;
 	private ImageView loadImage;
@@ -131,6 +132,15 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				comment_content.setText("");
 				Toast.makeText(WeiboDetailActivity.this, "评论成功",
 						Toast.LENGTH_SHORT).show();
+				loadImage.setVisibility(View.VISIBLE);
+				loadText.setText("");
+				loadingComment.setVisibility(View.VISIBLE);
+				totalCount = 0;
+				currentPage = 0;
+				since_id = "";
+				comment_all.clear();
+				comment_count.setText((weibo.getComment_count() + 1) + "");
+				getComments();
 				/*
 				 * WeiboDetailActivity.this.getSupportFragmentManager()
 				 * .beginTransaction().replace( R.id.wb_detail_comment_layout,
@@ -150,8 +160,10 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 4:
-/*				Toast.makeText(WeiboDetailActivity.this, "出现意外，收藏微博失败:(",
-						Toast.LENGTH_SHORT).show();*/
+				/*
+				 * Toast.makeText(WeiboDetailActivity.this, "出现意外，收藏微博失败:(",
+				 * Toast.LENGTH_SHORT).show();
+				 */
 				break;
 			case 5:
 				favorite.setImageDrawable(getResources().getDrawable(
@@ -161,8 +173,10 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 6:
-/*				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消收藏失败:(",
-						Toast.LENGTH_SHORT).show();*/
+				/*
+				 * Toast.makeText(WeiboDetailActivity.this, "出现意外，取消收藏失败:(",
+				 * Toast.LENGTH_SHORT).show();
+				 */
 				break;
 			case 7:
 				int like_n = Integer.parseInt(like_count.getText().toString());
@@ -172,9 +186,11 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				like.invalidate();
 				break;
 			case 8:
-/*				Toast.makeText(WeiboDetailActivity.this, "出现意外，赞失败了:(",
-						Toast.LENGTH_SHORT).show(); // 存bug，待修复
-*/				break;
+				/*
+				 * Toast.makeText(WeiboDetailActivity.this, "出现意外，赞失败了:(",
+				 * Toast.LENGTH_SHORT).show(); // 存bug，待修复
+				 */
+				break;
 			case 9:
 				int dislike = Integer.parseInt(like_count.getText().toString());
 				like_count.setText((--dislike) + "");
@@ -183,8 +199,10 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				like.invalidate();
 				break;
 			case 10:
-/*				Toast.makeText(WeiboDetailActivity.this, "出现意外，取消赞失败了:(",
-						Toast.LENGTH_SHORT).show();*/
+				/*
+				 * Toast.makeText(WeiboDetailActivity.this, "出现意外，取消赞失败了:(",
+				 * Toast.LENGTH_SHORT).show();
+				 */
 				break;
 			case 11:
 				loadImage.setAnimation(null);
@@ -221,6 +239,7 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 				}
 				loadingComment.setVisibility(View.GONE);
 				commentList.setVisibility(View.VISIBLE);
+				adapter.clear();
 				adapter.insertToHead(comments);
 				commentList.bindLinearLayout();
 				if (comments.size() < 10) {
@@ -228,11 +247,13 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 					loadMore.setClickable(false);
 				} else if (comments.size() == 10) {
 					loadMoreText.setText("加载更多");
+					loadMore.setClickable(true);
 				}
 				for (int i = comments.size() - 1; i >= 0; --i) {
 					comment_all.addFirst(comments.get(i));
 				}
 				currentPage = totalCount / 10 + 1;
+
 				break;
 
 			}
@@ -338,11 +359,11 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 		sticky_header = (LinearLayout) findViewById(R.id.wb_detail_comment_desc_header);
 		sv = (ScrollView) findViewById(R.id.wb_detail_scroll);
 		commentList = (LinearLayoutForListView) findViewById(R.id.wb_detail_comment_list_view);
-		adapter = new CommentAdapter(this, this.getLayoutInflater());
+		adapter = new CommentAdapter(this, this.getLayoutInflater(), mHandler);
 		commentList.setAdapter(adapter);
 		loadingComment = (LinearLayout) findViewById(R.id.wb_detail_comment_loading);
 		loadImage = (ImageView) findViewById(R.id.wb_detail_comment_load_img);
-		RotateAnimation rotateAnimation = new RotateAnimation(0.0f, +360.0f,
+		rotateAnimation = new RotateAnimation(0.0f, +360.0f,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
 				0.5f);
 		rotateAnimation.setRepeatCount(Animation.INFINITE);
@@ -557,7 +578,6 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 							String result = HttpUtility.getInstance()
 									.executeNormalTask(HttpMethod.Get,
 											HttpConstant.THINKSNS_URL, map);
-							Log.d("send weibo return what?", result);
 							if (result.equals("1")) {
 								mHandler.sendEmptyMessage(1);
 							} else if (result.equals("0")) {

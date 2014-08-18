@@ -21,6 +21,7 @@ import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public class CommentAdapter extends BaseAdapter {
 
 	Activity ctx;
 	LayoutInflater in;
+	Handler handler;
 
 	private DisplayImageOptions options;
 
@@ -63,12 +65,13 @@ public class CommentAdapter extends BaseAdapter {
 
 	public void clear() {
 		cList.clear();
-		notifyDataSetChanged();
+		//notifyDataSetChanged();
 	}
 
-	public CommentAdapter(Activity context, LayoutInflater inflater) {
+	public CommentAdapter(Activity context, LayoutInflater inflater, Handler h) {
 		ctx = context;
 		in = inflater;
+		handler = h;
 
 		options = new DisplayImageOptions.Builder().showStubImage(
 				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
@@ -124,16 +127,45 @@ public class CommentAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (comment != null) {
-					Intent in_o = new Intent(ctx, OtherInfoActivity.class);
-					in_o.putExtra("userinfo", comment.getUid());
-					Log.d("wj", "comment.getUser_info().follow_state is null?"
-							+ (comment.getUser_info().follow_state == null));// true
-					in_o.putExtra("following",
-							comment.getUser_info().follow_state.getFollowing()
-									+ "");
-					ctx.startActivity(in_o);
-				}
+				if (Utility.isConnected(ctx)) {
+
+					new Thread() {
+						@Override
+						public void run() {
+							Gson gson = new Gson();
+							HashMap<String, String> map = new HashMap<String, String>();
+							map = new HashMap<String, String>();
+							map.put("app", "api");
+							map.put("mod", "User");
+							map.put("act", "show");
+							map.put("user_id", comment.getUid());
+							map.put("oauth_token", ThinkSNSApplication
+									.getInstance().getOauth_token(ctx));
+							map.put("oauth_token_secret", ThinkSNSApplication
+									.getInstance().getOauth_token_secret(ctx));
+							String json = HttpUtility.getInstance()
+									.executeNormalTask(HttpMethod.Get,
+											HttpConstant.THINKSNS_URL, map);
+							if (json != null && !"".equals(json)) {
+								UserInfoBean userinfo = gson.fromJson(json,
+										UserInfoBean.class);
+								if (userinfo != null) {
+									Intent in_o = new Intent(ctx,
+											OtherInfoActivity.class);
+									in_o
+											.putExtra("userinfo", userinfo
+													.getUid());
+									in_o.putExtra("following",
+											userinfo.follow_state
+													.getFollowing()
+													+ "");
+									ctx.startActivity(in_o);
+								}
+							}
+						}
+					}.start();
+				} else
+					handler.sendEmptyMessage(0);
 			}
 
 		});
@@ -143,16 +175,46 @@ public class CommentAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (comment != null) {
-					Intent in_o = new Intent(ctx, OtherInfoActivity.class);
-					in_o.putExtra("userinfo", comment.getUid());
-					in_o.putExtra("following",
-							comment.getUser_info().follow_state.getFollowing()
-									+ "");
-					ctx.startActivity(in_o);
-				}
-			}
+				if (Utility.isConnected(ctx)) {
 
+					new Thread() {
+						@Override
+						public void run() {
+							Gson gson = new Gson();
+							HashMap<String, String> map = new HashMap<String, String>();
+							map = new HashMap<String, String>();
+							map.put("app", "api");
+							map.put("mod", "User");
+							map.put("act", "show");
+							map.put("user_id", comment.getUid());
+							map.put("oauth_token", ThinkSNSApplication
+									.getInstance().getOauth_token(ctx));
+							map.put("oauth_token_secret", ThinkSNSApplication
+									.getInstance().getOauth_token_secret(ctx));
+							String json = HttpUtility.getInstance()
+									.executeNormalTask(HttpMethod.Get,
+											HttpConstant.THINKSNS_URL, map);
+							if (json != null && !"".equals(json)) {
+								UserInfoBean userinfo = gson.fromJson(json,
+										UserInfoBean.class);
+								if (userinfo != null) {
+									Intent in_o = new Intent(ctx,
+											OtherInfoActivity.class);
+									in_o
+											.putExtra("userinfo", userinfo
+													.getUid());
+									in_o.putExtra("following",
+											userinfo.follow_state
+													.getFollowing()
+													+ "");
+									ctx.startActivity(in_o);
+								}
+							}
+						}
+					}.start();
+				} else
+					handler.sendEmptyMessage(0);
+			}
 		});
 		holder.content.setText(comment.getListViewSpannableString());
 		holder.time.setText(comment.getCtime());

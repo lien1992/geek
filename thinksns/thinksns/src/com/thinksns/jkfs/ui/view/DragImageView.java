@@ -349,8 +349,6 @@ public class DragImageView extends ImageView {
 				top = Math.max(top, start_Top);
 				right = Math.min(right, start_Right);
 				bottom = Math.min(bottom, start_Bottom);
-				Log.e("jj", "top=" + top + ",bottom=" + bottom + ",left="
-						+ left + ",right=" + right);
 				onProgressUpdate(new Integer[] { left, top, right, bottom });
 				try {
 					Thread.sleep(10);
