@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".DraftActivity" >
+
+    <RelativeLayout
+        android:id="@+id/draft_weibo_header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white_for_title" >
+
+        <ImageView
+            android:id="@+id/draft_weibo_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0dip"
+            android:paddingBottom="1dip"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/draft_weibo_desc_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/draft_weibo_back"
+            android:text="草稿箱"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:src="@color/grey" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/draft_lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/common_white"
+        android:cacheColorHint="#0000"
+        android:divider="@drawable/lv_divider"
+        android:listSelector="@color/green_1" >
+    </ListView>
+
+</LinearLayout>

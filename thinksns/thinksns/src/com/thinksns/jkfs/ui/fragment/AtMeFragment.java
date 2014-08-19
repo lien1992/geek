@@ -57,6 +57,7 @@ public class AtMeFragment extends BaseListFragment {
 	private LinkedList<WeiboBean> at_weibos = new LinkedList<WeiboBean>();
 	private LinkedList<WeiboBean> at_weibo_all = new LinkedList<WeiboBean>();
 	private boolean firstLoad = true;
+	private boolean cacheMode = true;
 
 	private DbUtils db;
 	private List<WeiboBean> weibos_cache;
@@ -87,7 +88,7 @@ public class AtMeFragment extends BaseListFragment {
 				if (!listView.getLoadMoreStatus() && at_totalCount == 10) {
 					listView.setLoadMoreEnable(true);
 				}
-				at_adapter.insertToHead(at_weibos);
+				at_adapter.update(at_weibos);
 
 				try {
 					if (application.isClearCache()) {
@@ -189,14 +190,24 @@ public class AtMeFragment extends BaseListFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getActivity(),
-						WeiboDetailActivity.class);
-				intent.putExtra("weibo_detail", at_weibo_all.get(position - 1));
-				startActivity(intent);
+				if (cacheMode) {
+					Intent intent = new Intent(getActivity(),
+							WeiboDetailActivity.class);
+					intent.putExtra("weibo_detail", weibos_cache
+							.get(position - 1));
+					startActivity(intent);
+
+				} else {
+					Intent intent = new Intent(getActivity(),
+							WeiboDetailActivity.class);
+					intent.putExtra("weibo_detail", at_weibo_all
+							.get(position - 1));
+					startActivity(intent);
+				}
 			}
 
 		});
-		
+
 		if (application.isClearCache()) {
 			loadImage.setAnimation(null);
 			loadImage.setVisibility(View.GONE);
@@ -222,6 +233,7 @@ public class AtMeFragment extends BaseListFragment {
 				loadImage.setVisibility(View.GONE);
 			} else {
 				getAtToMe();
+				cacheMode = false;
 			}
 		} catch (DbException e) {
 			// TODO Auto-generated catch block
@@ -273,6 +285,7 @@ public class AtMeFragment extends BaseListFragment {
 	private void getAtToMe() {
 		// TODO Auto-generated method stub
 		if (Utility.isConnected(getActivity())) {
+			cacheMode = false;
 			new Thread() {
 				@Override
 				public void run() {

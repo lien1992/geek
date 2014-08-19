@@ -5,11 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import com.google.gson.Gson;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.exception.DbException;
 
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.BaseActivity;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
+import com.thinksns.jkfs.bean.DraftBean;
+import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.util.FaceDialog;
 import com.thinksns.jkfs.util.Utility;
@@ -25,12 +29,14 @@ import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -70,6 +76,10 @@ public class WriteWeiboActivity extends BaseActivity implements
 	private ProgressDialog sendProgress;
 	private Uri imageFileUri;
 	private String picPath = "";
+	private int draft_id = -1;
+	private int image_upload_quality = 1;
+
+	private DbUtils db;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -100,7 +110,23 @@ public class WriteWeiboActivity extends BaseActivity implements
 		setContentView(R.layout.activity_writeweibo);
 		application = (ThinkSNSApplication) getApplicationContext();
 		account = application.getAccount(this);
+		Intent intent = getIntent();
+		draft_id = intent.getIntExtra("id", -1);
+		String draft = intent.getStringExtra("draft");
+
 		initViews();
+
+		if (!TextUtils.isEmpty(draft))
+			content.setText(draft);
+
+		db = DbUtils.create(this, "thinksns2.db");
+		db.configDebug(true);
+
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String up_quality = prefs
+				.getString(BaseConstant.IMAGE_QUALITY_KEY, "1");
+		image_upload_quality = Integer.parseInt(up_quality);
 
 	}
 
@@ -235,20 +261,54 @@ public class WriteWeiboActivity extends BaseActivity implements
 				AlertDialog.Builder builder = new Builder(this);
 				builder.setTitle("提示");
 				builder.setMessage("取消发送微博？");
-				builder.setPositiveButton("确定",
+				builder.setPositiveButton("取消发送",
 						new DialogInterface.OnClickListener() {
 
 							public void onClick(DialogInterface dialog,
 									int which) {
+								if (draft_id != -1) {
+									DraftBean draft = new DraftBean();
+									draft.setId(draft_id);
+									draft.setContent(content.getText()
+											.toString());
+									try {
+										db.delete(draft);
+										Intent in = new Intent();
+										in
+												.setAction(BaseConstant.DRAFT_BROADCAST);
+										WriteWeiboActivity.this
+												.sendBroadcast(in);
+									} catch (DbException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
 								dialog.dismiss();
 								finish();
 							}
 						});
-				builder.setNegativeButton("取消",
+				builder.setNegativeButton("存入草稿箱",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-								dialog.cancel();
+								if (draft_id == -1) {
+									DraftBean draft = new DraftBean();
+									draft.setContent(content.getText()
+											.toString());
+									try {
+										db.save(draft);
+										Intent in = new Intent();
+										in
+												.setAction(BaseConstant.DRAFT_BROADCAST);
+										WriteWeiboActivity.this
+												.sendBroadcast(in);
+									} catch (DbException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+								dialog.dismiss();
+								finish();
 							}
 						});
 				builder.create().show();
@@ -299,7 +359,7 @@ public class WriteWeiboActivity extends BaseActivity implements
 					} else {
 						sendDialogShow();
 						final String uploadPicPath = ImageUtils.compressPic(
-								this, picPath, 1);
+								this, picPath, image_upload_quality);
 						new Thread() {
 							@Override
 							public void run() {
@@ -410,20 +470,55 @@ public class WriteWeiboActivity extends BaseActivity implements
 				AlertDialog.Builder builder = new Builder(this);
 				builder.setTitle("提示");
 				builder.setMessage("取消发送微博？");
-				builder.setPositiveButton("确定",
+				builder.setPositiveButton("取消发送",
 						new DialogInterface.OnClickListener() {
 
 							public void onClick(DialogInterface dialog,
 									int which) {
+								if (draft_id != -1) {
+									Log.d("wj", "draft_id=" + draft_id);
+									DraftBean draft = new DraftBean();
+									draft.setId(draft_id);
+									draft.setContent(content.getText()
+											.toString());
+									try {
+										db.delete(draft);
+										Intent in = new Intent();
+										in
+												.setAction(BaseConstant.DRAFT_BROADCAST);
+										WriteWeiboActivity.this
+												.sendBroadcast(in);
+									} catch (DbException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
 								dialog.dismiss();
 								finish();
 							}
 						});
-				builder.setNegativeButton("取消",
+				builder.setNegativeButton("存入草稿箱",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-								dialog.cancel();
+								if (draft_id == -1) {
+									DraftBean draft = new DraftBean();
+									draft.setContent(content.getText()
+											.toString());
+									try {
+										db.save(draft);
+										Intent in = new Intent();
+										in
+												.setAction(BaseConstant.DRAFT_BROADCAST);
+										WriteWeiboActivity.this
+												.sendBroadcast(in);
+									} catch (DbException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+								dialog.dismiss();
+								finish();
 							}
 						});
 				builder.create().show();

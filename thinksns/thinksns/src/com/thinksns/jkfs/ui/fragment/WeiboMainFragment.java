@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.exception.DbException;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.bean.DraftBean;
+import com.thinksns.jkfs.constant.BaseConstant;
+import com.thinksns.jkfs.ui.DraftActivity;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.SearchActivity;
 import com.thinksns.jkfs.ui.WriteWeiboActivity;
@@ -15,8 +21,10 @@ import com.thinksns.jkfs.ui.view.UnderlinePageIndicator;
 import com.thinksns.jkfs.util.WeiboCheckHelper;
 
 import android.app.ActionBar.LayoutParams;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
@@ -31,7 +39,9 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -55,12 +65,17 @@ public class WeiboMainFragment extends Fragment {
 	private ViewPager pager;
 	private UnderlinePageIndicator indicator;
 	private MainFragmentPagerAdapter adapter;
-	private View view;
+	private FrameLayout view;
 	private LayoutInflater in;
 	private TextView weiboList, aboutMe;
+	private TextView draft;
+	private LinearLayout draft_view;
 	private ImageView navi;
 	private ArcMenu menu;
+	private DraftReceiver receiver;
 	private SwitchGroupListener switchListener;
+
+	private static DbUtils db;
 
 	private static final int[] ITEM_DRAWABLES = {
 			R.drawable.circle_ico_green_1_w, R.drawable.circle_ico_green_check,
@@ -76,9 +91,12 @@ public class WeiboMainFragment extends Fragment {
 		Log.d(TAG, "onCreateView");
 		super.onCreateView(inflater, container, savedInstanceState);
 		in = inflater;
-		view = in.inflate(R.layout.main_weibo_fragment, null);
+		view = (FrameLayout) in.inflate(R.layout.main_weibo_fragment, null);
 		weiboList = (TextView) view.findViewById(R.id.tab_main_weibo_fragment);
 		aboutMe = (TextView) view.findViewById(R.id.tab_about_me_fragment);
+		draft = (TextView) view.findViewById(R.id.draft_box_notice_txt);
+		draft_view = (LinearLayout) view
+				.findViewById(R.id.draft_box_notice_view);
 		navi = (ImageView) view.findViewById(R.id.app_navi);
 		group = (TextView) view.findViewById(R.id.weibo_main_group);
 		indicator = (UnderlinePageIndicator) view
@@ -103,6 +121,11 @@ public class WeiboMainFragment extends Fragment {
 		indicator.setOnPageChangeListener(new MyPageChangeListener());
 
 		initArcMenu(menu, ITEM_DRAWABLES);
+
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(BaseConstant.DRAFT_BROADCAST);
+		receiver = new DraftReceiver();
+		getActivity().registerReceiver(receiver, filter);
 
 		navi.setOnClickListener(new OnClickListener() {
 
@@ -136,6 +159,31 @@ public class WeiboMainFragment extends Fragment {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				pager.setCurrentItem(1);
+			}
+		});
+
+		db = DbUtils.create(getActivity(), "thinksns2.db");
+		db.configDebug(true);
+		try {
+			List<DraftBean> drafts = db.findAll(Selector.from(DraftBean.class));
+			if (drafts != null && drafts.size() > 0) {
+				draft.setText("草稿箱(" + drafts.size() + ")");
+				draft_view.setVisibility(View.VISIBLE);
+			} else {
+				draft_view.setVisibility(View.GONE);
+			}
+
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		draft_view.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(getActivity(), DraftActivity.class);
+				getActivity().startActivity(intent);
 			}
 		});
 	}
@@ -177,6 +225,11 @@ public class WeiboMainFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 	}
 
+	public void onDestory() {
+		getActivity().unregisterReceiver(receiver);
+		super.onDestroy();
+	}
+
 	class MyPageChangeListener implements OnPageChangeListener {
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
@@ -196,6 +249,19 @@ public class WeiboMainFragment extends Fragment {
 				aboutMe.setTextColor(getResources().getColor(R.color.grey));
 				group.setVisibility(View.VISIBLE);
 				menu.setVisibility(View.VISIBLE);
+				List<DraftBean> drafts;
+				try {
+					drafts = db.findAll(Selector.from(DraftBean.class));
+					if (drafts != null && drafts.size() > 0) {
+						draft.setText("草稿箱(" + drafts.size() + ")");
+						draft_view.setVisibility(View.VISIBLE);
+					} else {
+						draft_view.setVisibility(View.GONE);
+					}
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				((MainFragmentActivity) getActivity()).getSlidingMenu()
 						.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 			} else if (arg == 1) {
@@ -203,6 +269,7 @@ public class WeiboMainFragment extends Fragment {
 				weiboList.setTextColor(getResources().getColor(R.color.grey));
 				group.setVisibility(View.GONE);
 				menu.setVisibility(View.GONE);
+				draft_view.setVisibility(View.GONE);
 				((MainFragmentActivity) getActivity()).getSlidingMenu()
 						.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 			}
@@ -293,4 +360,24 @@ public class WeiboMainFragment extends Fragment {
 
 	}
 
+	class DraftReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			List<DraftBean> drafts;
+			try {
+				drafts = db.findAll(Selector.from(DraftBean.class));
+				if (drafts != null && drafts.size() > 0) {
+					draft.setText("草稿箱(" + drafts.size() + ")");
+					draft_view.setVisibility(View.VISIBLE);
+				} else {
+					draft_view.setVisibility(View.GONE);
+				}
+			} catch (DbException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	};
 }
