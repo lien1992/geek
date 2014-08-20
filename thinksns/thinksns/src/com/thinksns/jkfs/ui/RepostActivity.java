@@ -143,6 +143,12 @@ public class RepostActivity extends BaseActivity implements OnClickListener,
 				count.setText(String.valueOf(number));
 				selectionStart = content.getSelectionStart();
 				selectionEnd = content.getSelectionEnd();
+				if (weibo.getTranspond_data() != null && temp.length() > 140) {
+					Toast.makeText(RepostActivity.this, "字数超限，最多输入140字 :)",
+							Toast.LENGTH_SHORT).show();
+					s.delete(140, temp.length());
+					content.setText(s);
+				}
 				if (temp.length() > 140) {
 					Toast.makeText(RepostActivity.this, "字数超限，最多输入140字 :)",
 							Toast.LENGTH_SHORT).show();

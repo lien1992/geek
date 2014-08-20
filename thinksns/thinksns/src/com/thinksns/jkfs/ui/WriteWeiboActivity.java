@@ -88,6 +88,9 @@ public class WriteWeiboActivity extends BaseActivity implements
 				sendDialogDismiss();
 				Toast.makeText(WriteWeiboActivity.this, "微博发送成功",
 						Toast.LENGTH_SHORT).show();
+				Intent in = new Intent();
+				in.setAction(BaseConstant.REFRESH_MAIN_WEIBO_LIST_BROADCAST);
+				WriteWeiboActivity.this.sendBroadcast(in);
 				finish();
 				break;
 			case 1:
@@ -557,6 +560,7 @@ public class WriteWeiboActivity extends BaseActivity implements
 	private void sendDialogDismiss() {
 		if (sendProgress != null && sendProgress.isShowing()) {
 			sendProgress.dismiss();
+			
 		}
 	}
 

@@ -47,6 +47,7 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.bean.UserInfoMedalBean;
+import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.UserInfoFollowList;
 import com.thinksns.jkfs.ui.WriteWeiboActivity;
@@ -699,6 +700,11 @@ public class AboutMeFragment extends Fragment {
 					HttpUtils.doPost(HttpConstant.THINKSNS_URL, map);
 					boolean result = HttpUtils.doUploadFile(
 							HttpConstant.THINKSNS_URL, map, uploadPicPath);
+					if (result) {
+						Intent in = new Intent();
+						in.setAction(BaseConstant.CHANGE_HEAD_BROADCAST);
+						getActivity().sendBroadcast(in);
+					}
 
 				}
 			}.start();

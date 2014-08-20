@@ -379,5 +379,5 @@ public class WeiboMainFragment extends Fragment {
 				e.printStackTrace();
 			}
 		}
-	};
+	}
 }

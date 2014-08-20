@@ -65,7 +65,7 @@ public class CommentAdapter extends BaseAdapter {
 
 	public void clear() {
 		cList.clear();
-		//notifyDataSetChanged();
+		// notifyDataSetChanged();
 	}
 
 	public CommentAdapter(Activity context, LayoutInflater inflater, Handler h) {
@@ -152,6 +152,12 @@ public class CommentAdapter extends BaseAdapter {
 								if (userinfo != null) {
 									Intent in_o = new Intent(ctx,
 											OtherInfoActivity.class);
+									in_o.putExtra("FLAG", userinfo.getUid()
+											.equals(
+													ThinkSNSApplication
+															.getInstance()
+															.getAccount(ctx)
+															.getUid()) ? 0 : 1);
 									in_o
 											.putExtra("userinfo", userinfo
 													.getUid());
@@ -200,6 +206,12 @@ public class CommentAdapter extends BaseAdapter {
 								if (userinfo != null) {
 									Intent in_o = new Intent(ctx,
 											OtherInfoActivity.class);
+									in_o.putExtra("FLAG", userinfo.getUid()
+											.equals(
+													ThinkSNSApplication
+															.getInstance()
+															.getAccount(ctx)
+															.getUid()) ? 0 : 1);
 									in_o
 											.putExtra("userinfo", userinfo
 													.getUid());
