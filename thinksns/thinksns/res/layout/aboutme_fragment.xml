@@ -26,7 +26,8 @@
                 <ImageView
                     android:id="@+id/m_head"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" />
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/ic_launcher" />
                 <!-- image corner -->
 
                 <ImageView
@@ -84,6 +85,14 @@
                     android:layout_marginRight="5dp"
                     android:background="@drawable/sel_but"
                     android:text="修改头像" />
+
+                <Button
+                    android:id="@+id/sendmessage"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/sel_but"
+                    android:text="私信" />
             </LinearLayout>
         </LinearLayout>
 
@@ -312,6 +321,37 @@
                             android:padding="5dp" >
                         </LinearLayout>
                     </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bottomfooter"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:visibility="gone"
+                    android:background="@color/white"
+                    android:orientation="horizontal" >
+
+                    <EditText
+                        android:id="@+id/inputmessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_bg" />
+
+                    <Button
+                        android:id="@+id/buttonsend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/send"
+                        android:onClick="sendButton" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>

@@ -8,8 +8,11 @@ import java.util.List;
 import android.R.interpolator;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -39,6 +42,7 @@ import com.thinksns.jkfs.bean.WeiboAttachBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.bean.WeiboRepostAttachBean;
 import com.thinksns.jkfs.bean.WeiboRepostBean;
+import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.WeiboDetailActivity;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
@@ -70,6 +74,7 @@ public class WeiboListFragment extends BaseListFragment {
 
 	private DbUtils db;
 	private List<WeiboBean> weibos_cache;
+	private RefreshMainWeiboListReceiver receiver;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -105,7 +110,7 @@ public class WeiboListFragment extends BaseListFragment {
 				if (!listView.getLoadMoreStatus() && totalCount == 20) {
 					listView.setLoadMoreEnable(true);
 				}
-				adapter.update(weibos);
+				adapter.insertToHead(weibos);
 				try {
 					if (application.isClearCache()) {
 						loadImage.setAnimation(null);
@@ -218,6 +223,11 @@ public class WeiboListFragment extends BaseListFragment {
 		db = DbUtils.create(getActivity(), "thinksns2.db");
 		// db.configAllowTransaction(true);
 		db.configDebug(true);
+
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(BaseConstant.REFRESH_MAIN_WEIBO_LIST_BROADCAST);
+		receiver = new RefreshMainWeiboListReceiver();
+		getActivity().registerReceiver(receiver, filter);
 
 		listView.setListener(this);
 		adapter = new WeiboAdapter(getActivity(), mInflater, listView);
@@ -457,6 +467,21 @@ public class WeiboListFragment extends BaseListFragment {
 		}
 		for (int i = lists.size() - 1; i >= 0; --i) {
 			weibo_all.addFirst(lists.get(i));
+		}
+	}
+
+	class RefreshMainWeiboListReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			currentPage = 0;
+			totalCount = 0;
+			since_id = "";
+			firstLoad = true;
+			cacheMode = false;
+			weibo_all.clear();
+			getWeibos();
 		}
 	}
 

@@ -77,6 +77,7 @@ public class OtherInfoActivity extends FragmentActivity {
 		progressBar = (ProgressBar) findViewById(R.id.user_page_progressbar);
 
 		Bundle extras = getIntent().getExtras();
+		String flag = extras.getString("FLAG");
 		String user = extras.getString("userinfo");
 		String fo = extras.getString("following");
 		uid = extras.getString("uid");
@@ -85,7 +86,7 @@ public class OtherInfoActivity extends FragmentActivity {
 			android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 			android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager
 					.beginTransaction();
-			AboutMeFragment fragment = new AboutMeFragment("1", user, fo);
+			AboutMeFragment fragment = new AboutMeFragment(flag, user, fo);
 			fragmentTransaction.replace(R.id.other_page_layout, fragment);
 			fragmentTransaction.commit();
 			progressBar.setVisibility(View.INVISIBLE);

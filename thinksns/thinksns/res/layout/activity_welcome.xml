@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green" >
+
+    <com.thinksns.jkfs.ui.view.ShimmerTextView
+        xmlns:app="http://schemas.android.com/apk/res/com.thinksns.jkfs"
+        android:id="@+id/thinksns_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:text="ThinkSNS"
+        android:textColor="@color/common_white"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        app:reflectionColor="#36C77B" />
+
+    <TextView
+        android:id="@+id/thinksns_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/thinksns_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="开源社交网络平台"
+        android:textColor="@color/common_white"
+        android:textSize="25sp" />
+
+    <View
+        android:id="@+id/thinksns_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true" />
+
+    <TextView
+        android:id="@+id/thinksns_team"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/thinksns_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="33dp"
+        android:gravity="center"
+        android:text="极酷范式团队"
+        android:textColor="@color/common_white"
+        android:textSize="20sp" />
+
+</RelativeLayout>

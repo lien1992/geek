@@ -1,7 +1,6 @@
 package com.thinksns.jkfs.ui.fragment;
 
 import java.util.HashMap;
-
 import com.google.gson.Gson;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -14,6 +13,7 @@ import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.NotificationBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.bean.UserInfoCountBean;
+import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.SettingActivity;
@@ -23,8 +23,11 @@ import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -46,6 +49,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private static RoundAngleImageView avatar;
 	private static TextView nick;
 	private ImageView at_new;
+	private ImageView chat_new;
 	private LinearLayout home;
 	private LinearLayout at;
 	private LinearLayout favorite;
@@ -58,9 +62,10 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private AccountBean account;
 	private static UserInfoBean userinfo;
 	private String json;
-	private NotificationBean comment_unread, at_unread;
+	private NotificationBean comment_unread, at_unread, pm_unread;
 	private static DbUtils db;
 	private static DisplayImageOptions options;
+	private ChangeHeadReceiver receiver;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -114,6 +119,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		avatar = (RoundAngleImageView) view.findViewById(R.id.sm_behind_avatar);
 		nick = (TextView) view.findViewById(R.id.sm_behind_nick);
 		at_new = (ImageView) view.findViewById(R.id.sm_at_unread);
+		chat_new = (ImageView) view.findViewById(R.id.sm_chat_unread);
 		home = (LinearLayout) view.findViewById(R.id.sm_home);
 		at = (LinearLayout) view.findViewById(R.id.sm_at);
 		favorite = (LinearLayout) view.findViewById(R.id.sm_favorite);
@@ -147,6 +153,11 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		options = new DisplayImageOptions.Builder().showStubImage(
 				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
 
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(BaseConstant.CHANGE_HEAD_BROADCAST);
+		receiver = new ChangeHeadReceiver();
+		getActivity().registerReceiver(receiver, filter);
+
 		db = DbUtils.create(MenuFragment.this.getActivity());
 		db.configDebug(true);
 		UserInfoBean uib = null;
@@ -157,7 +168,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (uib != null) {
+		if (uib != null && !Utility.isConnected(getActivity())) {
 			ImageLoader.getInstance().displayImage(uib.getAvatar_original(),
 					avatar, options);
 			nick.setText(uib.getUname());
@@ -223,6 +234,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.sm_chat:
 			changeBackground(R.id.sm_chat);
+			chat_new.setVisibility(View.GONE);
 			ChatFragment chatFragment = new ChatFragment();
 			if (chatFragment != null)
 				switchFragment(chatFragment);
@@ -325,13 +337,22 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		}
 	}
 
+	// 设置未读评论和at消息提醒
 	public void setUnread(NotificationBean comment_unread,
-			NotificationBean at_unread) {
+			NotificationBean at_unread, NotificationBean pm_unread) {
 		this.comment_unread = comment_unread;
 		this.at_unread = at_unread;
+		this.pm_unread = pm_unread;
 		if (comment_unread.getCount() > 0 || at_unread.getCount() > 0) {
 			at_new.setVisibility(View.VISIBLE);
 		}
+		if (pm_unread.getCount() > 0)
+			chat_new.setVisibility(View.VISIBLE);
+	}
+
+	// 设置未读聊天消息提醒
+	public void setUnreadChat() {
+		chat_new.setVisibility(View.VISIBLE);
 	}
 
 	public static void setUserInfo(UserInfoBean user) {
@@ -348,6 +369,33 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		} catch (DbException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	class ChangeHeadReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			if (Utility.isConnected(getActivity()))
+				new Thread() {
+					@Override
+					public void run() {
+						HashMap<String, String> map = new HashMap<String, String>();
+						map = new HashMap<String, String>();
+						map.put("app", "api");
+						map.put("mod", "User");
+						map.put("act", "show");
+						map.put("user_id", account.getUid());
+						map.put("oauth_token", account.getOauth_token());
+						map.put("oauth_token_secret", account
+								.getOauth_token_secret());
+						json = HttpUtility.getInstance().executeNormalTask(
+								HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+						mHandler.sendEmptyMessage(HTTP_GET_OK);
+
+					}
+				}.start();
 		}
 	}
 

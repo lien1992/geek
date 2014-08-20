@@ -12,5 +12,6 @@
     <string name="myweibonum">0</string>
     <string name="myfollownum">0</string>
     <string name="followmenum">0</string>
+    <string name="title_activity_draft">DraftActivity</string>
 
 </resources>

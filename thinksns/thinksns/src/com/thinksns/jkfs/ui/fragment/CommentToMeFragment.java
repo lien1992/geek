@@ -162,7 +162,7 @@ public class CommentToMeFragment extends BaseListFragment {
 
 		listView.setListener(this);
 		listView.setDividerHeight(0);
-		comment_adapter = new CommentAdapter(getActivity(), mInflater);
+		comment_adapter = new CommentAdapter(getActivity(), mInflater,mHandler);
 		listView.setAdapter(comment_adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 

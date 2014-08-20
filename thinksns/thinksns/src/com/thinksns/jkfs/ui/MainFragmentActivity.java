@@ -130,11 +130,12 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 			NotificationBean comment_unread = intent
 					.getParcelableExtra("comment");
 			NotificationBean at_unread = intent.getParcelableExtra("atme");
+			NotificationBean pm_unread = intent.getParcelableExtra("pm");
 
 			Log.d("wj", "NotificationBean comment count:"
 					+ comment_unread.getCount());
 			Log.d("wj", "NotificationBean at count" + at_unread.getCount());
-			menu.setUnread(comment_unread, at_unread);
+			menu.setUnread(comment_unread, at_unread, pm_unread);
 		}
 
 	}

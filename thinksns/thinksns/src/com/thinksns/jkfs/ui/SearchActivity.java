@@ -3,8 +3,6 @@ package com.thinksns.jkfs.ui;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -18,9 +16,9 @@ import com.thinksns.jkfs.bean.WeiboBean;
 import com.thinksns.jkfs.constant.HttpConstant;
 import com.thinksns.jkfs.ui.adapter.PeopleListAdapter;
 import com.thinksns.jkfs.ui.adapter.WeiboAdapter;
-import com.thinksns.jkfs.ui.fragment.ChannelFragment;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView.RefreshAndLoadMoreListener;
+import com.thinksns.jkfs.util.Utility;
 import com.thinksns.jkfs.util.http.HttpMethod;
 import com.thinksns.jkfs.util.http.HttpUtility;
 
@@ -135,7 +133,8 @@ public class SearchActivity extends BaseActivity {
 					onSearchFlag = 0;
 					break;
 				case CONNECT_WRONG:
-					Toast.makeText(mContext, "网络故障", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "网络未连接", Toast.LENGTH_SHORT)
+							.show();
 					break;
 				case GET_USERS:
 					if (((LinkedList<UserFollowBean>) msg.obj).size() == 0) {
@@ -276,7 +275,9 @@ public class SearchActivity extends BaseActivity {
 					Log.i(TAG, "微博点击");
 					Intent intent = new Intent(mContext,
 							WeiboDetailActivity.class);
-					intent.putExtra("weibo_detail", weiboList.get(position - 1));
+					intent
+							.putExtra("weibo_detail", weiboList
+									.get(position - 1));
 					startActivity(intent);
 				}
 			});
@@ -305,6 +306,9 @@ public class SearchActivity extends BaseActivity {
 							.getUser(arg2);
 					String fo = "" + userfollow.follow_state.getFollowing();
 					Intent i = new Intent(mContext, OtherInfoActivity.class);
+					i.putExtra("FLAG", userfollow.getUid().equals(
+							ThinkSNSApplication.getInstance().getAccount(
+									mContext).getUid()) ? 0 : 1);
 					i.putExtra("following", fo);
 					i.putExtra("userinfo", userfollow);
 					startActivity(i);
@@ -355,39 +359,41 @@ public class SearchActivity extends BaseActivity {
 
 	// 获取用户
 	private void getUsersInThread(final int page, final String keyWord) {
+		if (Utility.isConnected(this)) {
+			new Thread() {
+				public void run() {
+					final Map<String, String> map = new HashMap<String, String>();
+					map.put("app", APP);
+					map.put("oauth_token", OAUTH_TOKEN);
+					map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
+					map.put("mod", MOD);
+					map.put("act", ACT_GET_USER);
+					map.put("count", "20");
+					map.put("key", keyWord);
 
-		new Thread() {
-			public void run() {
-				final Map<String, String> map = new HashMap<String, String>();
-				map.put("app", APP);
-				map.put("oauth_token", OAUTH_TOKEN);
-				map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
-				map.put("mod", MOD);
-				map.put("act", ACT_GET_USER);
-				map.put("count", "20");
-				map.put("key", keyWord);
+					if (onLoadMoreFlag == 1) {
+						map.put("page", page + "");
+					}
+					Log.i(TAG, "获取用户");
+					jsonData = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					if (onSearchFlag == 1) {
+						// 将json转化成bean列表，handler出去
+						handler.obtainMessage(SearchActivity.GET_USERS,
+								JSONToUsers(jsonData)).sendToTarget();
+					}
+					if (onLoadMoreFlag == 1) {
+						handler.obtainMessage(SearchActivity.LOAD_MORE_USER,
+								JSONToUsers(jsonData)).sendToTarget();
+					}
+				};
+			}.start();
+		} else
+			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
 
-				if (onLoadMoreFlag == 1) {
-					map.put("page", page + "");
-				}
-				Log.i(TAG, "获取用户");
-				jsonData = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				if (onSearchFlag == 1) {
-					// 将json转化成bean列表，handler出去
-					handler.obtainMessage(SearchActivity.GET_USERS,
-							JSONToUsers(jsonData)).sendToTarget();
-				}
-				if (onLoadMoreFlag == 1) {
-					handler.obtainMessage(SearchActivity.LOAD_MORE_USER,
-							JSONToUsers(jsonData)).sendToTarget();
-				}
-			};
-		}.start();
 	}
 
 	private LinkedList<UserFollowBean> JSONToUsers(String jsonData) {
-
 		LinkedList<UserFollowBean> list = new LinkedList<UserFollowBean>();
 		try {
 			Type listType = new TypeToken<LinkedList<UserFollowBean>>() {
@@ -407,38 +413,40 @@ public class SearchActivity extends BaseActivity {
 
 	// 获取微博
 	private void getWeibosInThread(final int page, final String keyWord) {
+		if (Utility.isConnected(this)) {
+			new Thread() {
+				public void run() {
+					final Map<String, String> map = new HashMap<String, String>();
+					map.put("app", APP);
+					map.put("oauth_token", OAUTH_TOKEN);
+					map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
+					map.put("mod", MOD);
+					map.put("act", ACT_GET_WEIBO);
+					map.put("count", "20");
+					map.put("key", keyWord);
 
-		new Thread() {
-			public void run() {
-				final Map<String, String> map = new HashMap<String, String>();
-				map.put("app", APP);
-				map.put("oauth_token", OAUTH_TOKEN);
-				map.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
-				map.put("mod", MOD);
-				map.put("act", ACT_GET_WEIBO);
-				map.put("count", "20");
-				map.put("key", keyWord);
+					if (onLoadMoreFlag == 1) {
+						Log.i(TAG, "page" + page);
+						map.put("page", page + "");
+					}
+					Log.i(TAG, "获取微博");
+					jsonData = HttpUtility.getInstance().executeNormalTask(
+							HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
+					if (onSearchFlag == 1) {
+						// 将json转化成bean列表，handler出去
+						handler.obtainMessage(SearchActivity.GET_WEIBOS,
+								JSONToWeibos(jsonData)).sendToTarget();
+					}
+					if (onLoadMoreFlag == 1) {
 
-				if (onLoadMoreFlag == 1) {
-					Log.i(TAG, "page" + page);
-					map.put("page", page + "");
-				}
-				Log.i(TAG, "获取微博");
-				jsonData = HttpUtility.getInstance().executeNormalTask(
-						HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-				if (onSearchFlag == 1) {
-					// 将json转化成bean列表，handler出去
-					handler.obtainMessage(SearchActivity.GET_WEIBOS,
-							JSONToWeibos(jsonData)).sendToTarget();
-				}
-				if (onLoadMoreFlag == 1) {
-
-					Log.i(TAG, "微博加载更多。。。");
-					handler.obtainMessage(SearchActivity.LOAD_MORE_WEIBO,
-							JSONToWeibos(jsonData)).sendToTarget();
-				}
-			};
-		}.start();
+						Log.i(TAG, "微博加载更多。。。");
+						handler.obtainMessage(SearchActivity.LOAD_MORE_WEIBO,
+								JSONToWeibos(jsonData)).sendToTarget();
+					}
+				};
+			}.start();
+		} else
+			handler.obtainMessage(CONNECT_WRONG).sendToTarget();
 	}
 
 	private LinkedList<WeiboBean> JSONToWeibos(String jsonData) {
