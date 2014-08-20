@@ -2,8 +2,6 @@ package com.thinksns.jkfs.base;
 
 import java.io.File;
 
-import cn.jpush.android.api.JPushInterface;
-
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -63,9 +61,7 @@ public final class ThinkSNSApplication extends Application {
 
 		// Initialize ImageLoader with configuration
 		ImageLoader.getInstance().init(config);
-		
-        JPushInterface.setDebugMode(true); 
-        JPushInterface.init(this);     
+
 	}
 
 	public boolean isLogin(Context context) {
