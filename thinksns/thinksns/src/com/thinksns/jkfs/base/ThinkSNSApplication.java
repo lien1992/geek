@@ -13,6 +13,7 @@ import com.thinksns.jkfs.bean.AccountBean;
 import com.thinksns.jkfs.bean.UserInfoBean;
 import com.thinksns.jkfs.constant.BaseConstant;
 import com.thinksns.jkfs.constant.SettingsUtil;
+import com.thinksns.jkfs.ui.fragment.MenuFragment;
 import com.thinksns.jkfs.util.common.PreferencesUtils;
 
 import android.app.Activity;
@@ -29,6 +30,7 @@ public final class ThinkSNSApplication extends Application {
 
 	private Activity activity;
 	private UserInfoBean user;
+	private MenuFragment menu;
 
 	private boolean isNoImageMode;// 无图模式
 
@@ -184,5 +186,13 @@ public final class ThinkSNSApplication extends Application {
 
 	public int getImage_quality() {
 		return image_quality;
+	}
+
+	public void setMenu(MenuFragment menu) {
+		this.menu = menu;
+	}
+
+	public MenuFragment getMenu() {
+		return menu;
 	}
 }

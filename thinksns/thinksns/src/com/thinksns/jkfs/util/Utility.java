@@ -44,6 +44,10 @@ import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.CommentBean;
 import com.thinksns.jkfs.bean.WeiboBean;
 
+/**
+ * 工具类
+ * 
+ */
 public class Utility {
 	static String[] emotions = new String[] { "aoman", "baiyan", "bishi",
 			"bizui", "cahan", "caidao", "chajin", "cheer", "chong", "ciya",
@@ -103,6 +107,13 @@ public class Utility {
 
 		return sb.toString();
 	}
+
+	/**
+	 * 将URL分解到bundle中
+	 * 
+	 * @param s
+	 * @return
+	 */
 
 	public static Bundle decodeUrl(String s) {
 		Bundle params = new Bundle();
@@ -193,20 +204,28 @@ public class Utility {
 		return i;
 	}
 
+	/**
+	 * 判断网络是否连接
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public static boolean isConnected(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		/*
-		 * NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-		 * 
-		 * return networkInfo != null && networkInfo.isConnected();
-		 */
 		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 		if (networkInfo != null) {
 			return networkInfo.isAvailable();
 		}
 		return false;
 	}
+
+	/**
+	 * 判断是否是WiFi连接
+	 * 
+	 * @param context
+	 * @return
+	 */
 
 	public static boolean isWifi(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
@@ -220,6 +239,12 @@ public class Utility {
 		return false;
 	}
 
+	/**
+	 * 获取网络类型
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public static int getNetType(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -230,6 +255,12 @@ public class Utility {
 		return -1;
 	}
 
+	/**
+	 * 判断当前网络是否是gprs
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public static boolean isGprs(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -242,6 +273,11 @@ public class Utility {
 		return false;
 	}
 
+	/**
+	 * 获取屏幕宽度
+	 * 
+	 * @return
+	 */
 	public static int getScreenWidth() {
 		Activity activity = ThinkSNSApplication.getInstance().getActivity();
 		if (activity != null) {
@@ -254,6 +290,11 @@ public class Utility {
 		return 480;
 	}
 
+	/**
+	 * 获取屏幕高度
+	 * 
+	 * @return
+	 */
 	public static int getScreenHeight() {
 		Activity activity = ThinkSNSApplication.getInstance().getActivity();
 		if (activity != null) {
@@ -409,6 +450,11 @@ public class Utility {
 		return value;
 	}
 
+	/**
+	 * 增加表情
+	 * 
+	 * @param value
+	 */
 	public static void addEmotions(SpannableString value) {
 		Matcher localMatcher = Pattern.compile("\\[(\\S+?)\\]").matcher(value);
 		while (localMatcher.find()) {

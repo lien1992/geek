@@ -475,6 +475,13 @@ public class WeiboListFragment extends BaseListFragment {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
+			RotateAnimation rotateAnimation = new RotateAnimation(0.0f,
+					+360.0f, Animation.RELATIVE_TO_SELF, 0.5f,
+					Animation.RELATIVE_TO_SELF, 0.5f);
+			rotateAnimation.setRepeatCount(Animation.INFINITE);
+			rotateAnimation.setInterpolator(new LinearInterpolator());
+			rotateAnimation.setDuration(500);
+			loadImage.startAnimation(rotateAnimation);
 			currentPage = 0;
 			totalCount = 0;
 			since_id = "";

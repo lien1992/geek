@@ -25,6 +25,12 @@ import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.widget.Toast;
 
+/**
+ * 扩展功能类
+ * 
+ * @author wangjia
+ * 
+ */
 public class SettingActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener, OnPreferenceClickListener {
 	private CheckBoxPreference mCheckPreference;
@@ -81,7 +87,7 @@ public class SettingActivity extends PreferenceActivity implements
 		// TODO Auto-generated method stub
 		if (aboutUs == preference)
 			startActivity(new Intent(this, AboutUsActivity.class));
-		if (clearCache == preference) {
+		if (clearCache == preference) { // 清除微博和评论缓存
 			DBHelper.getInstance().deleteTableData();
 			DbUtils db = DbUtils.create(this, "thinksns2.db", 10,
 					new DbUpgradeListener() {

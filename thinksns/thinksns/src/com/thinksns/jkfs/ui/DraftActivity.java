@@ -28,6 +28,12 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
+/**
+ * 草稿箱
+ * 
+ * @author wangjia
+ * 
+ */
 public class DraftActivity extends Activity {
 	private ImageView back;
 	private ListView listView;
@@ -136,6 +142,12 @@ public class DraftActivity extends Activity {
 
 	}
 
+	/**
+	 * 草稿箱适配器类
+	 * 
+	 * @author wangjia
+	 * 
+	 */
 	class DraftAdapter extends BaseAdapter {
 
 		@Override

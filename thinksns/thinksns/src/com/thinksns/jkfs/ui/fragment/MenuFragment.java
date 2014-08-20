@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -46,6 +47,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	public static final String TAG = "MenuFragment";
 
 	private final int HTTP_GET_OK = 9;
+	private final int HTTP_CHANGE_HEAD = 10;
 	private static RoundAngleImageView avatar;
 	private static TextView nick;
 	private ImageView at_new;
@@ -66,29 +68,42 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private static DbUtils db;
 	private static DisplayImageOptions options;
 	private ChangeHeadReceiver receiver;
+	private Bitmap bitmap;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case HTTP_GET_OK:
-				Log.d(TAG, "handler is 9");
-				if (json != null && !"".equals(json)) {
-					Gson gson = new Gson();
-					userinfo = gson.fromJson(json, UserInfoBean.class);
-					ImageLoader.getInstance().displayImage(
-							userinfo.getAvatar_original(), avatar, options);
-					nick.setText(userinfo.getUname());
-					try {
-						UserInfoCountBean userInfoCount = userinfo.count_info;
-						if (userInfoCount != null) {
-							userInfoCount.setUser_info(userinfo);
-							db.save(userInfoCount);
-						}
-					} catch (DbException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+
+				ImageLoader.getInstance().displayImage(
+						userinfo.getAvatar_original(), avatar, options);
+				avatar.setImageBitmap(bitmap);
+				avatar.invalidate();
+				nick.setText(userinfo.getUname());
+				try {
+					UserInfoCountBean userInfoCount = userinfo.count_info;
+					if (userInfoCount != null) {
+						userInfoCount.setUser_info(userinfo);
+						db.save(userInfoCount);
 					}
-					application.setUser(userinfo);
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				application.setUser(userinfo);
+				break;
+			case HTTP_CHANGE_HEAD:
+				avatar.setImageBitmap(bitmap);
+				avatar.invalidate();
+				try {
+					UserInfoCountBean userInfoCount = userinfo.count_info;
+					if (userInfoCount != null) {
+						userInfoCount.setUser_info(userinfo);
+						db.save(userInfoCount);
+					}
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				break;
 
@@ -189,7 +204,14 @@ public class MenuFragment extends Fragment implements OnClickListener {
 								.getOauth_token_secret());
 						json = HttpUtility.getInstance().executeNormalTask(
 								HttpMethod.Get, HttpConstant.THINKSNS_URL, map);
-						mHandler.sendEmptyMessage(HTTP_GET_OK);
+						if (json != null && !"".equals(json)) {
+							Gson gson = new Gson();
+							userinfo = gson.fromJson(json, UserInfoBean.class);
+						}
+						bitmap = ImageLoader.getInstance().loadImageSync(
+								userinfo.getAvatar_big());
+						if (bitmap != null)
+							mHandler.sendEmptyMessage(HTTP_GET_OK);
 
 					}
 				}.start();
@@ -355,21 +377,19 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		chat_new.setVisibility(View.VISIBLE);
 	}
 
-	public static void setUserInfo(UserInfoBean user) {
+	public void setUserInfo(UserInfoBean user) {
 		userinfo = user;
-		ImageLoader.getInstance().displayImage(userinfo.getAvatar_original(),
-				avatar, options);
-		nick.setText(userinfo.getUname());
-		try {
-			UserInfoCountBean userInfoCount = userinfo.count_info;
-			if (userInfoCount != null) {
-				userInfoCount.setUser_info(userinfo);
-				db.save(userInfoCount);
+		Log.d("wj", "url after:" + userinfo.getAvatar_big());
+		new Thread() {
+			@Override
+			public void run() {
+				bitmap = ImageLoader.getInstance().loadImageSync(
+						userinfo.getAvatar_big());
+				if (bitmap != null)
+					mHandler.sendEmptyMessage(HTTP_CHANGE_HEAD);
 			}
-		} catch (DbException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		}.start();
+
 	}
 
 	class ChangeHeadReceiver extends BroadcastReceiver {

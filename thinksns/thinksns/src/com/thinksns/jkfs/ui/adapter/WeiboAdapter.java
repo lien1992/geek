@@ -187,7 +187,8 @@ public class WeiboAdapter extends BaseAdapter {
 			holder.repost_userName.setText(weibo_repost.getUname());
 			holder.repost_content.setText(weibo_repost
 					.getListViewSpannableString());
-			if (weibo_repost.getType().equals("postimage")) {
+			if (weibo_repost.getType() != null
+					&& weibo_repost.getType().equals("postimage")) {
 				if (!isNoImageMode) {
 					ImageLoader.getInstance().displayImage(
 							weibo_repost.getAttach().get(0).getAttach_middle(),
@@ -198,9 +199,9 @@ public class WeiboAdapter extends BaseAdapter {
 				holder.repost_pics.setVisibility(View.GONE);
 			}
 			holder.repost.setVisibility(View.VISIBLE);
-		} else if (weibo.getType().equals("weiba_repost")) {
-			// 转发微吧
-
+		} else if (weibo.getType().equals("weiba_post")) {
+			// 微吧
+			holder.from.setText("来自微吧");
 		} else {
 			if (weibo.getType().equals("postimage")) {
 				if (!isNoImageMode && weibo.getAttach() != null

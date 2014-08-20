@@ -7,14 +7,19 @@ import android.widget.BaseAdapter;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 适配器基类
+ * 
+ * @param <T>
+ */
 public abstract class AdapterBase<T> extends BaseAdapter {
-	
+
 	private final List<T> mList = new LinkedList<T>();
-	
-	public List<T> getList(){
+
+	public List<T> getList() {
 		return mList;
 	}
-	
+
 	public void appendToList(List<T> list) {
 		if (list == null) {
 			return;
@@ -35,6 +40,7 @@ public abstract class AdapterBase<T> extends BaseAdapter {
 		mList.clear();
 		notifyDataSetChanged();
 	}
+
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -44,7 +50,7 @@ public abstract class AdapterBase<T> extends BaseAdapter {
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		if(position > mList.size()-1){
+		if (position > mList.size() - 1) {
 			return null;
 		}
 		return mList.get(position);
@@ -64,10 +70,10 @@ public abstract class AdapterBase<T> extends BaseAdapter {
 		}
 		return getExView(position, convertView, parent);
 	}
-	
 
-	protected abstract View getExView(int position, View convertView, ViewGroup parent);
+	protected abstract View getExView(int position, View convertView,
+			ViewGroup parent);
+
 	protected abstract void onReachBottom();
-
 
 }

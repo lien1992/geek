@@ -116,9 +116,6 @@ public class CommentAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		Log.d("comment.getUser().getAvatar_small()", comment.getUser_info()
-				.getAvatar_small());
-
 		ImageLoader.getInstance().displayImage(
 				comment.getUser_info().getAvatar_small(), holder.avatar,
 				options);

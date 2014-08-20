@@ -3,6 +3,7 @@ package com.thinksns.jkfs.ui;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.thinksns.jkfs.R;
+import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.NotificationBean;
 import com.thinksns.jkfs.ui.fragment.MenuFragment;
 import com.thinksns.jkfs.ui.fragment.WeiboMainFragment;
@@ -66,6 +67,7 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 					.getName());
 			sm.showContent();
 			menuTransation.commit();
+			ThinkSNSApplication.getInstance().setMenu(menu);
 
 			// customize the SlidingMenu
 			sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);

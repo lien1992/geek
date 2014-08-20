@@ -59,7 +59,7 @@ import com.thinksns.jkfs.util.http.HttpUtils;
  * @author 邓思宇 我的主页列表显示信息 还未完成
  * 
  */
-@SuppressLint({ "HandlerLeak", "ValidFragment" })
+@SuppressLint( { "HandlerLeak", "ValidFragment" })
 public class AboutMeFragment extends Fragment {
 
 	public static final String TAG = "AboutMeFragment";
@@ -101,9 +101,9 @@ public class AboutMeFragment extends Fragment {
 	}
 
 	public AboutMeFragment(String i, String uid, String following) {
-		if(i==null){
-			this.FLAG=1;
-		}else{
+		if (i == null) {
+			this.FLAG = 1;
+		} else {
 			this.FLAG = Integer.parseInt(i);
 		}
 		this.uuid = uid;
@@ -204,7 +204,9 @@ public class AboutMeFragment extends Fragment {
 								image, options);
 					}
 				}
-				MenuFragment.setUserInfo(userinfo);
+				if (FLAG == 0)
+					ThinkSNSApplication.getInstance().getMenu().setUserInfo(
+							userinfo);
 
 				break;
 
@@ -245,7 +247,7 @@ public class AboutMeFragment extends Fragment {
 				View footer = (View) getActivity().findViewById(
 						R.id.bottomfooter);
 				footer.setVisibility(View.GONE);
-				
+
 				Toast toast2 = Toast.makeText(getActivity(), "私信发送成功",
 						Toast.LENGTH_SHORT);
 				toast2.show();
@@ -273,9 +275,8 @@ public class AboutMeFragment extends Fragment {
 				.getApplicationContext();
 		account = application.getAccount(this.getActivity());
 
-		options = new DisplayImageOptions.Builder()
-				.showStubImage(R.drawable.ic_launcher).cacheInMemory()
-				.cacheOnDisc().build();
+		options = new DisplayImageOptions.Builder().showStubImage(
+				R.drawable.ic_launcher).cacheInMemory().cacheOnDisc().build();
 		db = DbUtils.create(getActivity());
 		db.configDebug(true);
 
@@ -340,8 +341,8 @@ public class AboutMeFragment extends Fragment {
 					map.put("to_uid", uuid);
 					map.put("content", content);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
 					HttpUtils.doPost(HttpConstant.THINKSNS_URL, map);
 
 					mHandler.sendEmptyMessage(4);
@@ -397,9 +398,8 @@ public class AboutMeFragment extends Fragment {
 				Bundle args = new Bundle();
 				args.putParcelable("uinfo", userinfo);
 				userInfoWeiboListFragment.setArguments(args);
-				getChildFragmentManager().beginTransaction()
-						.replace(R.id.aboutme_frame, userInfoWeiboListFragment)
-						.commit();
+				getChildFragmentManager().beginTransaction().replace(
+						R.id.aboutme_frame, userInfoWeiboListFragment).commit();
 
 			}
 		});
@@ -473,10 +473,11 @@ public class AboutMeFragment extends Fragment {
 		switch (FLAG) {
 		case 0:
 
-			if (application.getUser() != null) {
-				userinfo = application.getUser();
-				mHandler.sendEmptyMessage(1);
-			} else if (Utility.isConnected(getActivity())) {
+			/*
+			 * if (application.getUser() != null) { userinfo =
+			 * application.getUser(); mHandler.sendEmptyMessage(1); } else
+			 */
+			if (Utility.isConnected(getActivity())) {
 				// 待添加超时判断
 
 				new Thread() {
@@ -490,15 +491,14 @@ public class AboutMeFragment extends Fragment {
 						map.put("act", "show");
 						map.put("user_id", account.getUid());
 						map.put("oauth_token", account.getOauth_token());
-						map.put("oauth_token_secret",
-								account.getOauth_token_secret());
+						map.put("oauth_token_secret", account
+								.getOauth_token_secret());
 						String json = HttpUtility.getInstance()
 								.executeNormalTask(HttpMethod.Get,
 										HttpConstant.THINKSNS_URL, map);
 
 						if (json != null && !"".equals(json)
 								&& json.startsWith("{")) {
-
 							userinfo = gson.fromJson(json, UserInfoBean.class);
 							mHandler.sendEmptyMessage(1);
 						}
@@ -535,8 +535,8 @@ public class AboutMeFragment extends Fragment {
 						map.put("act", "show");
 						map.put("user_id", uuid);
 						map.put("oauth_token", account.getOauth_token());
-						map.put("oauth_token_secret",
-								account.getOauth_token_secret());
+						map.put("oauth_token_secret", account
+								.getOauth_token_secret());
 						String json = HttpUtility.getInstance()
 								.executeNormalTask(HttpMethod.Get,
 										HttpConstant.THINKSNS_URL, map);
@@ -571,8 +571,8 @@ public class AboutMeFragment extends Fragment {
 					map.put("mod", "User");
 					map.put("act", act);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
 					map.put("user_id", uid);
 					String json = HttpUtility.getInstance().executeNormalTask(
 							HttpMethod.Post, HttpConstant.THINKSNS_URL, map);
@@ -591,9 +591,8 @@ public class AboutMeFragment extends Fragment {
 	 */
 	private void showDialog() {
 
-		new AlertDialog.Builder(getActivity())
-				.setTitle("设置头像")
-				.setItems(items, new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(getActivity()).setTitle("设置头像").setItems(items,
+				new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -614,14 +613,16 @@ public class AboutMeFragment extends Fragment {
 						case 1:
 							imageFileUri = getActivity()
 									.getContentResolver()
-									.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+									.insert(
+											MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 											new ContentValues());
 							if (imageFileUri != null) {
 								Intent i = new Intent(
 										android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-								i.putExtra(
-										android.provider.MediaStore.EXTRA_OUTPUT,
-										imageFileUri);
+								i
+										.putExtra(
+												android.provider.MediaStore.EXTRA_OUTPUT,
+												imageFileUri);
 								startActivityForResult(i, CAMERA_REQUEST_CODE);
 							} else {
 								Toast.makeText(getActivity(), "出现了点小意外",
@@ -630,8 +631,8 @@ public class AboutMeFragment extends Fragment {
 							break;
 						}
 					}
-				})
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				}).setNegativeButton("取消",
+				new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -791,15 +792,33 @@ public class AboutMeFragment extends Fragment {
 					map.put("act", "upload_face");
 					map.put("Filedata", head);
 					map.put("oauth_token", account.getOauth_token());
-					map.put("oauth_token_secret",
-							account.getOauth_token_secret());
+					map.put("oauth_token_secret", account
+							.getOauth_token_secret());
 					HttpUtils.doPost(HttpConstant.THINKSNS_URL, map);
 					boolean result = HttpUtils.doUploadFile(
 							HttpConstant.THINKSNS_URL, map, uploadPicPath);
+					Log.d("wj", "url before:" + userinfo.getAvatar_original());
 					if (result) {
-						Intent in = new Intent();
-						in.setAction(BaseConstant.CHANGE_HEAD_BROADCAST);
-						getActivity().sendBroadcast(in);
+						HashMap<String, String> m = new HashMap<String, String>();
+						m = new HashMap<String, String>();
+						m.put("app", "api");
+						m.put("mod", "User");
+						m.put("act", "show");
+						m.put("user_id", account.getUid());
+						m.put("oauth_token", account.getOauth_token());
+						m.put("oauth_token_secret", account
+								.getOauth_token_secret());
+						String json = HttpUtility.getInstance()
+								.executeNormalTask(HttpMethod.Get,
+										HttpConstant.THINKSNS_URL, map);
+						if (json != null && !"".equals(json)) {
+							Gson g = new Gson();
+							UserInfoBean user = g.fromJson(json,
+									UserInfoBean.class);
+							Log.d("wj", "url middle:" + userinfo.getAvatar_original());
+							ThinkSNSApplication.getInstance().getMenu()
+									.setUserInfo(user);
+						}
 					}
 
 				}
