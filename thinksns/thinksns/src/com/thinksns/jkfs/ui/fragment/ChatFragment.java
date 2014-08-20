@@ -123,21 +123,12 @@ public class ChatFragment extends Fragment {
 
         chat_listview=(ListView)view.findViewById(R.id.chat_list);
         mMenuSlide=(View)view.findViewById(R.id.menu_icon);
-        addButton=(ImageView)view.findViewById(R.id.chat_add_button);
         mMenuSlide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((MainFragmentActivity) getActivity()).getSlidingMenu()
                         .toggle();
             }
-        });
-        addButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-			}
         });
 
         chatListAdapter=new ChatListAdapter(mListChat,getActivity(),mInflater);

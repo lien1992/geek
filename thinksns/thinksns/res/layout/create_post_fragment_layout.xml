@@ -86,6 +86,7 @@
             android:id="@+id/create_post_emotion"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:visibility="invisible"
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
             android:layout_toRightOf="@+id/create_post_add_topic"
