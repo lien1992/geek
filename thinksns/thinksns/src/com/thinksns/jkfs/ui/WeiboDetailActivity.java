@@ -749,17 +749,25 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 		case R.id.re_detail_user_name:
 			break;
 		case R.id.wb_detail_pic1:
-			Intent in_browse = new Intent(WeiboDetailActivity.this,
-					BrowseImageActivity.class);
-			in_browse.putExtra("url", weibo.getAttach().get(0).getAttach_url());
-			startActivity(in_browse);
+			if (weibo.getAttach().get(0).getAttach_url() != null
+					&& !weibo.getAttach().get(0).getAttach_url().equals("")) {
+				Intent in_browse = new Intent(WeiboDetailActivity.this,
+						BrowseImageActivity.class);
+				in_browse.putExtra("url", weibo.getAttach().get(0)
+						.getAttach_url());
+				startActivity(in_browse);
+			}
 			break;
 		case R.id.re_detail_wb_pic1:
-			Intent in_r_browse = new Intent(WeiboDetailActivity.this,
-					BrowseImageActivity.class);
-			in_r_browse.putExtra("url", weibo.getTranspond_data().getAttach()
-					.get(0).getAttach_url());
-			startActivity(in_r_browse);
+			if (weibo.getTranspond_data().getAttach().get(0).getAttach_url() != null
+					&& !weibo.getTranspond_data().getAttach().get(0)
+							.getAttach_url().equals("")) {
+				Intent in_r_browse = new Intent(WeiboDetailActivity.this,
+						BrowseImageActivity.class);
+				in_r_browse.putExtra("url", weibo.getTranspond_data()
+						.getAttach().get(0).getAttach_url());
+				startActivity(in_r_browse);
+			}
 			break;
 		}
 	}

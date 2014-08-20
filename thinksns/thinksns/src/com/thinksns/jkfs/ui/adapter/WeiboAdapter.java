@@ -203,7 +203,8 @@ public class WeiboAdapter extends BaseAdapter {
 
 		} else {
 			if (weibo.getType().equals("postimage")) {
-				if (!isNoImageMode && weibo.getAttach().size() > 0) {
+				if (!isNoImageMode && weibo.getAttach() != null
+						&& weibo.getAttach().size() > 0) {
 					ImageLoader.getInstance().displayImage(
 							weibo.getAttach().get(0).getAttach_middle(),
 							holder.weibo_pic, options);

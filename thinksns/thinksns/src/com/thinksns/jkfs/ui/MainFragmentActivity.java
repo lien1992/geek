@@ -85,9 +85,9 @@ public class MainFragmentActivity extends SlidingFragmentActivity {
 		PendingIntent pendingIntent = PendingIntent.getService(this, 2014,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		long triggerAtTime = SystemClock.elapsedRealtime();
-		// 每30s请求一次服务器获取未读消息数目
+		// 每10s请求一次服务器获取未读消息数目
 		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, triggerAtTime,
-				30 * 1000, pendingIntent);
+				10 * 1000, pendingIntent);
 	}
 
 	@Override

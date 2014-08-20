@@ -109,7 +109,7 @@ public class WeiboListFragment extends BaseListFragment {
 				if (!listView.getLoadMoreStatus() && totalCount == 20) {
 					listView.setLoadMoreEnable(true);
 				}
-				adapter.insertToHead(weibos);
+				adapter.update(weibos);
 				try {
 					if (application.isClearCache()) {
 						loadImage.setAnimation(null);

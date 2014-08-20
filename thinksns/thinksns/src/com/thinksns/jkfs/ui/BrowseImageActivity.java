@@ -8,40 +8,52 @@ import com.thinksns.jkfs.ui.view.DragImageView;
 import com.thinksns.jkfs.ui.view.ImageLoadingDialog;
 import com.thinksns.jkfs.util.Utility;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class BrowseImageActivity extends Activity {
+	private Context ctx;
+	private Activity activity;
 	private String url;
 	private DragImageView image;
 	private ImageLoadingDialog dialog;
 	private DisplayImageOptions options;
-	private Bitmap bitmap;
+	private static Bitmap bitmap;
 
 	private int window_width, window_height;
 	private int state_height;// 状态栏的高度
 
 	private ViewTreeObserver viewTreeObserver;
 
+	private Handler mHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 0:
+				Toast.makeText(BrowseImageActivity.this, "网络未连接",
+						Toast.LENGTH_SHORT).show();
+				BrowseImageActivity.this.finish();
+				break;
+			}
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browseimage);
+
+		ctx = this.getApplicationContext();
+		activity = this;
 
 		Intent intent = getIntent();
 		url = intent.getStringExtra("url");
@@ -59,42 +71,44 @@ public class BrowseImageActivity extends Activity {
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
 
-		if (Utility.isConnected(this)) {
-			dialog.dismiss();
-			ImageSize targetSize = new ImageSize(window_width, window_height);
-			bitmap = ImageLoader.getInstance().loadImageSync(url, targetSize,
-					options);
-			image.setImageBitmap(bitmap);
-			image.setmActivity(this);
-			viewTreeObserver = image.getViewTreeObserver();
-			viewTreeObserver
-					.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+		new Thread() {
+			@Override
+			public void run() {
+				if (Utility.isConnected(ctx)) {
+					dialog.dismiss();
+					ImageSize targetSize = new ImageSize(window_width,
+							window_height);
+					bitmap = ImageLoader.getInstance().loadImageSync(url,
+							targetSize, options);
+					image.setImageBitmap(bitmap);
 
-						@Override
-						public void onGlobalLayout() {
-							if (state_height == 0) {
-								// 获取状况栏高度
-								Rect frame = new Rect();
-								getWindow().getDecorView()
-										.getWindowVisibleDisplayFrame(frame);
-								state_height = frame.top;
-								image.setScreen_H(window_height - state_height);
-								image.setScreen_W(window_width);
-							}
+					image.setmActivity(activity);
+					viewTreeObserver = image.getViewTreeObserver();
+					viewTreeObserver
+							.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
-						}
-					});
-		} else {
-			dialog.dismiss();
-			Toast.makeText(BrowseImageActivity.this, "网络未连接",
-					Toast.LENGTH_SHORT).show();
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					finish();
+								@Override
+								public void onGlobalLayout() {
+									if (state_height == 0) {
+										// 获取状况栏高度
+										Rect frame = new Rect();
+										getWindow().getDecorView()
+												.getWindowVisibleDisplayFrame(
+														frame);
+										state_height = frame.top;
+										image.setScreen_H(window_height
+												- state_height);
+										image.setScreen_W(window_width);
+									}
+
+								}
+							});
+				} else {
+					dialog.dismiss();
+					mHandler.sendEmptyMessageDelayed(0, 500);
 				}
-			}, 1000 * 2);
-		}
-	}
 
+			}
+		}.start();
+	}
 }
