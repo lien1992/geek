@@ -303,7 +303,7 @@ public class UserInfoFollowList extends BaseActivity implements
 	 * @param view
 	 */
 	public void loadMore(View view) {
-		loadMoreButton.setText("loading..."); // 设置按钮文字loading
+		loadMoreButton.setText("加载中..."); // 设置按钮文字loading
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -312,7 +312,7 @@ public class UserInfoFollowList extends BaseActivity implements
 
 				// adapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
 				listView.setSelection(visibleLastIndex - visibleItemCount + 1); // 设置选中项
-				loadMoreButton.setText("load more"); // 恢复按钮文字
+				loadMoreButton.setText("加载更多"); // 恢复按钮文字
 			}
 		}, 2000);
 	}
