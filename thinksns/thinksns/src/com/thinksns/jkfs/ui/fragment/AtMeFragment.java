@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -165,7 +166,7 @@ public class AtMeFragment extends BaseListFragment {
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
 				0.5f);
 		rotateAnimation.setRepeatCount(Animation.INFINITE);
-		rotateAnimation.setInterpolator(getActivity(), interpolator.linear);
+		rotateAnimation.setInterpolator(new LinearInterpolator());
 		rotateAnimation.setDuration(500);
 		loadImage.startAnimation(rotateAnimation);
 		return view;

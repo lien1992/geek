@@ -7,8 +7,10 @@ import java.util.Map;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.WeibaBean;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.adapter.WeibaDropListAdapter;
 import com.thinksns.jkfs.util.WeibaActionHelper;
+import com.thinksns.jkfs.util.WeibaBaseHelper;
 import com.thinksns.jkfs.util.WeibaDataHelper;
 import com.thinksns.jkfs.util.db.WeibaOperator;
 
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
@@ -42,6 +45,7 @@ public class CreatePostFragment extends Fragment {
 	private static String OAUTH_TOKEN;
 	private static String OAUTH_TOKEN_SECRECT;
 	
+	private ImageView navigation;
 	private EditText title;
 	private Spinner weiba_group;
 	private EditText content;
@@ -76,6 +80,13 @@ public class CreatePostFragment extends Fragment {
 								.show();
 					}
 					break;
+				case WeibaBaseHelper.DATA_ERROR:
+					Toast.makeText(mContext, "数据加载失败", Toast.LENGTH_SHORT)
+							.show();
+					break;
+				case WeibaBaseHelper.NET_ERROR:
+					Toast.makeText(mContext, "网络故障", Toast.LENGTH_SHORT).show();
+					break;
 				}
 			}
 		};
@@ -87,14 +98,20 @@ public class CreatePostFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View rootView = inflater.inflate(R.layout.create_post_fragment_layout,
 				container, false);
+		navigation=(ImageView) rootView.findViewById(R.id.weiba_fragment_title);
 		title=(EditText)rootView.findViewById(R.id.title);
 		weiba_group=(Spinner)rootView.findViewById(R.id.weiba_group);
 		content=(EditText)rootView.findViewById(R.id.content);
-		create_post_location=rootView.findViewById(R.id.create_post_location);
-		create_post_add_pic=rootView.findViewById(R.id.create_post_add_pic);
 		create_post_add_topic=rootView.findViewById(R.id.create_post_add_topic);
 		create_post_emotion=rootView.findViewById(R.id.create_post_emotion);
 		create_post_send=rootView.findViewById(R.id.create_post_send);
+		navigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainFragmentActivity) getActivity()).getSlidingMenu()
+                        .toggle();
+            }
+        });
 		
 		init();
 		followedWeiba=WeibaOperator.getInstance().queryFollowedWeibaList();

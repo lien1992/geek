@@ -75,29 +75,11 @@
         android:background="@color/white" >
 
         <ImageView
-            android:id="@+id/create_post_location"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:src="@drawable/location" />
-
-        <ImageView
-            android:id="@+id/create_post_add_pic"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:layout_toRightOf="@+id/create_post_location"
-            android:src="@drawable/photo" />
-
-        <ImageView
             android:id="@+id/create_post_add_topic"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
-            android:layout_toRightOf="@+id/create_post_add_pic"
             android:src="@drawable/topic" />
 
         <ImageView

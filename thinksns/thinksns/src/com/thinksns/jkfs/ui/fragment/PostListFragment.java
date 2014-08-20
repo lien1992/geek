@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -91,24 +93,25 @@ public class PostListFragment extends Fragment implements
 				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				switch (msg.what) {
-				case GET_POST_LIST:
+				case GET_POST_LIST:// 加载帖子列表
 					loadImage.setAnimation(null);
 					loadImage.setVisibility(View.GONE);
 					postList = (LinkedList<PostBean>) msg.obj;
-					Log.w("l列表大小", postList.size()+"/"+postList.toString()+"/"+map.toString());
-					if(postList.size()==0){
-						String info="";
-						String act=map.get("act");
-						if(act.equals("following_posts")){
-							info="你还没有关注任何微吧，快去看看吧！";
-						}else if(act.equals("search_post")){
-							info="未搜素到任何帖子，换换关键词试试！";
-						}	
+					Log.w("l列表大小", postList.size() + "/" + postList.toString()
+							+ "/" + map.toString());
+					if (postList.size() == 0) {
+						String info = "";
+						String act = map.get("act");
+						if (act.equals("following_posts")) {
+							info = "你还没有关注任何微吧，快去看看吧！";
+						} else if (act.equals("search_post")) {
+							info = "未搜素到任何帖子，换换关键词试试！";
+						}
 						Toast.makeText(mContext, info, Toast.LENGTH_SHORT)
-						.show();
+								.show();
 					}
 
-					if(postList.size()<20){
+					if (postList.size() < 20) {
 						mListView.setLoadMoreEnable(false);
 					}
 					{
@@ -124,7 +127,7 @@ public class PostListFragment extends Fragment implements
 					}
 					break;
 
-				case APPEND_POST_LIST:
+				case APPEND_POST_LIST:// 加载更多
 					mListView.onLoadMoreComplete();
 					LinkedList<PostBean> appendList = (LinkedList<PostBean>) msg.obj;
 					if (postListAdapter == null) {
@@ -145,10 +148,10 @@ public class PostListFragment extends Fragment implements
 						postListAdapter.notifyDataSetChanged();
 					}
 					break;
-				case ADD_POST_LIST:
+				case ADD_POST_LIST:// 刷新帖子列表
 					mListView.onRefreshComplete();
 					LinkedList<PostBean> addList = (LinkedList<PostBean>) msg.obj;
-					if((postList.size()+addList.size())>20){
+					if ((postList.size() + addList.size()) > 20) {
 						mListView.setLoadMoreEnable(true);
 					}
 					if (postListAdapter == null) {
@@ -169,7 +172,7 @@ public class PostListFragment extends Fragment implements
 						postListAdapter.notifyDataSetChanged();
 					}
 					break;
-				case ACT_COLLECT:
+				case ACT_COLLECT:// 收藏操作
 					final Map<String, String> collect = new HashMap<String, String>();
 					collect.put("app", APP);
 					collect.put("mod", MOD);
@@ -177,11 +180,11 @@ public class PostListFragment extends Fragment implements
 					collect.put("id", (String) msg.obj);
 					collect.put("oauth_token", OAUTH_TOKEN);
 					collect.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
-					new Thread(new WeibaActionHelper(mHandler, mContext, collect,
-							ACT_COLLECT_OK)).start();
+					new Thread(new WeibaActionHelper(mHandler, mContext,
+							collect, ACT_COLLECT_OK)).start();
 					Log.w("关注开始", collect.toString());
 					break;
-				case ACT_CANCEL:
+				case ACT_CANCEL:// 取消收藏操作
 					final Map<String, String> cancel = new HashMap<String, String>();
 					cancel.put("app", APP);
 					cancel.put("mod", MOD);
@@ -189,10 +192,10 @@ public class PostListFragment extends Fragment implements
 					cancel.put("id", (String) msg.obj);
 					cancel.put("oauth_token", OAUTH_TOKEN);
 					cancel.put("oauth_token_secret", OAUTH_TOKEN_SECRECT);
-					new Thread(new WeibaActionHelper(mHandler, mContext, cancel,
-							ACT_CANCEL_OK)).start();
+					new Thread(new WeibaActionHelper(mHandler, mContext,
+							cancel, ACT_CANCEL_OK)).start();
 					break;
-				case ACT_COLLECT_OK:
+				case ACT_COLLECT_OK:// 收藏成功
 					operatStatus = (String[]) msg.obj;
 					Log.w("关注结束", operatStatus[0] + "/" + operatStatus[1]);
 					if ("1".equals(operatStatus[0])) {
@@ -205,7 +208,7 @@ public class PostListFragment extends Fragment implements
 								.show();
 					}
 					break;
-				case ACT_CANCEL_OK:
+				case ACT_CANCEL_OK:// 取消收藏成功
 					operatStatus = (String[]) msg.obj;
 					if ("1".equals(operatStatus[0])) {
 						Toast.makeText(mContext, "取消收藏成功", Toast.LENGTH_SHORT)
@@ -217,11 +220,11 @@ public class PostListFragment extends Fragment implements
 								.show();
 					}
 					break;
-				case WeibaBaseHelper.DATA_ERROR:
+				case WeibaBaseHelper.DATA_ERROR:// 数据加载出错
 					Toast.makeText(mContext, "数据加载失败", Toast.LENGTH_SHORT)
 							.show();
 					break;
-				case WeibaBaseHelper.NET_ERROR:
+				case WeibaBaseHelper.NET_ERROR:// 网络故障
 					Toast.makeText(mContext, "网络故障", Toast.LENGTH_SHORT).show();
 					break;
 				}
@@ -230,17 +233,11 @@ public class PostListFragment extends Fragment implements
 
 		};
 	}
-    
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
-		
-		
-		
-		
-		
 	}
 
 	@Override
@@ -251,8 +248,7 @@ public class PostListFragment extends Fragment implements
 				container, false);
 		mListView = (PullToRefreshListView) rootView
 				.findViewById(R.id.weiba_post_list);
-		loadImage=(ImageView) rootView
-		.findViewById(R.id.load_img);
+		loadImage = (ImageView) rootView.findViewById(R.id.load_img);
 		mListView.setSoundEffectsEnabled(true);
 		mListView.setLoadMoreEnable(true);
 		mListView.setListener(this);
@@ -272,12 +268,13 @@ public class PostListFragment extends Fragment implements
 				ft.commit();
 			}
 		});
-		RotateAnimation rotateAnimation=new RotateAnimation(0.0f, +360.0f,
-	               Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF, 0.5f);
-	    rotateAnimation.setRepeatCount(Animation.INFINITE);
-	    rotateAnimation.setInterpolator(mContext,interpolator.linear);
-	    rotateAnimation.setDuration(500);
-	    loadImage.startAnimation(rotateAnimation);
+		RotateAnimation rotateAnimation = new RotateAnimation(0.0f, +360.0f,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		rotateAnimation.setRepeatCount(Animation.INFINITE);
+		rotateAnimation.setInterpolator(new LinearInterpolator());
+		rotateAnimation.setDuration(500);
+		loadImage.startAnimation(rotateAnimation);
 		return rootView;
 	}
 
@@ -320,18 +317,23 @@ public class PostListFragment extends Fragment implements
 
 	}
 
+	/**
+	 * 在postList后添加，返回值为新添加的元素数目；
+	 * 
+	 * @param list：需要添加的对象
+	 */
 	public int append(List<PostBean> list) {
 		if (list == null) {
 			return 0;
 		}
-		int index = 0;
+		int index = 0;//index：从list的第几项开始往后添加
 		int length = list.size();
-		if(postList.size()==0){
-			index=length;
-		}else{
+		if (postList.size() == 0) {
+			index = length;
+		} else {
 			Iterator<PostBean> it = list.iterator();
 			PostBean last = postList.getLast();
-			
+
 			while (it.hasNext()) {
 				PostBean temp = it.next();
 				if (!temp.getPost_id().equals(last.getPost_id())) {
@@ -339,10 +341,10 @@ public class PostListFragment extends Fragment implements
 				} else {
 					break;
 				}
-			}	
+			}
 		}
 		Log.w("向后添加", "索引是" + index);
-		if (index == (length - 1)) {
+		if (index == (length - 1)) {//此处分三种情况：1.中部相交；2.尾部相交；3.不相交
 			return 0;
 		} else if (index == length) {
 			postList.addAll(list);
@@ -354,14 +356,19 @@ public class PostListFragment extends Fragment implements
 
 	}
 
+	/**
+	 * 在postList前添加，返回值为新添加的元素数目
+	 * 
+	 * @param list：需要添加的对象
+	 */
 	public int insertToHead(List<PostBean> list) {
 		if (list == null) {
 			return 0;
 		}
 		int index = 0;
-		if(postList.size()==0){
-			index=list.size();
-		}else{
+		if (postList.size() == 0) {
+			index = list.size();
+		} else {
 			Iterator<PostBean> it = list.iterator();
 			PostBean first = postList.getFirst();
 			while (it.hasNext()) {
@@ -371,10 +378,10 @@ public class PostListFragment extends Fragment implements
 				} else {
 					break;
 				}
-			}	
+			}
 		}
 		Log.w("向前添加", "索引是" + index);
-		if (index == 0) {
+		if (index == 0) {//此处分两种情况：1.头部相交，即代表完全相同；2.其他；
 			return 0;
 		} else {
 			for (int i = index - 1; i >= 0; i--) {
@@ -384,10 +391,19 @@ public class PostListFragment extends Fragment implements
 		}
 	}
 
+	/**
+	 * 清空postList；
+	 * 
+	 */
 	public void clear() {
 		postList.clear();
 	}
 
+	/**
+	 * PostListFragment在帖子列表、我的个人中心、帖子搜索中都被重用，在帖子列表和我的个人中心均进行缓存，不同的项目下各建立了一个对应的表
+	 * ，通过该方法获取相应表的序号；
+	 * 
+	 */
 	public void getTableNum() {
 		String act = map.get("act");
 		Log.w("表序号前", act + "/" + postTableFlag);

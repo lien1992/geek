@@ -64,7 +64,9 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/follower_count_label"
             android:gravity="left"
-            android:text="10"
+            android:singleLine="true"
+            android:text="1000"
+            android:minEms="2"
             android:textColor="@color/grey"
             android:textSize="15sp" />
 
@@ -86,7 +88,9 @@
             android:layout_below="@+id/follower_count_label"
             android:layout_toRightOf="@+id/thread_count_label"
             android:gravity="left"
-            android:text="10"
+            android:singleLine="true"
+            android:text="1000"
+            android:minEms="2"
             android:textColor="@color/grey"
             android:textSize="15sp" />
 
@@ -95,8 +99,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/follower_count"
             android:gravity="center"
             android:singleLine="true"
+            android:ems="4"
             android:text="关    注"
             android:textColor="@color/pure_white"
             android:textSize="15sp" 

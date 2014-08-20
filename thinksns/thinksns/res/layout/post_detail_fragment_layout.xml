@@ -159,14 +159,18 @@
             android:src="@drawable/favourite" />
     </RelativeLayout>
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/detail_comment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <FrameLayout
             android:id="@+id/detail_comment_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@color/pure_white" />
 
         <LinearLayout
@@ -204,6 +208,6 @@
                 android:layout_margin="5dp"
                 android:src="@drawable/send" />
         </LinearLayout>
-    </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>

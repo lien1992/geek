@@ -2,6 +2,7 @@ package com.thinksns.jkfs.ui.fragment;
 
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.adapter.WeibaCenterAdapter;
 import com.thinksns.jkfs.ui.adapter.WeibaSearchAdapter;
 import com.thinksns.jkfs.ui.view.UnderlinePageIndicator;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -23,6 +25,7 @@ import android.widget.TextView;
  */
 public class PersonalCenterFragment extends Fragment {
 
+	private ImageView navigation;
 	private TextView posteds;
 	private TextView commenteds;
 	private TextView favorite_list;
@@ -38,12 +41,20 @@ public class PersonalCenterFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View rootView = inflater.inflate(
 				R.layout.personal_center_fragment_layout, container, false);
+		navigation = (ImageView) rootView.findViewById(R.id.weiba_center_navigation);
 		posteds=(TextView) rootView.findViewById(R.id.posteds);
 		commenteds=(TextView) rootView.findViewById(R.id.commenteds);
 		favorite_list=(TextView) rootView.findViewById(R.id.favorite_list);
 		weiba_center_indicator=(UnderlinePageIndicator)rootView.findViewById(R.id.weiba_center_indicator);
 		weiba_center_pager=(ViewPager)rootView.findViewById(R.id.weiba_center_pager);
-        
+		navigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainFragmentActivity) getActivity()).getSlidingMenu()
+                        .toggle();
+            }
+        });
+
 		FragmentManager fm=getChildFragmentManager();
 		pagerAdapter=new WeibaCenterAdapter(fm, getActivity(), this);
 		weiba_center_pager.setAdapter(pagerAdapter);

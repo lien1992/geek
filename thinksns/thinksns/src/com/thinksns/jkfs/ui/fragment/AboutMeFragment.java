@@ -101,7 +101,11 @@ public class AboutMeFragment extends Fragment {
 	}
 
 	public AboutMeFragment(String i, String uid, String following) {
-		this.FLAG = Integer.parseInt(i);
+		if(i==null){
+			this.FLAG=1;
+		}else{
+			this.FLAG = Integer.parseInt(i);
+		}
 		this.uuid = uid;
 		this.follow = Integer.parseInt(following);
 	}
