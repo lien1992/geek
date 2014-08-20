@@ -253,7 +253,8 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 					comment_all.addFirst(comments.get(i));
 				}
 				currentPage = totalCount / 10 + 1;
-
+				if (comment_all.size() > weibo.getComment_count())
+					comment_count.setText(comment_all.size() + "");
 				break;
 
 			}
@@ -692,8 +693,8 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 								Intent in_o = new Intent(
 										WeiboDetailActivity.this,
 										OtherInfoActivity.class);
-								in_o.putExtra("FLAG", userinfo.getUid().equals(
-										account.getUid()) ? 0 : 1);
+								in_o.putExtra("FLAG", (userinfo.getUid()
+										.equals(account.getUid()) ? "0" : "1"));
 								in_o.putExtra("userinfo", userinfo.getUid());
 								in_o.putExtra("following",
 										userinfo.follow_state.getFollowing()
@@ -732,8 +733,8 @@ public class WeiboDetailActivity extends Activity implements OnClickListener,
 								Intent in_o = new Intent(
 										WeiboDetailActivity.this,
 										OtherInfoActivity.class);
-								in_o.putExtra("FLAG", userinfo.getUid().equals(
-										account.getUid()) ? 0 : 1);
+								in_o.putExtra("FLAG", (userinfo.getUid()
+										.equals(account.getUid()) ? "0" : "1"));
 								in_o.putExtra("userinfo", userinfo.getUid());
 								in_o.putExtra("following",
 										userinfo.follow_state.getFollowing()

@@ -15,9 +15,11 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class BrowseImageActivity extends Activity {
@@ -28,6 +30,8 @@ public class BrowseImageActivity extends Activity {
 	private ImageLoadingDialog dialog;
 	private DisplayImageOptions options;
 	private static Bitmap bitmap;
+	private ImageSize targetSize;
+	private ProgressBar p;
 
 	private int window_width, window_height;
 	private int state_height;// 状态栏的高度
@@ -42,6 +46,11 @@ public class BrowseImageActivity extends Activity {
 						Toast.LENGTH_SHORT).show();
 				BrowseImageActivity.this.finish();
 				break;
+			case 1:
+				p.setVisibility(View.GONE);
+				if (bitmap != null)
+					image.setImageBitmap(bitmap);
+				break;
 			}
 		}
 	};
@@ -51,6 +60,7 @@ public class BrowseImageActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browseimage);
+		p = (ProgressBar) findViewById(R.id.browse_big_image_progressbar);
 
 		ctx = this.getApplicationContext();
 		activity = this;
@@ -70,45 +80,44 @@ public class BrowseImageActivity extends Activity {
 		dialog = new ImageLoadingDialog(this);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
+		targetSize = new ImageSize(window_width, window_height);
 
 		new Thread() {
 			@Override
 			public void run() {
 				if (Utility.isConnected(ctx)) {
 					dialog.dismiss();
-					ImageSize targetSize = new ImageSize(window_width,
-							window_height);
 					bitmap = ImageLoader.getInstance().loadImageSync(url,
 							targetSize, options);
-					image.setImageBitmap(bitmap);
-
-					image.setmActivity(activity);
-					viewTreeObserver = image.getViewTreeObserver();
-					viewTreeObserver
-							.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-
-								@Override
-								public void onGlobalLayout() {
-									if (state_height == 0) {
-										// 获取状况栏高度
-										Rect frame = new Rect();
-										getWindow().getDecorView()
-												.getWindowVisibleDisplayFrame(
-														frame);
-										state_height = frame.top;
-										image.setScreen_H(window_height
-												- state_height);
-										image.setScreen_W(window_width);
-									}
-
-								}
-							});
+					// image.setImageBitmap(bitmap);
+					mHandler.sendEmptyMessage(1);
 				} else {
 					dialog.dismiss();
 					mHandler.sendEmptyMessageDelayed(0, 500);
 				}
-
 			}
 		}.start();
+		/*
+		 * if (bitmap != null) image.setImageBitmap(bitmap);
+		 */
+		image.setmActivity(activity);
+		viewTreeObserver = image.getViewTreeObserver();
+		viewTreeObserver
+				.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+					@Override
+					public void onGlobalLayout() {
+						if (state_height == 0) {
+							// 获取状况栏高度
+							Rect frame = new Rect();
+							getWindow().getDecorView()
+									.getWindowVisibleDisplayFrame(frame);
+							state_height = frame.top;
+							image.setScreen_H(window_height - state_height);
+							image.setScreen_W(window_width);
+						}
+
+					}
+				});
 	}
 }
