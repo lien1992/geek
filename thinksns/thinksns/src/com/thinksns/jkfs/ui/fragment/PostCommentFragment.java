@@ -17,15 +17,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.PostCommentBean;
 import com.thinksns.jkfs.ui.adapter.CommentListAdapter;
+import com.thinksns.jkfs.ui.adapter.PostListAdapter;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView;
 import com.thinksns.jkfs.ui.view.PullToRefreshListView.RefreshAndLoadMoreListener;
 import com.thinksns.jkfs.util.WeibaActionHelper;
@@ -81,10 +85,20 @@ public class PostCommentFragment extends Fragment implements
 				case GET_COMMENT_LIST:
 					loadImage.setAnimation(null);
 					loadImage.setVisibility(View.GONE);
-					commentList = (LinkedList<PostCommentBean>) msg.obj;
-					commentListAdapter = new CommentListAdapter(mContext,
-							commentList, mHandler);
-					postCommentList.setAdapter(commentListAdapter);
+					commentList = (LinkedList<PostCommentBean>) msg.obj;	
+					if (commentList.size() == 0) {
+						Toast.makeText(mContext, "暂无评论", Toast.LENGTH_SHORT)
+								.show();
+					}
+					if (commentList.size() < 20) {
+						postCommentList.setLoadMoreEnable(false);
+					}
+					{
+						commentListAdapter = new CommentListAdapter(mContext,
+								commentList, mHandler);
+						postCommentList.setAdapter(commentListAdapter);
+					}
+					
 					break;
 				case APPEND_COMMENT_LIST:
 					postCommentList.onRefreshComplete();
@@ -103,6 +117,9 @@ public class PostCommentFragment extends Fragment implements
 				case ADD_COMMENT_LIST:
 					postCommentList.onLoadMoreComplete();
 					LinkedList<PostCommentBean> addList = (LinkedList<PostCommentBean>) msg.obj;
+					if ((commentList.size()+addList.size()) > 20) {
+						postCommentList.setLoadMoreEnable(true);
+					}
 					if (commentListAdapter == null) {
 						commentListAdapter = new CommentListAdapter(mContext,
 								addList, mHandler);
@@ -177,7 +194,7 @@ public class PostCommentFragment extends Fragment implements
 		RotateAnimation rotateAnimation=new RotateAnimation(0.0f, +360.0f,
 	               Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF, 0.5f);
 	    rotateAnimation.setRepeatCount(Animation.INFINITE);
-	    rotateAnimation.setInterpolator(mContext,interpolator.linear);
+	    rotateAnimation.setInterpolator(new LinearInterpolator());
 	    rotateAnimation.setDuration(500);
 	    loadImage.startAnimation(rotateAnimation);
 		refresh();

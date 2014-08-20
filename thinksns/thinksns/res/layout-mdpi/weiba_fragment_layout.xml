@@ -36,13 +36,6 @@
             android:layout_alignParentRight="true"
             android:src="@drawable/droplist" />
 
-        <ImageView
-            android:id="@+id/weiba_fragment_add_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/weiba_fragmente_drop_button"
-            android:scaleType="fitXY"
-            android:src="@drawable/compose" />
     </RelativeLayout>
 
     <ImageView

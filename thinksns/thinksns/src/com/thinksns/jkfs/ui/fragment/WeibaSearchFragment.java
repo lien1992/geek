@@ -17,11 +17,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.adapter.WeibaSearchAdapter;
 import com.thinksns.jkfs.ui.view.UnderlinePageIndicator;
 
@@ -42,6 +44,7 @@ public class WeibaSearchFragment extends Fragment {
 	
 	private Activity mContext;
 	private Handler mHandler;
+	private ImageView navigation;
 	private EditText weiba_search_edit;
 	private View weiba_search_button;
 	private TextView weiba_search;
@@ -63,13 +66,21 @@ public class WeibaSearchFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View rootView = inflater.inflate(R.layout.weiba_search_fragment_layout,
 				container, false);
+		navigation = (ImageView) rootView.findViewById(R.id.weiba_fragment_title);
 		weiba_search_edit=(EditText)rootView.findViewById(R.id.weiba_search_edit);
 		weiba_search_button=rootView.findViewById(R.id.weiba_search_button);
 		weiba_search_indicator=(UnderlinePageIndicator)rootView.findViewById(R.id.weiba_search_indicator);
 		weiba_search_pager=(ViewPager)rootView.findViewById(R.id.weiba_search_pager);
 		weiba_search=(TextView) rootView.findViewById(R.id.weiba_search);
         post_search=(TextView) rootView.findViewById(R.id.post_search);
-		
+        navigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainFragmentActivity) getActivity()).getSlidingMenu()
+                        .toggle();
+            }
+        }); 
+        
         init();
 		fm=getChildFragmentManager();
 		pagerAdapter=new WeibaSearchAdapter(fm,mContext,this);

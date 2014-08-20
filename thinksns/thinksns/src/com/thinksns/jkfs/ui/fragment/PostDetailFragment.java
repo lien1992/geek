@@ -11,8 +11,10 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
@@ -28,6 +30,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.PostBean;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.util.WeibaActionHelper;
 import com.thinksns.jkfs.util.WeibaBaseHelper;
 import com.thinksns.jkfs.util.common.DateUtils;
@@ -52,6 +55,7 @@ public class PostDetailFragment extends Fragment {
 	private static String OAUTH_TOKEN_SECRECT;
 	// 组件
 	private Activity mContext;
+	private ImageView navigation;
     private TextView post_title;
     private TextView weiba_name;
     private TextView post_user;
@@ -66,11 +70,13 @@ public class PostDetailFragment extends Fragment {
     private View ScrollView;
     private EditText inputView;
     private View sendButton;
+    private View detail_comment;
 	// 数据
 	private PostBean post;
 	private static DisplayImageOptions options;
 	private ImageLoader imageLoader;
-    private boolean flag;
+    private boolean flag;//标记评论是否未显示，未显示为true，显示为false；
+    private int displayflag;
 	
 	public PostDetailFragment() {
 		super();
@@ -124,6 +130,7 @@ public class PostDetailFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View rootView = inflater.inflate(R.layout.post_detail_fragment_layout,
 				container, false);
+		navigation=(ImageView) rootView.findViewById(R.id.weiba_fragment_title);
 		post_title=(TextView)rootView.findViewById(R.id.post_title);
 		weiba_name=(TextView)rootView.findViewById(R.id.weiba_name);
 		post_user=(TextView)rootView.findViewById(R.id.post_user);
@@ -135,6 +142,14 @@ public class PostDetailFragment extends Fragment {
 		ScrollView=rootView.findViewById(R.id.scrollView);
 		inputView=(EditText) rootView.findViewById(R.id.edit_comment);
 		sendButton=rootView.findViewById(R.id.create_post_send);
+		detail_comment=rootView.findViewById(R.id.detail_comment);
+		navigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainFragmentActivity) getActivity()).getSlidingMenu()
+                        .toggle();
+            }
+        });
 		
 		post_title.setText(post.getTitle());
 		weiba_name.setText("["
@@ -142,14 +157,61 @@ public class PostDetailFragment extends Fragment {
 						post.getWeiba_id()) + "]");
 		post_user.setText(post.getUname());
 		post_date.setText(DateUtils.getTimeInString(post.getPost_time()));
-		
+		//帖子内容显示设置
 		WebSettings contentSetting= post_content.getSettings();
 		contentSetting.setDefaultTextEncodingName("utf-8"); 
 		contentSetting.setSupportZoom(true);
 		contentSetting.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		post_content.setBackgroundColor(0);
 		post_content.loadDataWithBaseURL("http://tsimg.tsurl.cn", post.getContent(), "text/html", "utf-8", null);
-		
+		displayflag=1;
+		post_content.setOnTouchListener(new OnTouchListener(){//双击实现不同的显示模式。
+			int count = 0; 
+			long firClick = 0;  
+            long secClick = 0;  
+            @Override
+			public boolean onTouch(View view, MotionEvent event) {
+				// TODO Auto-generated method stub 
+				if(MotionEvent.ACTION_DOWN == event.getAction()){  
+			            count++;  
+			            if(count == 1){  
+			                firClick = System.currentTimeMillis();  
+			                  
+			            } else if (count == 2){  
+			                secClick = System.currentTimeMillis();  
+			                if(secClick - firClick < 500){  
+			                    if(displayflag==1){
+			       			        WebSettings contentSetting= post_content.getSettings();  
+			                		contentSetting.setUseWideViewPort(true);
+			                		//contentSetting.setLoadWithOverviewMode(true);
+			                		contentSetting.setSupportZoom(true);
+			                		contentSetting.setBuiltInZoomControls(true);
+			                		post_content.loadDataWithBaseURL("http://tsimg.tsurl.cn", post.getContent(), "text/html", "utf-8", null);
+			                    	displayflag=2;
+			                    	Toast.makeText(mContext,"切换到缩放模式", Toast.LENGTH_SHORT)
+									.show();
+			                    }else{
+			                    	WebSettings contentSetting= post_content.getSettings();
+			                		//contentSetting.setUseWideViewPort(false);
+			                		//contentSetting.setLoadWithOverviewMode(false);
+			                    	contentSetting.setSupportZoom(false);
+			                		contentSetting.setBuiltInZoomControls(false);
+			                		contentSetting.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+			                		post_content.loadDataWithBaseURL("http://tsimg.tsurl.cn", post.getContent(), "text/html", "utf-8", null);
+			                    	displayflag=1;
+			                    	Toast.makeText(mContext,"切换到自适应屏幕模式", Toast.LENGTH_SHORT)
+									.show();
+			                    }      
+			                }  
+			                count = 0;  
+			                firClick = 0;  
+			                secClick = 0;         
+			            }  
+			       }  
+			       return true;  
+			}			
+		});
+
 		post_comment.setText("(" + post.getReply_count()+ ")");
 		post_view.setText("(" + post.getRead_count() + ")");
 		post_comment.setOnClickListener(new OnClickListener() {
@@ -157,12 +219,14 @@ public class PostDetailFragment extends Fragment {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if(flag){
-					initCommentList();
 					ScrollView.setVisibility(View.GONE);
+					detail_comment.setVisibility(View.VISIBLE);
+					initCommentList();
 					flag=!flag;
 				}else{
 					ScrollView.setVisibility(View.VISIBLE);
-					getChildFragmentManager().beginTransaction().hide(post_comment_list).commit();
+					detail_comment.setVisibility(View.GONE);
+					//getChildFragmentManager().beginTransaction().hide(post_comment_list).commit();
 					flag=!flag;
 				}
 			}
@@ -250,5 +314,7 @@ public class PostDetailFragment extends Fragment {
 	public void setPost(PostBean post) {
 		this.post = post;
 	}
+	
+	
 	
 }

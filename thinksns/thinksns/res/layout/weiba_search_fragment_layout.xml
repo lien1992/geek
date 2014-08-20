@@ -36,6 +36,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:singleLine="true"
+            android:textSize="18sp"
+            android:hint="请输入关键词!"
             android:textColor="@color/black"
             android:background="@drawable/input_underline"/>
 

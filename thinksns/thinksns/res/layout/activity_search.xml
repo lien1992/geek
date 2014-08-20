@@ -5,67 +5,50 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".SearchActivity" >
-
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/search_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white_for_title"  >
+        android:padding="5dp"
+        android:orientation="horizontal"
+        android:background="@color/white" >
 
         <ImageView
             android:id="@+id/search_title_back_img"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="0dip"
-            android:paddingBottom="1dip"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|center_vertical"
             android:src="@drawable/back" />
 
         <TextView
             android:id="@+id/search_title_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/search_title_back_img"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="搜索"
-            android:textColor="@color/black"
             android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/search_title_search_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:paddingRight="20dp"
-            android:src="@drawable/send_2" />
 
         <EditText
             android:id="@+id/search_title_edit"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/search_title_search_img"
-            android:layout_toRightOf="@id/search_title_name"
-            android:background="@null"
-            android:hint="请输入关键词!"
-            android:paddingLeft="15dp"
-            android:paddingRight="20dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:singleLine="true"
-            android:textSize="12sp" >
-        </EditText>
+            android:textSize="18sp"
+            android:hint="请输入关键词!"
+            android:textColor="@color/black"
+            android:background="@drawable/input_underline"/>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/search_title_edit"
-            android:layout_alignRight="@id/search_title_edit"
-            android:layout_below="@id/search_title_edit"
-            android:paddingLeft="13dp"
-            android:paddingRight="20dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/editview_tiao" />
-    </RelativeLayout>
+            android:id="@+id/search_title_search_img"
+            android:layout_width="30dp"
+            android:layout_height="30dp" 
+            android:layout_gravity="right|center_vertical"
+            android:scaleType="fitXY"    
+            android:src="@drawable/search" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/search_choose_all"

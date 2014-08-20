@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.thinksns.jkfs.R;
 import com.thinksns.jkfs.base.ThinkSNSApplication;
 import com.thinksns.jkfs.bean.WeibaBean;
+import com.thinksns.jkfs.ui.MainFragmentActivity;
 import com.thinksns.jkfs.ui.adapter.WeibaDropAdapter;
 import com.thinksns.jkfs.ui.view.ArcMenu;
 import com.thinksns.jkfs.ui.view.SatelliteMenu;
@@ -62,7 +63,6 @@ public class WeibaFragment extends Fragment {
 	// 组件
 	private Activity mContext;
 	private ImageView navigation;
-	private ImageView add_button;
 	private ImageView drop_button;
 	private ArcMenu arcMenu;
 	private PostListFragment mPostList;
@@ -87,11 +87,16 @@ public class WeibaFragment extends Fragment {
 		weiba_bar = (View) rootView.findViewById(R.id.weiba_bar);
 		navigation = (ImageView) rootView
 				.findViewById(R.id.weiba_fragment_title);
-		add_button = (ImageView) rootView
-				.findViewById(R.id.weiba_fragment_add_button);
 		drop_button = (ImageView) rootView
 				.findViewById(R.id.weiba_fragmente_drop_button);
 		arcMenu = (ArcMenu) rootView.findViewById(R.id.weiba_arc_menu);
+		navigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainFragmentActivity) getActivity()).getSlidingMenu()
+                        .toggle();
+            }
+        });
 
 		View test = rootView.findViewById(R.id.weiba_main_page);
 		Log.w(TAG, test.toString());

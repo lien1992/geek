@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class ChatFragment extends Fragment {
     public static final int HANDLER_GET_JSON_REFRESH=3;
     public static final int CHANGE_ADAPTER=4;
 
+    private ImageView addButton;
     private String mJsonData;
     private AccountBean mAccountBean;
     private ListView chat_listview;
@@ -121,6 +123,7 @@ public class ChatFragment extends Fragment {
 
         chat_listview=(ListView)view.findViewById(R.id.chat_list);
         mMenuSlide=(View)view.findViewById(R.id.menu_icon);
+        addButton=(ImageView)view.findViewById(R.id.chat_add_button);
         mMenuSlide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,8 +131,14 @@ public class ChatFragment extends Fragment {
                         .toggle();
             }
         });
-
- 
+        addButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+        });
 
         chatListAdapter=new ChatListAdapter(mListChat,getActivity(),mInflater);
         chat_listview.setAdapter(chatListAdapter);

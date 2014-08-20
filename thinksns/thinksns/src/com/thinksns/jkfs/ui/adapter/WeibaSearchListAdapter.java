@@ -89,8 +89,8 @@ public class WeibaSearchListAdapter extends BaseAdapter {
 				holder.weiba_img, options);
 		holder.weiba_name.setText(getItem(position).getWeiba_name());
 		holder.weiba_intro.setText(getItem(position).getIntro());
-		holder.follower_count.setText(getItem(position).getFollower_count());
-		holder.thread_count.setText(getItem(position).getThread_count());
+		holder.follower_count.setText(getFormalCount(getItem(position).getFollower_count()));
+		holder.thread_count.setText(getFormalCount(getItem(position).getThread_count()));
 		final int pos=position;
 		final String weiba_id=getItem(position).getWeiba_id();
 		holder.follow_weiba.setText(getItem(position).getFollow_state() == 1? "取消关注":"关    注");
@@ -111,6 +111,15 @@ public class WeibaSearchListAdapter extends BaseAdapter {
 		return convertView;
 	}
 
+	private String getFormalCount(String arg){
+		long count=Long.parseLong(arg);
+		if(count<=10000){
+			return arg;
+		}else{
+			return count/10000+"万";
+		}
+	}
+	
 	final class ViewHolder {
 		ImageView weiba_img;
 		TextView weiba_name;
