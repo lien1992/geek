@@ -202,6 +202,10 @@ public class WeiboAdapter extends BaseAdapter {
 		} else if (weibo.getType().equals("weiba_post")) {
 			// 微吧
 			holder.from.setText("来自微吧");
+			holder.weibo_pics.setVisibility(View.GONE);
+			holder.repost.setVisibility(View.GONE);
+			holder.repost_pics.setVisibility(View.GONE);
+
 		} else {
 			if (weibo.getType().equals("postimage")) {
 				if (!isNoImageMode && weibo.getAttach() != null

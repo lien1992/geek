@@ -24,7 +24,7 @@ public class DateUtils {
 		long currentDate = cal.getTimeInMillis();
 		long interval = currentDate - date;
 		if (interval > 0 && interval < ONEHOUR) {
-			return (interval / 60 * 1000) + "分钟前";
+			return (interval / (60 * 1000)) + "分钟前";
 		}
 		return TimeStamp2Date(arg, "yyyy-MM-dd  HH:mm");
 	}
