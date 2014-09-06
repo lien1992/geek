@@ -37,7 +37,7 @@
 
 概况
 -----
-
+```sh
 ├── base              基类包
 ├── bean              实体包，各模块实体类
 ├── constant          常量包
@@ -49,8 +49,10 @@
      ├── util.http    HTTP操作类
      ├── util.db      数据库操作
      └── util.sina    新浪微博第三方登录包
+```
 
 项目依赖library：SlidingMenu
+
 项目依赖jar包：universal-image-loader-1.9.2.jar，gson-2.2.2.jar，jsoup-1.7.3.jar，mta-sdk-1.0.0.jar等
 
 测试服务器
@@ -62,6 +64,7 @@ ID：极酷范式团队
 
 password：jikufanshi
 
+
 设计、开发、测试、维护
 ----------------------
 
@@ -70,7 +73,7 @@ password：jikufanshi
 
 
  [1]:https://github.com/lien1992/geek/raw/master/docs/login.jpg
- [2]:https://github.com/lien1992/geek/raw/master/docs/weibo.jpg
+ [2]:https://github.com/lien1992/geek/raw/master/docs/weibo.png
  [3]:https://github.com/lien1992/geek/raw/master/docs/weibo_detail.jpg
  [4]:https://github.com/lien1992/geek/raw/master/docs/user.jpg
  [5]:https://github.com/lien1992/geek/raw/master/docs/weiba.jpg
