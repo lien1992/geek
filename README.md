@@ -42,9 +42,9 @@
 ├── bean              实体包，各模块实体类
 ├── constant          常量包
 ├── ui                UI界面包,存放UI相关的Activity
-│   ├── ui.fragment  存放UI相关的Fragment
-│   ├── ui.adapter   适配器包
-│   └── ui.view      自定义UI组件包
+│   ├── ui.fragment   存放UI相关的Fragment
+│   ├── ui.adapter    适配器包
+│   └── ui.view       自定义UI组件包
 └── util              工具包
      ├── util.http    HTTP操作类
      ├── util.db      数据库操作
@@ -55,20 +55,19 @@
 
 项目依赖jar包：universal-image-loader-1.9.2.jar，gson-2.2.2.jar，jsoup-1.7.3.jar，mta-sdk-1.0.0.jar等
 
+
 测试服务器
 ----------
 
 http://42.121.113.32/weibo/
 
-ID：极酷范式团队
-
-password：jikufanshi
+ID：极酷范式团队 |  pwd：jikufanshi
 
 
 设计、开发、测试、维护
 ----------------------
 
-极酷范式团队
+Copyright 2014 极酷范式团队
 
 
 
